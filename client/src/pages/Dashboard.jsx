@@ -29,7 +29,7 @@ const Dashboard = () => {
     if (orderId) {
         const verifyPayment = async () => {
             try {
-                const res = await axios.post('http://localhost:5000/api/payment/status', { order_id: orderId });
+                const res = await axios.post('/api/payment/status', { order_id: orderId });
                 
                 if (res.data.success) {
                     setIsVip(true);
