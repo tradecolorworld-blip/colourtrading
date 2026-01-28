@@ -119,6 +119,7 @@ app.post('/api/payment/create', async (req, res) => {
 
 // 5. Payment Webhook (Gateway calls this)
 app.post('/api/payment/webhook', async (req, res) => {
+    console.log("📥 RECEIVED WEBHOOK:", req.body);
     const { status, customer_mobile, order_id } = req.body;
 
     if (status === "Success") {
