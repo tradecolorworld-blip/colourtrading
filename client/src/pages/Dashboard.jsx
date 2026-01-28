@@ -188,13 +188,13 @@ const Dashboard = () => {
 
                 {/* Bottom Navigation */}
                 <div className="mt-2">
-                    <button className="border border-sky-500 text-sky-400 py-2 px-5 rounded-full font-bold hover:bg-sky-500/10 transition-colors">
+                    <button className="border border-sky-500 text-sky-400 py-2 px-5 rounded-full font-bold hover:bg-sky-500/10 transition-colors" onClick={() => window.open('https://www.jalwagame8.com/#/register?invitationCode=228359260636', '_blank')}>
                         Sign Up Jalwa Game
                     </button>
                     <div className="flex justify-center gap-6 mt-6">
-                        <SocialIcon src="https://colourtradinghack.com/icons/whatsapp.png" />
-                        <SocialIcon src="https://colourtradinghack.com/icons/youtube.png" />
-                        <SocialIcon src="https://colourtradinghack.com/icons/telegram.png" />
+                        <SocialIcon src="https://colourtradinghack.com/icons/whatsapp.png" link="https://wa.me/919116046055" />
+                        <SocialIcon src="https://colourtradinghack.com/icons/youtube.png" link="https://www.youtube.com/watch?v=-HdcugtTRN4"/>
+                        <SocialIcon src="https://colourtradinghack.com/icons/telegram.png" link="https://t.me/modapksh"/>
                     </div>
                 </div>
             </div>
@@ -208,7 +208,7 @@ const Dashboard = () => {
                         <button className="bg-linear-to-r from-[#38bdf8] to-[#6366f1] text-white font-bold py-2 px-5.5 rounded-full " onClick={handleUpgrade} disabled={loading}>
                             {loading ? (
                                 <>
-                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    {/* <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> */}
                                     <span>Processing...</span>
                                 </>
                             ) : (
@@ -236,8 +236,14 @@ const Dashboard = () => {
     );
 };
 
-const SocialIcon = ({ src }) => (
-    <img src={src} alt="social" className="w-10 h-10 cursor-pointer hover:scale-110 transition-transform" />
+const SocialIcon = ({ src, link }) => (
+    <a href={link} target="_blank" rel="noopener noreferrer">
+        <img 
+            src={src} 
+            alt="social" 
+            className="w-10 h-10 cursor-pointer hover:scale-110 transition-transform" 
+        />
+    </a>
 );
 
 export default Dashboard;
