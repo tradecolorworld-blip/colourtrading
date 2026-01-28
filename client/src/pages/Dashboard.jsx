@@ -10,6 +10,7 @@ const Dashboard = () => {
     const [result, setResult] = useState('')
     const [stats, setStats] = useState(null);
 
+    const [loading, setLoading] = useState(false); // 🟢 Added loading state
     useEffect(() => {
         const userData = JSON.parse(localStorage.getItem('user'));
         if (userData && userData.isVip) {
@@ -102,7 +103,7 @@ const Dashboard = () => {
     const handleUpgrade = async () => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user) return alert("Please login again");
-
+        setLoading(true); // 🟢 Start loading
         try {
             const res = await axios.post('/api/payment/create', {
                 phone: user.phone,
@@ -115,9 +116,11 @@ const Dashboard = () => {
                 window.location.href = res.data.results.payment_url;
             } else {
                 alert("Payment error: " + res.data.message);
+                setLoading(false);
             }
         } catch (err) {
             console.error("Payment failed", err);
+            setLoading(false);
         }
     };
 
@@ -202,8 +205,15 @@ const Dashboard = () => {
                     <div className="bg-[#020617] w-[90%] max-w-85 rounded-2xl p-5  text-center">
                         <h3 className="text-lg font-bold mb-6">PAY ₹950 TO START</h3>
 
-                        <button className="bg-linear-to-r from-[#38bdf8] to-[#6366f1] text-white font-bold py-2 px-5.5 rounded-full " onClick={handleUpgrade}>
-                            Pay On QR Code
+                        <button className="bg-linear-to-r from-[#38bdf8] to-[#6366f1] text-white font-bold py-2 px-5.5 rounded-full " onClick={handleUpgrade} disabled={loading}>
+                            {loading ? (
+                                <>
+                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <span>Processing...</span>
+                                </>
+                            ) : (
+                                "Pay ₹950 On QR Code"
+                            )}
                         </button>
 
                         <div className="my-4 space-y-2 text-center inline-block w-full">

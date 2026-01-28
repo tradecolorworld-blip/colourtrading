@@ -80,9 +80,9 @@ app.post('/api/user/make-vip', async (req, res) => {
 
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        res.json({ 
-            message: "VIP access granted for 14 days", 
-            expiresAt: user.vipExpiresAt 
+        res.json({
+            message: "VIP access granted for 14 days",
+            expiresAt: user.vipExpiresAt
         });
     } catch (err) {
         res.status(500).json({ message: "Error updating VIP status" });
@@ -92,9 +92,9 @@ app.post('/api/user/make-vip', async (req, res) => {
 // 4. Create Payment Order
 app.post('/api/payment/create', async (req, res) => {
     const { phone, amount } = req.body;
-    
+
     // Generate a unique order ID for each transaction
-    const order_id = "ORD" + Date.now(); 
+    const order_id = "ORD" + Date.now();
 
     const paymentData = {
         token: "a86f69-675d92-da4e54-2886a7-0ce845", // From your documentation
@@ -130,6 +130,12 @@ app.post('/api/payment/create', async (req, res) => {
 // 5. Payment Webhook (Gateway calls this)
 app.post('/api/payment/webhook', async (req, res) => {
     console.log("📥 RECEIVED WEBHOOK:", req.body);
+
+    if (!req.body) {
+        console.error("❌ Webhook received with no body data");
+        return res.status(400).send("No body found");
+    }
+
     const { status, customer_mobile, order_id } = req.body;
 
     if (status === "Success") {
@@ -143,7 +149,7 @@ app.post('/api/payment/webhook', async (req, res) => {
         );
         console.log(`✅ Payment successful for ${customer_mobile}. VIP active.`);
     }
-    
+
     res.sendStatus(200); // Tell gateway you received the message
 });
 
@@ -158,11 +164,11 @@ app.post('/api/payment/status', async (req, res) => {
 
     try {
         const response = await axios.post('https://allapi.in/order/status', statusData);
-        
+
         // If the gateway confirms the payment was a "Success"
         if (response.data.status === true && response.data.results.status === "Success") {
             const phone = response.data.results.customer_mobile;
-            
+
             // Activate VIP for 14 days
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 14);
@@ -173,10 +179,10 @@ app.post('/api/payment/status', async (req, res) => {
                 { new: true }
             );
 
-            return res.json({ 
-                status: "Success", 
+            return res.json({
+                status: "Success",
                 isVip: updatedUser.isVip,
-                message: "Payment verified and VIP activated!" 
+                message: "Payment verified and VIP activated!"
             });
         }
 
