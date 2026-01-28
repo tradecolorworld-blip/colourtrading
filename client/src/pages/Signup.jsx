@@ -47,7 +47,7 @@ const Signup = () => {
             if (!isLogin) {
                 // API Call: Register
                 console.log("register api call",formData)
-                const res = await axios.post('http://localhost:5000/api/auth/register', formData);
+                const res = await axios.post('/api/auth/register', formData);
                 console.log(res)
                 if (res.status === 201) {
                     setShowSuccess(true);
@@ -60,7 +60,7 @@ const Signup = () => {
             } else {
                 // API Call: Login
                 console.log("login api call",formData)
-                const res = await axios.post('http://localhost:5000/api/auth/login', formData);
+                const res = await axios.post('/api/auth/login', formData);
                 console.log(res)
 
                 // Save user data (including isVip status) for the Dashboard
