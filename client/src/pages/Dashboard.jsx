@@ -110,6 +110,7 @@ const Dashboard = () => {
             });
 
             if (res.data.status === true) {
+                localStorage.setItem('pending_order_id', res.data.results.order_id);
                 // Redirect user to the secure payment page (UPI, QR, etc.)
                 window.location.href = res.data.results.payment_url;
             } else {
