@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard';
 // 🔒 1. Create a Protection Component
 const ProtectedRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
-  
+  console.log('user',user)
   // If no user exists, redirect to signup
   if (!user || !user.phone) {
     return <Navigate to="/signup" replace />;
