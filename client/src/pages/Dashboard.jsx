@@ -17,33 +17,49 @@ const Dashboard = () => {
         }
     }, []);
 
+
+
+    // --- 2. PAYMENT TRACKING LOGIC ---
     useEffect(() => {
-    // 1. Get User from LocalStorage
-    const userData = JSON.parse(localStorage.getItem('user'));
-    if (userData) setIsVip(userData.isVip);
+        const userData = JSON.parse(localStorage.getItem('user'));
 
-    // 2. Check URL for Order ID (AllApi appends this on redirect)
-    const urlParams = new URLSearchParams(window.location.search);
-    const orderId = urlParams.get('order_id');
+        // Priority 1: Check URL (Immediate Redirect)
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlOrderId = urlParams.get('order_id');
 
-    if (orderId) {
-        const verifyPayment = async () => {
-            try {
-                const res = await axios.post('/api/payment/status', { order_id: orderId });
-                
-                if (res.data.success) {
-                    setIsVip(true);
-                    // Update LocalStorage so VIP stays after refresh
-                    localStorage.setItem('user', JSON.stringify({ ...userData, isVip: true }));
-                    alert("💎 VIP Activated Successfully!");
+        // Priority 2: Check LocalStorage (The "Delayed Execution" Fix)
+        const pendingOrderId = localStorage.getItem('pending_order_id');
+
+        const orderToVerify = urlOrderId || pendingOrderId;
+
+        if (orderToVerify && !isVip) {
+            const verifyPayment = async () => {
+                try {
+                    const res = await axios.post('/api/payment/status', { order_id: orderToVerify });
+
+                    if (res.data.status === "Success") {
+                        setIsVip(true);
+                        // Update User Session
+                        const updatedUser = { ...userData, isVip: true };
+                        localStorage.setItem('user', JSON.stringify(updatedUser));
+
+                        // ✅ CLEAR the ID because payment is confirmed
+                        localStorage.removeItem('pending_order_id');
+                        alert("💎 VIP Activated Successfully!");
+
+                        // Optional: Clean the URL
+                        window.history.replaceState({}, document.title, "/dashboard");
+                    } else {
+                        // ❌ DO NOT delete pending_order_id if status is still 'Pending'
+                        console.log("Payment still pending... will check again on next refresh.");
+                    }
+                } catch (err) {
+                    console.error("Verification failed", err);
                 }
-            } catch (err) {
-                console.error("Verification failed", err);
-            }
-        };
-        verifyPayment();
-    }
-}, []);
+            };
+            verifyPayment();
+        }
+    }, [isVip]);
 
 
     const handleAnalyze = () => {
@@ -84,25 +100,25 @@ const Dashboard = () => {
     };
 
     const handleUpgrade = async () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) return alert("Please login again");
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) return alert("Please login again");
 
-    try {
-        const res = await axios.post('/api/payment/create', {
-            phone: user.phone,
-            amount: 199 // Example price
-        });
+        try {
+            const res = await axios.post('/api/payment/create', {
+                phone: user.phone,
+                amount: 199 // Example price
+            });
 
-        if (res.data.status === true) {
-            // Redirect user to the secure payment page (UPI, QR, etc.)
-            window.location.href = res.data.results.payment_url;
-        } else {
-            alert("Payment error: " + res.data.message);
+            if (res.data.status === true) {
+                // Redirect user to the secure payment page (UPI, QR, etc.)
+                window.location.href = res.data.results.payment_url;
+            } else {
+                alert("Payment error: " + res.data.message);
+            }
+        } catch (err) {
+            console.error("Payment failed", err);
         }
-    } catch (err) {
-        console.error("Payment failed", err);
-    }
-};
+    };
 
     return (
         <div className="min-h-screen bg-[#0f172a] flex flex-col items-center pt-3 font-sans text-white">

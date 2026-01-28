@@ -2,22 +2,40 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
-// import Login from './pages/Login';
+
+// 🔒 1. Create a Protection Component
+const ProtectedRoute = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  
+  // If no user exists, redirect to signup
+  if (!user || !user.phone) {
+    return <Navigate to="/signup" replace />;
+  }
+  
+  return children;
+};
 
 function App() {
   return (
     <BrowserRouter>
-      {/* Global Wrapper for the deep navy background */}
       <div className="min-h-screen bg-[#0e172a] text-white">
         <Routes>
           {/* Default Route: Redirect to Signup */}
           <Route path="/" element={<Navigate to="/signup" replace />} />
           
           <Route path="/signup" element={<Signup />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          {/* <Route path="/login" element={<Login />} /> */}
           
-          {/* Catch-all for 404s */}
+          {/* 🛡️ 2. Wrap Dashboard in Protection */}
+          <Route 
+            path="/dashboard" 
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } 
+          />
+          
+          {/* Catch-all: Redirect unknown paths to Signup */}
           <Route path="*" element={<Navigate to="/signup" replace />} />
         </Routes>
       </div>

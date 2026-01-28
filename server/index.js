@@ -105,7 +105,7 @@ app.post('/api/payment/create', async (req, res) => {
         customer_name: "User_" + phone,
         customer_mobile: phone,
         customer_email: "customer@gmail.com", // Placeholder
-        redirect_url: "http://localhost:5173/dashboard" // Your frontend URL
+        redirect_url: "https://colourtradingworld.sbs/dashboard" // Your frontend URL
     };
 
     try {
