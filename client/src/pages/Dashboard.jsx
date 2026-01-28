@@ -192,7 +192,7 @@ const Dashboard = () => {
                         Sign Up Jalwa Game
                     </button>
                     <div className="flex justify-center gap-6 mt-6">
-                        <SocialIcon src="https://colourtradinghack.com/icons/whatsapp.png" link="https://wa.me/919116046055" />
+                        <SocialIcon src="https://colourtradinghack.com/icons/whatsapp.png" link="https://wa.me/91" />
                         <SocialIcon src="https://colourtradinghack.com/icons/youtube.png" link="https://www.youtube.com/watch?v=-HdcugtTRN4"/>
                         <SocialIcon src="https://colourtradinghack.com/icons/telegram.png" link="https://t.me/modapksh"/>
                     </div>
