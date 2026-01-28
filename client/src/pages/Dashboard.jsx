@@ -88,7 +88,7 @@ const Dashboard = () => {
     if (!user) return alert("Please login again");
 
     try {
-        const res = await axios.post('http://localhost:5000/api/payment/create', {
+        const res = await axios.post('/api/payment/create', {
             phone: user.phone,
             amount: 199 // Example price
         });
