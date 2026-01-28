@@ -99,9 +99,9 @@ app.post('/api/payment/create', async (req, res) => {
     const paymentData = {
         token: "a86f69-675d92-da4e54-2886a7-0ce845", // From your documentation
         order_id: order_id,
-        txn_amount: 1,
+        txn_amount: 950,
         txn_note: "VIP Subscription",
-        product_name: "Number Pattern Hack VIP",
+        product_name: "VIP",
         customer_name: "User_" + phone,
         customer_mobile: phone,
         customer_email: "customer@gmail.com", // Placeholder
