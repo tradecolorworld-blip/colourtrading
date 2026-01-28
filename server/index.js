@@ -111,7 +111,17 @@ app.post('/api/payment/create', async (req, res) => {
     try {
         const response = await axios.post('https://allapi.in/order/create', paymentData);
         // This returns the results.payment_url we need for the frontend
-        res.json(response.data);
+
+        const finalResponse = {
+            ...response.data,
+            results: {
+                ...response.data.results,
+                order_id: order_id // Now the frontend can see it!
+            }
+        };
+
+        res.json(finalResponse);
+        // res.json(response.data);
     } catch (err) {
         res.status(500).json({ message: "Payment initialization failed" });
     }
