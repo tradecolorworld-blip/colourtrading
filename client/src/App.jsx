@@ -15,27 +15,35 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// 🔓 Redirect if already logged in
+const PublicRoute = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user && user.phone) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+};
+
 function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-[#0e172a] text-white">
         <Routes>
-          {/* Default Route: Redirect to Signup */}
           <Route path="/" element={<Navigate to="/signup" replace />} />
           
-          <Route path="/signup" element={<Signup />} />
+          {/* 🟢 Wrap Signup so logged-in users can't see it */}
+          <Route path="/signup" element={
+            <PublicRoute>
+              <Signup />
+            </PublicRoute>
+          } />
           
-          {/* 🛡️ 2. Wrap Dashboard in Protection */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
           
-          {/* Catch-all: Redirect unknown paths to Signup */}
           <Route path="*" element={<Navigate to="/signup" replace />} />
         </Routes>
       </div>

@@ -1,7 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
+    const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
     const [showError, setShowError] = useState(false); // Red error
     const [showSuccess, setShowSuccess] = useState(false); // Green success
@@ -45,7 +47,7 @@ const Signup = () => {
             if (!isLogin) {
                 // API Call: Register
                 console.log("register api call",formData)
-                const res = await axios.post('/api/auth/register', formData);
+                const res = await axios.post('http://localhost:5000/api/auth/register', formData);
                 console.log(res)
                 if (res.status === 201) {
                     setShowSuccess(true);
@@ -58,14 +60,14 @@ const Signup = () => {
             } else {
                 // API Call: Login
                 console.log("login api call",formData)
-                const res = await axios.post('/api/auth/login', formData);
+                const res = await axios.post('http://localhost:5000/api/auth/login', formData);
                 console.log(res)
 
                 // Save user data (including isVip status) for the Dashboard
                 localStorage.setItem('user', JSON.stringify(res.data));
 
                 // Redirect to Dashboard
-                window.location.href = '/dashboard';
+                navigate('/dashboard');
             }
         } catch (err) {
             // Logic for Login Error Flow (image_e5567f.png)
