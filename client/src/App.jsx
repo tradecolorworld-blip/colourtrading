@@ -2,20 +2,18 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
+import JoinTelegram from './pages/JoinTelegram'; // 🟢 Import your new page
 
-// 🔒 1. Create a Protection Component
+// 🔒 Protection Component (For Logged-in Users Only)
 const ProtectedRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
-  console.log('user',user)
-  // If no user exists, redirect to signup
   if (!user || !user.phone) {
     return <Navigate to="/signup" replace />;
   }
-  
   return children;
 };
 
-// 🔓 Redirect if already logged in
+// 🔓 Public Component (Redirects to Dashboard if already logged in)
 const PublicRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
   if (user && user.phone) {
@@ -29,21 +27,26 @@ function App() {
     <BrowserRouter>
       <div className="min-h-screen bg-[#0e172a] text-white">
         <Routes>
-          <Route path="/" element={<Navigate to="/signup" replace />} />
+          {/* 1. Standard Routes (No Auth Needed) */}
+          {/* This is the page you will use for your Ads */}
+          <Route path="/join" element={<JoinTelegram />} /> 
           
-          {/* 🟢 Wrap Signup so logged-in users can't see it */}
+          {/* 2. Auth Routes (Redirects if logged in) */}
           <Route path="/signup" element={
             <PublicRoute>
               <Signup />
             </PublicRoute>
           } />
           
+          {/* 3. Protected Routes (Redirects if logged out) */}
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           } />
-          
+
+          {/* 4. Navigation Logic */}
+          <Route path="/" element={<Navigate to="/signup" replace />} />
           <Route path="*" element={<Navigate to="/signup" replace />} />
         </Routes>
       </div>
