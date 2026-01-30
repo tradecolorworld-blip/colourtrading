@@ -81,8 +81,7 @@ function App() {
 
 
           {/* 4. Navigation Logic */}
-          <Route path="/" element={<Navigate to="/signup" replace />} />
-          <Route path="*" element={<Navigate to="/signup" replace />} />
+          <Route path="/" element={<Navigate to="/neon-signup" replace />} />
         </Routes>
       </div>
     </BrowserRouter>
