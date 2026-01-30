@@ -254,7 +254,7 @@ app.post('/api/neon/payment/create', async (req, res) => {
     const paymentData = {
         token: "a86f69-675d92-da4e54-2886a7-0ce845",
         order_id: order_id,
-        txn_amount: 1, // 🟢 Updated to 650
+        txn_amount: 650, // 🟢 Updated to 650
         txn_note: "Neon VIP Subscription",
         product_name: "Neon Premium",
         customer_name: "User_" + email.split('@')[0],
