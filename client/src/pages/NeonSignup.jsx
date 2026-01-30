@@ -42,14 +42,14 @@ const NeonSignup = () => {
             } else {
                 // 🟢 LOGIN API CALL
                 const res = await axios.post('/api/neon/login', formData);
-                console.log("Res",res.data.user)
+                console.log("Res", res.data.user)
                 if (res.data.user) {
                     // 🟢 SAVE TO NEON_USER KEY (Matches App.jsx logic)
                     console.log("try to navigate")
                     localStorage.setItem('neon_user', JSON.stringify(res.data.user));
-                    navigate('/neon-dashboard'); // 🟢 Redirect to new dashboard
+                    navigate('/neon/dashboard'); // 🟢 Redirect to new dashboard
                 }
-                else{
+                else {
                     console.log("error aa rgya")
                 }
             }

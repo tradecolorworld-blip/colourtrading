@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children }) => {
 const NeonProtectedRoute = ({ children }) => {
   const neonUser = JSON.parse(localStorage.getItem('neon_user'));
   if (!neonUser || !neonUser.email) {
-    return <Navigate to="/neon-signup" replace />;
+    return <Navigate to="/neon/signup" replace />;
   }
   return children;
 };
@@ -37,7 +37,7 @@ const PublicRoute = ({ children }) => {
 const NeonPublicRoute = ({ children }) => {
   const neonUser = JSON.parse(localStorage.getItem('neon_user'));
   if (neonUser && neonUser.email) {
-    return <Navigate to="/neon-dashboard" replace />;
+    return <Navigate to="/neon/dashboard" replace />;
   }
   return children;
 };
@@ -65,23 +65,32 @@ function App() {
             </ProtectedRoute>
           } />
 
-          <Route path="/neon-signup" element={
-            <NeonPublicRoute>
-              <NeonSignup />
-            </NeonPublicRoute>
-          } />
+          {/* --- 🟢 NEON MOD UNIVERSE (New Endpoint: /neon) --- */}
+          <Route path="/neon">
+            {/* Redirect /neon to /neon/signup automatically */}
+            <Route index element={<Navigate to="signup" replace />} />
 
-          {/* 3. Protected Routes (Redirects if logged out) */}
-          <Route path="/neon-dashboard" element={
-            <NeonProtectedRoute>
-              <NeonDashboard />
-            </NeonProtectedRoute>
-          } />
+            <Route path="signup" element={
+              <NeonPublicRoute>
+                <NeonSignup />
+              </NeonPublicRoute>
+            } />
+
+            <Route path="dashboard" element={
+              <NeonProtectedRoute>
+                <NeonDashboard />
+              </NeonProtectedRoute>
+            } />
+          </Route>
 
 
 
-          {/* 4. Navigation Logic */}
-          <Route path="/" element={<Navigate to="/neon-signup" replace />} />
+          {/* --- NAVIGATION LOGIC --- */}
+          {/* 🟢 Root domain now leads to Original Signup */}
+          <Route path="/" element={<Navigate to="/signup" replace />} />
+
+          {/* 🟢 Catch-all unknown routes also lead to Original Signup */}
+          <Route path="*" element={<Navigate to="/signup" replace />} />
         </Routes>
       </div>
     </BrowserRouter>

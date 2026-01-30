@@ -112,7 +112,7 @@ const NeonDashboard = () => {
                 <img src="https://colourtradingprediction.com/logo.png" alt="logo" className="w-27.5 h-27.5 object-contain" />
                 <div className="absolute right-4 top-4">
                     <button
-                        onClick={() => { localStorage.removeItem('neon_user'); window.location.href = '/neon-signup'; }}
+                        onClick={() => { localStorage.removeItem('neon_user'); window.location.href = '/neon/signup'; }}
                         className="text-[#35e07a] bg-transparent border-none text-sm cursor-pointer"
                     >
                         Logout

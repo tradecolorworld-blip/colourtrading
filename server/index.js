@@ -260,7 +260,7 @@ app.post('/api/neon/payment/create', async (req, res) => {
         customer_name: "User_" + email.split('@')[0],
         customer_mobile: "9999999999", // Placeholder
         customer_email: email.toLowerCase(),
-        redirect_url: "https://colourtradingworld.sbs/neon-dashboard"
+        redirect_url: "https://colourtradingworld.sbs/neon/dashboard"
     };
 
     try {
