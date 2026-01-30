@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from 'axios';
 import User from './models/User.js';
+import NeonUser from './models/NeonUser.js';
 
 dotenv.config();
 const app = express();
@@ -189,6 +190,122 @@ app.post('/api/payment/status', async (req, res) => {
         res.json({ status: "Pending", message: "Payment not completed yet" });
     } catch (err) {
         res.status(500).json({ message: "Error checking payment status" });
+    }
+});
+
+//neon user 
+// 🟢 1. Signup API
+app.post('/api/neon/signup', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const existingUser = await NeonUser.findOne({ email: email.toLowerCase() });
+        if (existingUser) return res.status(400).json({ message: "User already exists" });
+
+        const newUser = new NeonUser({ email: email.toLowerCase(), password });
+        await newUser.save();
+        res.status(201).json({ message: "Account created successfully", newUser });
+    } catch (err) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// 🟢 2. Login API
+app.post('/api/neon/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await NeonUser.findOne({ email: email.toLowerCase(), password });
+        if (!user) return res.status(401).json({ message: "Invalid login details" });
+
+        res.json({ message: "Login successful", user });
+    } catch (err) {
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
+// 🟢 4. Check VIP Status
+app.post('/api/neon/check-vip', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await NeonUser.findOne({ email: email.toLowerCase() });
+
+        if (!user || !user.isVip) {
+            return res.json({ isVip: false });
+        }
+
+        // Auto-check for expiration
+        if (new Date() > user.vipExpiry) {
+            user.isVip = false;
+            await user.save();
+            return res.json({ isVip: false, message: "VIP Expired" });
+        }
+
+        res.json({ isVip: true, expiry: user.vipExpiry });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// 4. Create Neon Payment Order (₹650)
+app.post('/api/neon/payment/create', async (req, res) => {
+    const { email } = req.body;
+    const order_id = "NEON" + Date.now();
+
+    const paymentData = {
+        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        order_id: order_id,
+        txn_amount: 1, // 🟢 Updated to 650
+        txn_note: "Neon VIP Subscription",
+        product_name: "Neon Premium",
+        customer_name: "User_" + email.split('@')[0],
+        customer_mobile: "9999999999", // Placeholder
+        customer_email: email.toLowerCase(),
+        redirect_url: "https://colourtradingworld.sbs/neon-dashboard"
+    };
+
+    try {
+        const response = await axios.post('https://allapi.in/order/create', paymentData);
+        res.json({
+            ...response.data,
+            results: { ...response.data.results, order_id }
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Payment initialization failed" });
+    }
+});
+
+// 5. Check Neon Payment Status & Activate VIP
+app.post('/api/neon/payment/status', async (req, res) => {
+    const { order_id, email } = req.body;
+
+    try {
+        const response = await axios.post('https://allapi.in/order/status', {
+            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            order_id: order_id
+        });
+
+        if (response.data.status === true && response.data.results.status === "Success") {
+            // const email = response.data.results.customer_email;
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 28); // 🟢 28 days validity
+
+            const updatedUser = await NeonUser.findOneAndUpdate(
+                { email: email.toLowerCase() },
+                { isVip: true, vipExpiry: expiryDate },
+                { new: true }
+            );
+
+            if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+            return res.json({
+                status: "Success",
+                user: updatedUser,
+                message: "Payment verified and Neon VIP activated!"
+            });
+        }
+        res.json({ status: "Pending", message: "Payment not completed" });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
     }
 });
 
