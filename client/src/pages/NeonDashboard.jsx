@@ -167,7 +167,7 @@ const NeonDashboard = () => {
 
                 {/* Social Links */}
                 <div className="flex justify-center gap-6 mt-8">
-                    <SocialBtn src="https://colourtradinghack.com/icons/whatsapp.png" link="https://wa.me/+91" />
+                    <SocialBtn src="https://colourtradinghack.com/icons/whatsapp.png" link="https://wa.me/+919116046055" />
                     <SocialBtn src="https://colourtradinghack.com/icons/youtube.png" link="https://www.youtube.com/watch?v=-HdcugtTRN4" />
                     <SocialBtn src="https://colourtradinghack.com/icons/telegram.png" link="https://t.me/modapksales" />
                 </div>

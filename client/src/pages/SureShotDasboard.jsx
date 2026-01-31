@@ -198,7 +198,7 @@ const SureShotDashboard = () => {
 
                 {/* Socials */}
                 <div className="flex justify-center gap-4 mt-4">
-                    <SocialIcon src="https://i.ibb.co/F4d2P58X/whatsapp.png" link="https://wa.me/+919057617196" />
+                    <SocialIcon src="https://i.ibb.co/F4d2P58X/whatsapp.png" link="https://wa.me/+919116046055" />
                     <SocialIcon src="https://i.ibb.co/gFBqK4Vm/telegram.png" link="https://t.me/modapksales" />
                     <SocialIcon src="https://i.ibb.co/fd1vGQwX/youtube.png" link="https://youtu.be/d_MvFufOMRQ" />
                 </div>

@@ -199,7 +199,7 @@ const JalwaDashboard = () => {
 
                 {/* Pill-shaped Social Links */}
                 <div className="flex gap-3 mt-10 mb-20">
-                    <SocialBtn color="#4cd964" label="WHATSAPP" link="https://wa.me/919057617196" />
+                    <SocialBtn color="#4cd964" label="WHATSAPP" link="https://wa.me/919116046055" />
                     <SocialBtn color="#ff3b30" label="YOUTUBE" link="https://youtube.com" />
                     <SocialBtn color="#007aff" label="TELEGRAM" link="https://t.me/betbhai9king" />
                 </div>
