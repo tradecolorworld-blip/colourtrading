@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import axios from 'axios';
 import User from './models/User.js';
 import NeonUser from './models/NeonUser.js';
+import JalwaUser from './models/JalwaUser.js';
+import SureShotUser from './models/SureShotUser.js';
 
 dotenv.config();
 const app = express();
@@ -306,6 +308,230 @@ app.post('/api/neon/payment/status', async (req, res) => {
         res.json({ status: "Pending", message: "Payment not completed" });
     } catch (err) {
         res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// --- JALWA BACKEND APIs ---
+
+// 🟢 1. Signup API
+app.post('/api/jalwa/signup', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        // Search in a dedicated JalwaUser collection (or use a 'mod' flag)
+        const existingUser = await JalwaUser.findOne({ email: email.toLowerCase() });
+        if (existingUser) return res.status(400).json({ message: "User already exists" });
+
+        const newUser = new JalwaUser({ email: email.toLowerCase(), password });
+        await newUser.save();
+        res.status(201).json({ message: "Jalwa account created successfully", user: newUser });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during Jalwa signup" });
+    }
+});
+
+// 🟢 2. Login API
+app.post('/api/jalwa/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await JalwaUser.findOne({ email: email.toLowerCase(), password });
+        if (!user) return res.status(401).json({ message: "Invalid Jalwa login details" });
+
+        res.json({ message: "Jalwa Login successful", user });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during Jalwa login" });
+    }
+});
+
+// 🟢 3. Check VIP Status (Includes auto-expiry for 28 days)
+app.post('/api/jalwa/check-vip', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await JalwaUser.findOne({ email: email.toLowerCase() });
+
+        if (!user || !user.isVip) {
+            return res.json({ isVip: false });
+        }
+
+        // Check if VIP has expired
+        if (new Date() > user.vipExpiry) {
+            user.isVip = false;
+            await user.save();
+            return res.json({ isVip: false, message: "Jalwa VIP Expired" });
+        }
+
+        res.json({ isVip: true, expiry: user.vipExpiry });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking Jalwa status" });
+    }
+});
+
+// 🟢 4. Create Jalwa Payment Order (₹899)
+app.post('/api/jalwa/payment/create', async (req, res) => {
+    const { email } = req.body;
+    const order_id = "JALWA" + Date.now(); // Unique prefix for Jalwa orders
+
+    const paymentData = {
+        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        order_id: order_id,
+        txn_amount: 1, // 🟢 Set to 899 as per Jalwa design
+        txn_note: "Jalwa VIP Subscription",
+        product_name: "Jalwa Premium Access",
+        customer_name: "JalwaUser_" + email.split('@')[0],
+        customer_mobile: "9999999999",
+        customer_email: email.toLowerCase(),
+        redirect_url: "https://colourtradingworld.sbs/jalwa/dashboard"
+    };
+
+    try {
+        const response = await axios.post('https://allapi.in/order/create', paymentData);
+        res.json({
+            ...response.data,
+            results: { ...response.data.results, order_id }
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Jalwa payment initialization failed" });
+    }
+});
+
+// 🟢 5. Verify Status & Activate VIP
+app.post('/api/jalwa/payment/status', async (req, res) => {
+    const { order_id, email } = req.body;
+
+    try {
+        const response = await axios.post('https://allapi.in/order/status', {
+            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            order_id: order_id
+        });
+
+        if (response.data.status === true && response.data.results.status === "Success") {
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 28); // 🟢 28 days validity
+
+            const updatedUser = await JalwaUser.findOneAndUpdate(
+                { email: email.toLowerCase() },
+                { isVip: true, vipExpiry: expiryDate },
+                { new: true }
+            );
+
+            if (!updatedUser) return res.status(404).json({ message: "Jalwa user not found" });
+
+            return res.json({
+                status: "Success",
+                user: updatedUser,
+                message: "Payment verified and Jalwa VIP activated!"
+            });
+        }
+        res.json({ status: "Pending", message: "Payment not completed" });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking Jalwa payment status" });
+    }
+});
+
+// --- SURESHOT BACKEND APIs ---
+
+// 🟢 1. Signup with Auto-Login
+app.post('/api/sureshot/signup', async (req, res) => {
+    try {
+        const { email, password, name } = req.body;
+        const existingUser = await SureShotUser.findOne({ email: email.toLowerCase() });
+        if (existingUser) return res.status(400).json({ message: "User already exists" });
+
+        const newUser = new SureShotUser({
+            email: email.toLowerCase(),
+            password,
+            fullName: name
+        });
+        await newUser.save();
+
+        // Return user object for immediate frontend session storage
+        res.status(201).json({ message: "Account created successfully", user: newUser });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during SureShot signup" });
+    }
+});
+
+// 🟢 2. Login API
+app.post('/api/sureshot/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await SureShotUser.findOne({ email: email.toLowerCase(), password });
+        if (!user) return res.status(401).json({ message: "Invalid login details" });
+
+        res.json({ message: "Login successful", user });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during SureShot login" });
+    }
+});
+
+// 🟢 3. VIP Status Check (28-day auto-expiry)
+app.post('/api/sureshot/check-vip', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await SureShotUser.findOne({ email: email.toLowerCase() });
+
+        if (!user || !user.isVip) return res.json({ isVip: false });
+
+        if (new Date() > user.vipExpiry) {
+            user.isVip = false;
+            await user.save();
+            return res.json({ isVip: false, message: "VIP Expired" });
+        }
+
+        res.json({ isVip: true, expiry: user.vipExpiry });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// 🟢 4. Create Order (₹655)
+app.post('/api/sureshot/payment/create', async (req, res) => {
+    const { email } = req.body;
+    const order_id = "SURE" + Date.now(); // Unique prefix for SureShot tracking
+
+    const paymentData = {
+        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        order_id: order_id,
+        txn_amount: 1, // 🟢 Set to ₹655 as per UI
+        txn_note: "SureShot VIP Subscription",
+        product_name: "SureShot Premium",
+        customer_name: "SureUser_" + email.split('@')[0],
+        customer_mobile: "9999999999",
+        customer_email: email.toLowerCase(),
+        redirect_url: "https://colourtradingworld.sbs/sureshot/dashboard"
+    };
+
+    try {
+        const response = await axios.post('https://allapi.in/order/create', paymentData);
+        res.json({ ...response.data, results: { ...response.data.results, order_id } });
+    } catch (err) {
+        res.status(500).json({ message: "Payment initialization failed" });
+    }
+});
+
+// 🟢 5. Verify & Activate
+app.post('/api/sureshot/payment/status', async (req, res) => {
+    const { order_id, email } = req.body;
+    try {
+        const response = await axios.post('https://allapi.in/order/status', {
+            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            order_id: order_id
+        });
+
+        if (response.data.status === true && response.data.results.status === "Success") {
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 28); // 28 days validity
+
+            const updatedUser = await SureShotUser.findOneAndUpdate(
+                { email: email.toLowerCase() },
+                { isVip: true, vipExpiry: expiryDate },
+                { new: true }
+            );
+
+            return res.json({ status: "Success", user: updatedUser });
+        }
+        res.json({ status: "Pending" });
+    } catch (err) {
+        res.status(500).json({ message: "Verification error" });
     }
 });
 
