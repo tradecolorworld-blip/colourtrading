@@ -209,7 +209,13 @@ const SureShotDashboard = () => {
                 <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[200] p-4 backdrop-blur-sm">
                     <div className="bg-[#0f2131] p-6 rounded-2xl w-full max-w-[420px] text-center shadow-2xl border border-white/10">
                         <h2 className="font-cinzel font-bold text-[22px] mb-2 leading-tight">Subscribe To Unlock The Hack</h2>
-                        <div className="text-[28px] font-extrabold text-[#ffdd55] my-2">₹655</div>
+                        <div className="flex flex-col items-center my-2">
+                            {/* 🔴 Strikethrough Old Price */}
+                            <span className="text-gray-400 line-through text-lg font-bold opacity-70">₹655</span>
+
+                            {/* 🟢 New Discounted Price */}
+                            <div className="text-[34px] font-extrabold text-[#ffdd55] leading-tight">₹450</div>
+                        </div>
                         <div className="flex flex-col gap-3 mb-3 mt-4">
                             <button
                                 className="w-full bg-[#9cc7da] text-[#0d2a39] py-3 rounded-xl font-bold disabled:opacity-50"

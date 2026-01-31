@@ -373,7 +373,7 @@ app.post('/api/jalwa/payment/create', async (req, res) => {
     const paymentData = {
         token: "a86f69-675d92-da4e54-2886a7-0ce845",
         order_id: order_id,
-        txn_amount: 1, // 🟢 Set to 899 as per Jalwa design
+        txn_amount: 499, // 🟢 Set to 899 as per Jalwa design
         txn_note: "Jalwa VIP Subscription",
         product_name: "Jalwa Premium Access",
         customer_name: "JalwaUser_" + email.split('@')[0],
@@ -491,7 +491,7 @@ app.post('/api/sureshot/payment/create', async (req, res) => {
     const paymentData = {
         token: "a86f69-675d92-da4e54-2886a7-0ce845",
         order_id: order_id,
-        txn_amount: 1, // 🟢 Set to ₹655 as per UI
+        txn_amount: 450, // 🟢 Set to ₹655 as per UI
         txn_note: "SureShot VIP Subscription",
         product_name: "SureShot Premium",
         customer_name: "SureUser_" + email.split('@')[0],

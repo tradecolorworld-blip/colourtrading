@@ -210,7 +210,13 @@ const JalwaDashboard = () => {
                 <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[1000] p-4 backdrop-blur-md">
                     <div className="bg-[#111] w-full max-w-[340px] p-6 rounded-2xl text-center border border-white/10">
                         <h3 className="font-bold text-xl mb-2 text-white">Purchase Premium Access</h3>
-                        <p className="text-[#39ff14] font-black text-3xl mb-6">₹899</p>
+                        <div className="flex flex-col items-center mb-6">
+                            {/* 🔴 Cut/Strikethrough Old Price */}
+                            <span className="text-gray-500 line-through text-xl font-bold">₹899</span>
+
+                            {/* 🟢 New Discounted Price */}
+                            <p className="text-[#39ff14] font-black text-4xl mt-1">₹499</p>
+                        </div>
                         <button className="bg-[#c83535] text-white w-full py-3.5 rounded-xl font-black mb-3 text-lg"
                             onClick={handleUpgrade}
                             disabled={loading}
