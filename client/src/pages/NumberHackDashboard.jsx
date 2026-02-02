@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const NumberHackDashboard = () => {
-    const [isVip, setIsVip] = useState(true);
+    const [isVip, setIsVip] = useState(false);
     const [currentTime, setCurrentTime] = useState("");
     const [periodNumber, setPeriodNumber] = useState("");
     const [timerType, setTimerType] = useState("1 Min");
@@ -244,10 +244,32 @@ const NumberHackDashboard = () => {
             </main>
 
             {/* Bottom Nav Dock */}
-            <div className="fixed bottom-0 left-0 right-0 grid grid-cols-3 gap-2 p-2 bg-transparent z-50">
-                <div className="bg-[#5cb85c] text-white py-3 rounded-md font-black italic text-xs shadow-md border-b-4 border-black/20 text-center">WHATSAPP</div>
-                <div className="bg-[#5bc0de] text-white py-3 rounded-md font-black italic text-xs shadow-md border-b-4 border-black/20 text-center">TELEGRAM</div>
-                <div className="bg-[#d9534f] text-white py-3 rounded-md font-black italic text-xs shadow-md border-b-4 border-black/20 text-center">YOUTUBE</div>
+            {/* Bottom Nav Dock with Active Links */}
+            <div className="fixed bottom-10 left-0 right-0 grid grid-cols-3 gap-2 p-2 bg-transparent z-50">
+                <a
+                    href="https://wa.me/919116046055"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-[#5cb85c] text-white py-3 rounded-md font-black italic text-xs shadow-md border-b-4 border-black/20 text-center no-underline active:translate-y-0.5 transition-transform"
+                >
+                    WHATSAPP
+                </a>
+                <a
+                    href="https://t.me/modapksh"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-[#5bc0de] text-white py-3 rounded-md font-black italic text-xs shadow-md border-b-4 border-black/20 text-center no-underline active:translate-y-0.5 transition-transform"
+                >
+                    TELEGRAM
+                </a>
+                <a
+                    href="https://www.youtube.com/watch?v=-HdcugtTRN4"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="bg-[#d9534f] text-white py-3 rounded-md font-black italic text-xs shadow-md border-b-4 border-black/20 text-center no-underline active:translate-y-0.5 transition-transform"
+                >
+                    YOUTUBE
+                </a>
             </div>
 
             {/* 🟢 Payment Modal */}
