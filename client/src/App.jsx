@@ -15,6 +15,7 @@ import SureShotDashboard from './pages/SureShotDasboard';
 
 import NumberHackAuth from './pages/NumberHackAuth';
 import NumberHackDashboard from './pages/NumberHackDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 
 // 🔒 Protection Component (For Logged-in Users Only)
 const ProtectedRoute = ({ children }) => {
@@ -111,6 +112,7 @@ function App() {
           {/* 1. Standard Routes (No Auth Needed) */}
           {/* This is the page you will use for your Ads */}
           <Route path="/join" element={<JoinTelegram />} />
+          <Route path="/admin-master" element={<AdminDashboard />} />
 
           {/* 2. Auth Routes (Redirects if logged in) */}
           <Route path="/signup" element={

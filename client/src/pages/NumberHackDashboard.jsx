@@ -144,7 +144,15 @@ const NumberHackDashboard = () => {
                     <span className="font-bold text-[#1a1a1a]">{currentTime}</span>
                 </div>
                 <div className="font-bold text-sm flex items-center gap-1">
-                    <span className="drop-shadow-md text-[#1a1a1a] uppercase">YOU'RE VIP USER 💎</span>
+                    {isVip ? (
+                        <span className="drop-shadow-md text-[#1a1a1a] uppercase animate-pulse">
+                            YOU'RE VIP USER 💎
+                        </span>
+                    ) : (
+                        <span className="drop-shadow-md text-[#1a1a1a] uppercase opacity-70">
+                            YOU'RE NOT VIP USER 😢
+                        </span>
+                    )}               
                 </div>
             </div>
 

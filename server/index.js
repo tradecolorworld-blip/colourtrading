@@ -23,6 +23,46 @@ mongoose.connect(process.env.MONGO_URI)
 
 // --- AUTH ROUTES ---
 
+// --- ADMIN DASHBOARD API ---
+app.get('/api/admin/stats', async (req, res) => {
+    try {
+        // Fetch all user collections
+        const collections = [
+            { name: 'Original', model: User },
+            { name: 'Neon', model: NeonUser },
+            { name: 'Jalwa', model: JalwaUser },
+            { name: 'SureShot', model: SureShotUser },
+            { name: 'NumberHack', model: NumberHackUser }
+        ];
+
+        let totalUsers = 0;
+        let totalVipUsers = 0;
+        let vipList = [];
+
+        for (const col of collections) {
+            const users = await col.model.find({});
+            totalUsers += users.length;
+
+            const vips = users.filter(u => u.isVip);
+            totalVipUsers += vips.length;
+
+            // Add VIPs to the list with their Mod source
+            vips.forEach(u => {
+                vipList.push({
+                    id: u._id,
+                    identifier: u.phone || u.email,
+                    mod: col.name,
+                    expiry: u.vipExpiresAt || u.vipExpiry
+                });
+            });
+        }
+
+        res.json({ totalUsers, totalVipUsers, vipList });
+    } catch (err) {
+        res.status(500).json({ message: "Admin data fetch failed" });
+    }
+});
+
 // 1. Create User (Signup)
 app.post('/api/auth/register', async (req, res) => {
     const { phone, password } = req.body;
@@ -547,11 +587,11 @@ app.post('/api/numberhack/signup', async (req, res) => {
 
         const newUser = new NumberHackUser({ email: email.toLowerCase(), password });
         await newUser.save();
-        
+
         // 🟢 Auto-Login: Return the user object immediately so frontend can redirect
-        res.status(201).json({ 
-            message: "Number Hack account created successfully", 
-            user: newUser 
+        res.status(201).json({
+            message: "Number Hack account created successfully",
+            user: newUser
         });
     } catch (err) {
         res.status(500).json({ message: "Server error during NumberHack signup" });
@@ -606,7 +646,7 @@ app.post('/api/numberhack/payment/create', async (req, res) => {
         txn_note: "Number VIP Subscription",
         product_name: "Number Premium",
         customer_name: "NumUser_" + email.split('@')[0],
-        customer_mobile: "9999999999", 
+        customer_mobile: "9999999999",
         customer_email: email.toLowerCase(),
         redirect_url: "https://colourtradingworld.sbs/numberhack/dashboard"
     };
