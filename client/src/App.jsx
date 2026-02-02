@@ -13,6 +13,9 @@ import JalwaDashboard from './pages/JalwaDashboard';
 import SureShotAuth from './pages/SureshotSignUp';
 import SureShotDashboard from './pages/SureShotDasboard';
 
+import NumberHackAuth from './pages/NumberHackAuth';
+import NumberHackDashboard from './pages/NumberHackDashboard';
+
 // 🔒 Protection Component (For Logged-in Users Only)
 const ProtectedRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -49,6 +52,15 @@ const SureShotProtectedRoute = ({ children }) => {
   return children;
 };
 
+// 🔒 5. Number Hack Protection (Uses 'NumberHack_user' key)
+const NumberHackProtectedRoute = ({ children }) => {
+  const numUser = JSON.parse(localStorage.getItem('NumberHack_user'));
+  if (!numUser || !numUser.email) {
+    return <Navigate to="/numberhack/signup" replace />;
+  }
+  return children;
+};
+
 // 🔓 Public Component (Redirects to Dashboard if already logged in)
 const PublicRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -78,6 +90,15 @@ const SureShotPublicRoute = ({ children }) => {
   const sureUser = JSON.parse(localStorage.getItem('Sure_user'));
   if (sureUser && sureUser.email) {
     return <Navigate to="/sureshot/dashboard" replace />;
+  }
+  return children;
+};
+
+// 🔓 6. Number Hack Public Route
+const NumberHackPublicRoute = ({ children }) => {
+  const numUser = JSON.parse(localStorage.getItem('NumberHack_user'));
+  if (numUser && numUser.email) {
+    return <Navigate to="/numberhack/dashboard" replace />;
   }
   return children;
 };
@@ -140,7 +161,7 @@ function App() {
               </JalwaProtectedRoute>
             } />
           </Route>
-          
+
 
           {/* --- 🟢 sureshot MOD UNIVERSE (New Endpoint: /neon) --- */}
           <Route path="/sureshot">
@@ -157,6 +178,23 @@ function App() {
               <SureShotProtectedRoute>
                 <SureShotDashboard />
               </SureShotProtectedRoute>
+            } />
+          </Route>
+
+          {/* --- 🟢 7. NUMBER HACK UNIVERSE (New Endpoint: /numberhack) --- */}
+          <Route path="/numberhack">
+            <Route index element={<Navigate to="signup" replace />} />
+
+            <Route path="signup" element={
+              <NumberHackPublicRoute>
+                <NumberHackAuth />
+              </NumberHackPublicRoute>
+            } />
+
+            <Route path="dashboard" element={
+              <NumberHackProtectedRoute>
+                <NumberHackDashboard />
+              </NumberHackProtectedRoute>
             } />
           </Route>
 

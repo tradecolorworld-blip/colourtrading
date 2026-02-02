@@ -7,6 +7,7 @@ import User from './models/User.js';
 import NeonUser from './models/NeonUser.js';
 import JalwaUser from './models/JalwaUser.js';
 import SureShotUser from './models/SureShotUser.js';
+import NumberHackUser from './models/NumberHackUser.js';
 
 dotenv.config();
 const app = express();
@@ -532,6 +533,124 @@ app.post('/api/sureshot/payment/status', async (req, res) => {
         res.json({ status: "Pending" });
     } catch (err) {
         res.status(500).json({ message: "Verification error" });
+    }
+});
+
+
+
+// 🟢 1. Signup API with Auto-Login
+app.post('/api/numberhack/signup', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const existingUser = await NumberHackUser.findOne({ email: email.toLowerCase() });
+        if (existingUser) return res.status(400).json({ message: "User already exists" });
+
+        const newUser = new NumberHackUser({ email: email.toLowerCase(), password });
+        await newUser.save();
+        
+        // 🟢 Auto-Login: Return the user object immediately so frontend can redirect
+        res.status(201).json({ 
+            message: "Number Hack account created successfully", 
+            user: newUser 
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during NumberHack signup" });
+    }
+});
+
+// 🟢 2. Login API
+app.post('/api/numberhack/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await NumberHackUser.findOne({ email: email.toLowerCase(), password });
+        if (!user) return res.status(401).json({ message: "Invalid login details" });
+
+        res.json({ message: "Login successful", user });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during login" });
+    }
+});
+
+// 🟢 3. Check VIP Status (28-day auto-expiry)
+app.post('/api/numberhack/check-vip', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await NumberHackUser.findOne({ email: email.toLowerCase() });
+
+        if (!user || !user.isVip) {
+            return res.json({ isVip: false });
+        }
+
+        // Auto-check for expiration
+        if (new Date() > user.vipExpiry) {
+            user.isVip = false;
+            await user.save();
+            return res.json({ isVip: false, message: "VIP Expired" });
+        }
+
+        res.json({ isVip: true, expiry: user.vipExpiry });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// 🟢 4. Create Payment Order (₹499)
+app.post('/api/numberhack/payment/create', async (req, res) => {
+    const { email } = req.body;
+    const order_id = "NUM" + Date.now(); // Unique prefix for NumberHack
+
+    const paymentData = {
+        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        order_id: order_id,
+        txn_amount: 1, // 🟢 Discounted price
+        txn_note: "Number VIP Subscription",
+        product_name: "Number Premium",
+        customer_name: "NumUser_" + email.split('@')[0],
+        customer_mobile: "9999999999", 
+        customer_email: email.toLowerCase(),
+        redirect_url: "https://colourtradingworld.sbs/numberhack/dashboard"
+    };
+
+    try {
+        const response = await axios.post('https://allapi.in/order/create', paymentData);
+        res.json({
+            ...response.data,
+            results: { ...response.data.results, order_id }
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Payment initialization failed" });
+    }
+});
+
+// 🟢 5. Verify Status & Activate VIP
+app.post('/api/numberhack/payment/status', async (req, res) => {
+    const { order_id, email } = req.body;
+
+    try {
+        const response = await axios.post('https://allapi.in/order/status', {
+            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            order_id: order_id
+        });
+
+        if (response.data.status === true && response.data.results.status === "Success") {
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 28); // 28 days validity
+
+            const updatedUser = await NumberHackUser.findOneAndUpdate(
+                { email: email.toLowerCase() },
+                { isVip: true, vipExpiry: expiryDate },
+                { new: true }
+            );
+
+            return res.json({
+                status: "Success",
+                user: updatedUser,
+                message: "Payment verified and NumberHack VIP activated!"
+            });
+        }
+        res.json({ status: "Pending" });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking payment status" });
     }
 });
 
