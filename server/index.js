@@ -642,7 +642,7 @@ app.post('/api/numberhack/payment/create', async (req, res) => {
     const paymentData = {
         token: "a86f69-675d92-da4e54-2886a7-0ce845",
         order_id: order_id,
-        txn_amount: 1, // 🟢 Discounted price
+        txn_amount: 700, // 🟢 Discounted price
         txn_note: "Number VIP Subscription",
         product_name: "Number Premium",
         customer_name: "NumUser_" + email.split('@')[0],
