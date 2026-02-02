@@ -287,7 +287,7 @@ const NumberHackDashboard = () => {
                         <h3 className="font-bold text-xl mb-2 text-black">Unlock Premium Hack</h3>
                         <div className="flex flex-col items-center mb-6">
                             <span className="text-gray-400 line-through text-lg font-bold">₹899</span>
-                            <p className="text-[#e85d34] font-black text-4xl mt-1">₹499</p>
+                            <p className="text-[#e85d34] font-black text-4xl mt-1">₹700</p>
                         </div>
 
                         <button
