@@ -152,7 +152,7 @@ const NumberHackDashboard = () => {
                         <span className="drop-shadow-md text-[#1a1a1a] uppercase opacity-70">
                             YOU'RE NOT VIP USER 😢
                         </span>
-                    )}               
+                    )}
                 </div>
             </div>
 
@@ -244,10 +244,20 @@ const NumberHackDashboard = () => {
                 </div>
 
                 {/* Footer Section */}
+                {/* Footer Section with Functional Link */}
                 <div className="mt-8 text-center border-t border-black/10 w-full pt-6">
-                    <h3 className="font-black italic text-[#1a1a1a] text-sm uppercase">New User? Sign Up in Jalwa</h3>
-                    <p className="text-purple-800 font-black italic underline mt-1 cursor-pointer">SIGN UP HERE</p>
-
+                    <h3 className="font-black italic text-[#1a1a1a] text-sm uppercase">
+                        New User? Sign Up in Jalwa
+                    </h3>
+                    {/* 🟢 Clickable link to Jalwa registration */}
+                    <a
+                        href="https://jalwagame1.link/#/register?invitationCode=4456842257850"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-purple-800 font-black italic underline mt-1 cursor-pointer block no-underline active:scale-95 transition-transform"
+                    >
+                        SIGN UP HERE
+                    </a>
                 </div>
             </main>
 
