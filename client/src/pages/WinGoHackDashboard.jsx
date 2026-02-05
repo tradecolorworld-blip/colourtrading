@@ -185,7 +185,15 @@ const WinGoHackDashboard = () => {
             </div>
 
             <p className="text-white text-[14px] font-bold mb-6">
-                Register New Game Account : <span className="text-[#ff9e48] underline underline-offset-4 decoration-2 cursor-pointer">Sign Up Now</span>
+                Register New Game Account :
+                <a
+                    href="https://jalwagame1.link/#/register?invitationCode=4456842257850"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#ff9e48] underline underline-offset-4 decoration-2 cursor-pointer hover:opacity-80 transition-opacity"
+                >
+                    Sign Up Now
+                </a>
             </p>
 
             {/* 🟢 WinGo 1 Minute Status Line */}
