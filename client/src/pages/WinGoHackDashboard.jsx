@@ -3,6 +3,8 @@ import axios from 'axios';
 
 const WinGoHackDashboard = () => {
     const [isVip, setIsVip] = useState(false);
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [selectedGame, setSelectedGame] = useState("JALWA GAME");
     const [showDropdown, setShowDropdown] = useState(false);
     const [showPayModal, setShowPayModal] = useState(false);
@@ -274,7 +276,7 @@ const WinGoHackDashboard = () => {
                             </div>
                             
                             {/* Single Payment Button */}
-                            <button className="w-full bg-[#1e1a8e] border-2 border-white py-2.5 rounded-lg font-black text-[14px] uppercase shadow-md mb-4 active:scale-95 transition-transform">
+                            <button onClick={handlePayment} className="w-full bg-[#1e1a8e] border-2 border-white py-2.5 rounded-lg font-black text-[14px] uppercase shadow-md mb-4 active:scale-95 transition-transform">
                                 PAY NOW
                             </button>
 
