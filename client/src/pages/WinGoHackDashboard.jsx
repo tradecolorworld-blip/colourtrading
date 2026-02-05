@@ -145,7 +145,7 @@ const WinGoHackDashboard = () => {
     return (
         <div className="min-h-screen flex flex-col items-center pt-6 px-4 font-sans select-none overflow-x-hidden"
             style={{ background: 'linear-gradient(180deg, #869ff1 0%, #3906e8 50%, #b6d0fe 100%)' }}>
-            
+
             {/* 🟢 TOP BANNER */}
             <div className="w-full max-w-[360px] mb-4">
                 <img
@@ -171,12 +171,15 @@ const WinGoHackDashboard = () => {
                 </div>
                 {showDropdown && (
                     <div className="absolute top-[105%] left-0 right-0 bg-[#f15a24] rounded-lg shadow-2xl z-[200] max-h-[300px] overflow-y-auto">
-                        {["JALWA GAME", "BHARAT CLUB", "91CLUB", "TIRANGA", "BDG GAME"].map(game => (
-                            <div key={game} onClick={() => { setSelectedGame(game); setShowDropdown(false); }}
-                                className="p-4 border-b border-white/10 font-black text-white text-[13px] italic uppercase hover:bg-black/10">
-                                {game}
-                            </div>
-                        ))}
+                        {["Jalwa", "Tashan", "BDG", "91Club", "DiuWin", "Tiranga",
+                            "Tc Lottery", "Raja Luck", "Big Mumbai", "Goa Game",
+                            "KWG", "OkWin", "Sikkim", "Lottery7", "82Lottery",
+                            "66Lottery", "55Club", "51Game", "IN999", "Bharat Club"].map(game => (
+                                <div key={game} onClick={() => { setSelectedGame(game); setShowDropdown(false); }}
+                                    className="p-4 border-b border-white/10 font-black text-white text-[13px] italic uppercase hover:bg-black/10">
+                                    {game}
+                                </div>
+                            ))}
                     </div>
                 )}
             </div>
@@ -191,7 +194,7 @@ const WinGoHackDashboard = () => {
                     <div className="w-1.5 h-1.5 bg-[#19d472] rounded-full animate-pulse"></div>
                 </div>
                 <span>WinGo 1 Minute</span>
-                <span className="opacity-50 tracking-tighter">20250802*******</span>
+                <span className="opacity-50 tracking-tighter">2026***********</span>
             </div>
 
             {/* BALL DISPLAY CONTAINER */}
@@ -249,7 +252,7 @@ const WinGoHackDashboard = () => {
                 <div className="fixed inset-0 bg-black/75 flex items-center justify-center p-5 z-[500] backdrop-blur-[2px]">
                     <div className="bg-[#ccff00] w-full max-w-[340px] rounded-[22px] p-5 shadow-2xl relative">
                         <h3 className="text-[#1e1a8e] font-black italic text-[17px] text-center uppercase mb-3">Subscribe To Start Hack</h3>
-                        
+
                         {/* Plan Selection Buttons */}
                         <div className="flex justify-center gap-6 mb-4">
                             <button onClick={() => setPlanType("PRO")} className="flex items-center gap-2 text-[#1e1a8e] font-black text-[10px]">
@@ -269,12 +272,12 @@ const WinGoHackDashboard = () => {
                             <h4 className="font-black italic uppercase border-b-[1.5px] border-white/40 pb-1 mb-3 text-[13px] tracking-tight text-center">
                                 {planType === "PRO" ? "PRO VERSION PLAN" : "SUPER PRO VERSION PLAN"}
                             </h4>
-                            
+
                             <div className="space-y-1 text-[11px] font-black mb-5 text-center">
                                 <p>RATE - <span className="text-red-500 line-through mr-1">₹{planType === "PRO" ? "899" : "1499"}</span> ₹{planType === "PRO" ? "599" : "999"}</p>
                                 <p>VALIDITY - {planType === "PRO" ? "21 DAYS" : "28 DAYS"}</p>
                             </div>
-                            
+
                             {/* Single Payment Button */}
                             <button onClick={handlePayment} className="w-full bg-[#1e1a8e] border-2 border-white py-2.5 rounded-lg font-black text-[14px] uppercase shadow-md mb-4 active:scale-95 transition-transform">
                                 PAY NOW
@@ -290,14 +293,14 @@ const WinGoHackDashboard = () => {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <button onClick={() => setShowPayModal(false)} className="w-full mt-4 text-[#1e1a8e] font-black text-[11px] uppercase underline underline-offset-2 opacity-70">Close</button>
                     </div>
                 </div>
             )}
 
             {/* Footer Buttons */}
-            <div className="fixed bottom-6 flex gap-5 z-50">
+            <div className="fixed bottom-10 flex gap-5 z-50">
                 <a href="https://wa.me/919116046055" target="_blank" rel="noreferrer" >
                     <img src="https://i.ibb.co/W4T5WthP/whatsapp.png" className="w-10 h-10" alt="whatsapp" />
                 </a>

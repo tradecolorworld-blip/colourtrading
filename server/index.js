@@ -25,16 +25,16 @@ mongoose.connect(process.env.MONGO_URI)
 // --- AUTH ROUTES ---
 
 // --- ADMIN DASHBOARD API ---
+// --- ADMIN DASHBOARD API ---
 app.get('/api/admin/stats', async (req, res) => {
     try {
-        // Fetch all user collections
         const collections = [
-            { name: 'Original', model: User },
-            { name: 'Neon', model: NeonUser },
-            { name: 'Jalwa', model: JalwaUser },
-            { name: 'SureShot', model: SureShotUser },
-            { name: 'NumberHack', model: NumberHackUser },
-            { name: 'WinGo', model: WinGoUser }
+            { name: 'Original', model: User, price: 950 },
+            { name: 'Neon', model: NeonUser, price: 650 },
+            { name: 'Jalwa', model: JalwaUser, price: 499 },
+            { name: 'SureShot', model: SureShotUser, price: 450 },
+            { name: 'NumberHack', model: NumberHackUser, price: 700 },
+            { name: 'WinGo', model: WinGoUser } 
         ];
 
         let totalUsers = 0;
@@ -48,17 +48,26 @@ app.get('/api/admin/stats', async (req, res) => {
             const vips = users.filter(u => u.isVip);
             totalVipUsers += vips.length;
 
-            // Add VIPs to the list with their Mod source
             vips.forEach(u => {
+                // Handle dynamic pricing for WinGo based on planType
+                let actualPrice = col.price;
+                if (col.name === 'WinGo') {
+                    actualPrice = u.planType === 'SUPER_PRO' ? 999 : 599;
+                }
+
                 vipList.push({
                     id: u._id,
                     identifier: u.phone || u.email,
                     mod: col.name,
+                    price: actualPrice,
                     expiry: u.vipExpiresAt || u.vipExpiry,
                     purchasedAt: u.purchaseDate || u.createdAt
                 });
             });
         }
+
+        // 🟢 Sort by latest purchase date first
+        vipList.sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt));
 
         res.json({ totalUsers, totalVipUsers, vipList });
     } catch (err) {
@@ -764,7 +773,7 @@ app.post('/api/wingo/payment/create', async (req, res) => {
     const order_id = "WINGO" + Date.now();
 
     // Set amount based on plan selection
-    const amount = planType === "SUPER_PRO" ? 1 : 1;
+    const amount = planType === "SUPER_PRO" ? 999 : 599;
 
     const paymentData = {
         token: "a86f69-675d92-da4e54-2886a7-0ce845",
