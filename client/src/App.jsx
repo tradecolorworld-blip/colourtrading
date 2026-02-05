@@ -17,6 +17,10 @@ import NumberHackAuth from './pages/NumberHackAuth';
 import NumberHackDashboard from './pages/NumberHackDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
+// 🟢 New WinGo Imports
+import WinGoAuth from './pages/WinGoAuth';
+import WinGoHackDashboard from './pages/WinGoHackDashboard';
+
 // 🔒 Protection Component (For Logged-in Users Only)
 const ProtectedRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -62,6 +66,15 @@ const NumberHackProtectedRoute = ({ children }) => {
   return children;
 };
 
+// 🔒 6. WinGo Protection (Uses 'WinGo_user' key)
+const WinGoProtectedRoute = ({ children }) => {
+  const winUser = JSON.parse(localStorage.getItem('WinGo_user'));
+  if (!winUser || !winUser.email) {
+    return <Navigate to="/wingo/signup" replace />;
+  }
+  return children;
+};
+
 // 🔓 Public Component (Redirects to Dashboard if already logged in)
 const PublicRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -100,6 +113,15 @@ const NumberHackPublicRoute = ({ children }) => {
   const numUser = JSON.parse(localStorage.getItem('NumberHack_user'));
   if (numUser && numUser.email) {
     return <Navigate to="/numberhack/dashboard" replace />;
+  }
+  return children;
+};
+
+// 🔓 7. WinGo Public Route
+const WinGoPublicRoute = ({ children }) => {
+  const winUser = JSON.parse(localStorage.getItem('WinGo_user'));
+  if (winUser && winUser.email) {
+    return <Navigate to="/wingo/dashboard" replace />;
   }
   return children;
 };
@@ -197,6 +219,21 @@ function App() {
               <NumberHackProtectedRoute>
                 <NumberHackDashboard />
               </NumberHackProtectedRoute>
+            } />
+          </Route>
+
+          {/* --- 🟢 8. WIN GO HACK UNIVERSE (New Endpoint: /wingo) --- */}
+          <Route path="/wingo">
+            <Route index element={<Navigate to="signup" replace />} />
+            <Route path="signup" element={
+              <WinGoPublicRoute>
+                <WinGoAuth />
+              </WinGoPublicRoute>
+            } />
+            <Route path="dashboard" element={
+              <WinGoProtectedRoute>
+                <WinGoHackDashboard />
+              </WinGoProtectedRoute>
             } />
           </Route>
 

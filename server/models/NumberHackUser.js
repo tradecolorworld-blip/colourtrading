@@ -23,7 +23,8 @@ const NumberHackUserSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    purchaseDate: { type: Date, default: null }
 });
 
 const NumberHackUser = mongoose.model('NumberHackUser', NumberHackUserSchema);

@@ -8,6 +8,7 @@ import NeonUser from './models/NeonUser.js';
 import JalwaUser from './models/JalwaUser.js';
 import SureShotUser from './models/SureShotUser.js';
 import NumberHackUser from './models/NumberHackUser.js';
+import WinGoUser from './models/WingoUser.js';
 
 dotenv.config();
 const app = express();
@@ -32,7 +33,8 @@ app.get('/api/admin/stats', async (req, res) => {
             { name: 'Neon', model: NeonUser },
             { name: 'Jalwa', model: JalwaUser },
             { name: 'SureShot', model: SureShotUser },
-            { name: 'NumberHack', model: NumberHackUser }
+            { name: 'NumberHack', model: NumberHackUser },
+            { name: 'WinGo', model: WinGoUser }
         ];
 
         let totalUsers = 0;
@@ -52,7 +54,8 @@ app.get('/api/admin/stats', async (req, res) => {
                     id: u._id,
                     identifier: u.phone || u.email,
                     mod: col.name,
-                    expiry: u.vipExpiresAt || u.vipExpiry
+                    expiry: u.vipExpiresAt || u.vipExpiry,
+                    purchasedAt: u.purchaseDate || u.createdAt
                 });
             });
         }
@@ -115,10 +118,11 @@ app.post('/api/user/make-vip', async (req, res) => {
     try {
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + 14); // Set expiry to 14 days from now
+        const now = new Date();
 
         const user = await User.findOneAndUpdate(
             { phone },
-            { isVip: true, vipExpiresAt: expiryDate },
+            { isVip: true, vipExpiresAt: expiryDate, purchaseDate: now },
             { new: true }
         );
 
@@ -216,10 +220,11 @@ app.post('/api/payment/status', async (req, res) => {
             // Activate VIP for 14 days
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 14);
+            const now = new Date();
 
             const updatedUser = await User.findOneAndUpdate(
                 { phone: phone },
-                { isVip: true, vipExpiresAt: expiryDate },
+                { isVip: true, vipExpiresAt: expiryDate, purchaseDate: now },
                 { new: true }
             );
 
@@ -331,10 +336,11 @@ app.post('/api/neon/payment/status', async (req, res) => {
             // const email = response.data.results.customer_email;
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 28); // 🟢 28 days validity
+            const now = new Date();
 
             const updatedUser = await NeonUser.findOneAndUpdate(
                 { email: email.toLowerCase() },
-                { isVip: true, vipExpiry: expiryDate },
+                { isVip: true, vipExpiry: expiryDate, purchaseDate: now },
                 { new: true }
             );
 
@@ -447,10 +453,11 @@ app.post('/api/jalwa/payment/status', async (req, res) => {
         if (response.data.status === true && response.data.results.status === "Success") {
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 28); // 🟢 28 days validity
+            const now = new Date();
 
             const updatedUser = await JalwaUser.findOneAndUpdate(
                 { email: email.toLowerCase() },
-                { isVip: true, vipExpiry: expiryDate },
+                { isVip: true, vipExpiry: expiryDate, purchaseDate: now },
                 { new: true }
             );
 
@@ -561,10 +568,11 @@ app.post('/api/sureshot/payment/status', async (req, res) => {
         if (response.data.status === true && response.data.results.status === "Success") {
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 28); // 28 days validity
+            const now = new Date();
 
             const updatedUser = await SureShotUser.findOneAndUpdate(
                 { email: email.toLowerCase() },
-                { isVip: true, vipExpiry: expiryDate },
+                { isVip: true, vipExpiry: expiryDate, purchaseDate: now },
                 { new: true }
             );
 
@@ -675,10 +683,11 @@ app.post('/api/numberhack/payment/status', async (req, res) => {
         if (response.data.status === true && response.data.results.status === "Success") {
             const expiryDate = new Date();
             expiryDate.setDate(expiryDate.getDate() + 28); // 28 days validity
+            const now = new Date();
 
             const updatedUser = await NumberHackUser.findOneAndUpdate(
                 { email: email.toLowerCase() },
-                { isVip: true, vipExpiry: expiryDate },
+                { isVip: true, vipExpiry: expiryDate, purchaseDate: now },
                 { new: true }
             );
 
@@ -693,6 +702,133 @@ app.post('/api/numberhack/payment/status', async (req, res) => {
         res.status(500).json({ message: "Error checking payment status" });
     }
 });
+
+// --- WIN GO HACK BACKEND APIs ---
+
+// 🟢 1. Signup API with Auto-Login
+app.post('/api/wingo/signup', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const existingUser = await WinGoUser.findOne({ email: email.toLowerCase() });
+        if (existingUser) return res.status(400).json({ message: "User already exists" });
+
+        const newUser = new WinGoUser({ email: email.toLowerCase(), password });
+        await newUser.save();
+
+        res.status(201).json({
+            message: "WinGo account created successfully",
+            user: newUser
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during WinGo signup" });
+    }
+});
+
+// 🟢 2. Login API
+app.post('/api/wingo/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await WinGoUser.findOne({ email: email.toLowerCase(), password });
+        if (!user) return res.status(401).json({ message: "Invalid login details" });
+
+        res.json({ message: "Login successful", user });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during login" });
+    }
+});
+
+// 🟢 3. Check VIP Status (Tiered Auto-Expiry)
+app.post('/api/wingo/check-vip', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await WinGoUser.findOne({ email: email.toLowerCase() });
+
+        if (!user || !user.isVip) return res.json({ isVip: false });
+
+        if (new Date() > user.vipExpiry) {
+            user.isVip = false;
+            user.planType = null;
+            await user.save();
+            return res.json({ isVip: false, message: "VIP Expired" });
+        }
+
+        res.json({ isVip: true, planType: user.planType, expiry: user.vipExpiry });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// 🟢 4. Create Payment Order (PRO: ₹599 | SUPER_PRO: ₹999)
+app.post('/api/wingo/payment/create', async (req, res) => {
+    const { email, planType } = req.body; // planType is "PRO" or "SUPER_PRO"
+    const order_id = "WINGO" + Date.now();
+
+    // Set amount based on plan selection
+    const amount = planType === "SUPER_PRO" ? 1 : 1;
+
+    const paymentData = {
+        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        order_id: order_id,
+        txn_amount: amount,
+        txn_note: `WinGo ${planType} Subscription`,
+        product_name: `WinGo ${planType}`,
+        customer_name: "WinUser_" + email.split('@')[0],
+        customer_mobile: "9999999999",
+        customer_email: email.toLowerCase(),
+        redirect_url: "https://colourtradingworld.sbs/wingo/dashboard"
+    };
+
+    try {
+        const response = await axios.post('https://allapi.in/order/create', paymentData);
+        res.json({
+            ...response.data,
+            results: { ...response.data.results, order_id, planType } // Pass planType back to track
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Payment initialization failed" });
+    }
+});
+
+// 🟢 Verify Status & Activate VIP with Purchase Date
+app.post('/api/wingo/payment/status', async (req, res) => {
+    const { order_id, email, planType } = req.body;
+
+    try {
+        const response = await axios.post('https://allapi.in/order/status', {
+            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            order_id: order_id
+        });
+
+        if (response.data.status === true && response.data.results.status === "Success") {
+            const now = new Date(); // 🟢 Capture current time as Purchase Date
+            const expiryDate = new Date();
+            const validityDays = planType === "SUPER_PRO" ? 28 : 21;
+            expiryDate.setDate(now.getDate() + validityDays);
+
+            const updatedUser = await WinGoUser.findOneAndUpdate(
+                { email: email.toLowerCase() },
+                {
+                    isVip: true,
+                    planType: planType,
+                    purchaseDate: now, // 🟢 Save the purchase timestamp
+                    vipExpiry: expiryDate
+                },
+                { new: true }
+            );
+
+            return res.json({
+                status: "Success",
+                user: updatedUser,
+                message: `WinGo ${planType} activated!`
+            });
+        }
+        res.json({ status: "Pending" });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

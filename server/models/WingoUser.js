@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const SureShotUserSchema = new mongoose.Schema({
+const WinGoUserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
@@ -12,24 +12,28 @@ const SureShotUserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    fullName: {
-        type: String,
-        default: ""
-    },
     isVip: {
         type: Boolean,
         default: false
     },
+    planType: {
+        type: String,
+        enum: ['PRO', 'SUPER_PRO', null],
+        default: null
+    },
     vipExpiry: {
+        type: Date,
+        default: null
+    },
+    purchaseDate: {
         type: Date,
         default: null
     },
     createdAt: {
         type: Date,
         default: Date.now
-    },
-    purchaseDate: { type: Date, default: null }
+    }
 });
 
-const SureShotUser= mongoose.model('SureShotUser', SureShotUserSchema);
-export default SureShotUser;
+const WinGoUser = mongoose.model('WinGoUser', WinGoUserSchema);
+export default WinGoUser;

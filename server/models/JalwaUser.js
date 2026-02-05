@@ -5,7 +5,8 @@ const JalwaUserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   isVip: { type: Boolean, default: false },
   vipExpiry: { type: Date, default: null }, 
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  purchaseDate: { type: Date, default: null }
 });
 
 const JalwaUser = mongoose.model('JalwaUser', JalwaUserSchema);
