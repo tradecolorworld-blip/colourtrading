@@ -108,7 +108,7 @@ const WinGoAuth = () => {
             </main>
 
             {/* Footer Buttons with Functional Links */}
-            <div className="fixed bottom-10 left-0 right-0 flex justify-center gap-5 z-50">
+            <div className="mb-6 flex justify-center gap-5 z-50">
                 <a href="https://wa.me/919116046055" target="_blank" rel="noreferrer">
                     <img src="https://i.ibb.co/W4T5WthP/whatsapp.png" className="w-10 h-10" alt="whatsapp" />
                 </a>
