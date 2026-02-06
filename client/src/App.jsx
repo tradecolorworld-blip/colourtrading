@@ -135,7 +135,7 @@ function App() {
           {/* This is the page you will use for your Ads */}
           <Route path="/join" element={<JoinTelegram />} />
           <Route path="/admin-master" element={<AdminDashboard />} />
-
+          {/* <Route path="/admin-dashboard" element={<WinGoHackDashboard />} /> */}
           {/* 2. Auth Routes (Redirects if logged in) */}
           <Route path="/signup" element={
             <PublicRoute>

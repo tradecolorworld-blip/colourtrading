@@ -143,11 +143,11 @@ const WinGoHackDashboard = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center pt-6 px-4 font-sans select-none overflow-x-hidden"
+        <div className="min-h-screen flex flex-col items-center pt-2 px-4 font-sans select-none overflow-x-hidden"
             style={{ background: 'linear-gradient(180deg, #869ff1 0%, #3906e8 50%, #b6d0fe 100%)' }}>
 
             {/* 🟢 TOP BANNER */}
-            <div className="w-full max-w-[360px] mb-4">
+            <div className="w-full max-w-[320px] mb-4">
                 <img
                     src="https://i.ibb.co/bMvGfgFg/wingo-bannr.png"
                     className="w-full h-auto rounded-[35px] shadow-2xl"
@@ -160,7 +160,7 @@ const WinGoHackDashboard = () => {
             {/* ORANGE DROPDOWN */}
             <div className="relative w-full max-w-[320px] mb-4">
                 <div onClick={() => setShowDropdown(!showDropdown)}
-                    className="bg-[#f15a24] rounded-lg py-3 px-4 flex items-center justify-between cursor-pointer shadow-lg active:scale-95 transition-transform">
+                    className="bg-[#f15a24] rounded-lg py-2 px-4 flex items-center justify-between cursor-pointer shadow-lg active:scale-95 transition-transform">
                     <div className="flex items-center gap-3 text-white font-black text-[15px] italic">
                         <div className="bg-[#1e1a8e] w-8 h-8 rounded-lg flex items-center justify-center">
                             <img src="https://i.ibb.co/pjdKPpGk/boll1.png" className="w-6" alt="ico" />
@@ -238,9 +238,9 @@ const WinGoHackDashboard = () => {
                 <div className="relative flex items-center justify-center w-full">
                     <span className="absolute left-0 text-xl opacity-60">🔓</span>
                     <button onClick={handleStart} disabled={cooldown > 0}
-                        className="bg-[#1e1a8e] border-[3.5px] border-white px-14 py-2.5 rounded-[15px] font-black text-white text-[24px] italic tracking-tighter shadow-[0_6px_0_white] active:shadow-none active:translate-y-1 transition-all">
+                        className="bg-[#1e1a8e] border-[3.5px] border-white px-14 py-1.5 rounded-[15px] font-black text-white text-[24px] italic tracking-tighter shadow-[0_6px_0_white] active:shadow-none active:translate-y-1 transition-all">
                         {cooldown > 0 ? (
-                            <div className="bg-[#111111] px-8 py-0.5 rounded-lg border border-white/20 text-white min-w-[80px]">{cooldown}</div>
+                            <div className="bg-[#111111] px-8  rounded-lg border border-white/20 text-white min-w-[80px]">{cooldown}</div>
                         ) : 'START'}
                     </button>
                     <span className="absolute right-0 text-xl opacity-60">🔓</span>
@@ -308,7 +308,7 @@ const WinGoHackDashboard = () => {
             )}
 
             {/* Footer Buttons */}
-            <div className="fixed bottom-10 flex gap-5 z-50">
+            <div className="fixed bottom-6 flex gap-5 z-50">
                 <a href="https://wa.me/919116046055" target="_blank" rel="noreferrer" >
                     <img src="https://i.ibb.co/W4T5WthP/whatsapp.png" className="w-10 h-10" alt="whatsapp" />
                 </a>

@@ -38,15 +38,15 @@ const WinGoAuth = () => {
             style={{ background: 'linear-gradient(180deg, #869ff1 0%, #3906e8 50%, #b6d0fe 100%)' }}>
 
             {/* Banner Section */}
-            <div className="flex justify-center pt-8 px-4">
+            <div className="flex justify-center pt-2 px-4">
                 <img
                     src="https://i.ibb.co/bMvGfgFg/wingo-bannr.png"
-                    className="w-full max-w-[360px] h-auto rounded-[35px] shadow-2xl"
+                    className="w-full max-w-[320px] h-auto rounded-[35px] shadow-2xl"
                     alt="Win Go Hack Banner"
                 />
             </div>
 
-            <main className="flex-1 flex flex-col items-center px-6 pt-10 pb-32">
+            <main className="flex-1 flex flex-col items-center px-6 pt-4 pb-32">
 
                 {/* Auth Card with Theme Colors */}
                 <div className="w-full max-w-sm bg-white/10 backdrop-blur-md rounded-[32px] p-8 border border-white/20 shadow-2xl">
@@ -62,7 +62,7 @@ const WinGoAuth = () => {
                             <input
                                 type="email"
                                 placeholder="you@example.com"
-                                className="w-full bg-[#f5f8ff] text-[#1e1a8e] placeholder:text-gray-400 py-4 px-6 rounded-2xl font-bold shadow-inner outline-none border-none text-lg"
+                                className="w-full bg-[#f5f8ff] text-[#1e1a8e] placeholder:text-gray-400 py-2 px-6 rounded-2xl font-bold shadow-inner outline-none border-none text-lg"
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 required
@@ -75,7 +75,7 @@ const WinGoAuth = () => {
                             <input
                                 type="password"
                                 placeholder="••••••••"
-                                className="w-full bg-[#f5f8ff] text-[#1e1a8e] placeholder:text-gray-400 py-4 px-6 rounded-2xl font-bold shadow-inner outline-none border-none text-lg"
+                                className="w-full bg-[#f5f8ff] text-[#1e1a8e] placeholder:text-gray-400 py-2 px-6 rounded-2xl font-bold shadow-inner outline-none border-none text-lg"
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 required
@@ -86,7 +86,7 @@ const WinGoAuth = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-[#1e1a8e] border-[3px] border-white text-white py-4 rounded-xl font-black text-xl italic shadow-[0_5px_0_white] active:shadow-none active:translate-y-1 transition-all mt-4 disabled:opacity-50"
+                            className="w-full bg-[#1e1a8e] border-[3px] border-white text-white py-2 rounded-xl font-black text-xl italic shadow-[0_5px_0_white] active:shadow-none active:translate-y-1 transition-all mt-4 disabled:opacity-50"
                         >
                             {loading ? 'PROCESSING...' : (isLogin ? 'LOGIN NOW' : 'SIGNUP NOW')}
                         </button>
@@ -108,7 +108,7 @@ const WinGoAuth = () => {
             </main>
 
             {/* Footer Buttons with Functional Links */}
-            <div className="fixed bottom-6 left-0 right-0 flex justify-center gap-5 z-50">
+            <div className="fixed bottom-10 left-0 right-0 flex justify-center gap-5 z-50">
                 <a href="https://wa.me/919116046055" target="_blank" rel="noreferrer">
                     <img src="https://i.ibb.co/W4T5WthP/whatsapp.png" className="w-10 h-10" alt="whatsapp" />
                 </a>
