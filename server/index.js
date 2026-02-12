@@ -34,42 +34,69 @@ app.get('/api/admin/stats', async (req, res) => {
             { name: 'Jalwa', model: JalwaUser, price: 499 },
             { name: 'SureShot', model: SureShotUser, price: 450 },
             { name: 'NumberHack', model: NumberHackUser, price: 700 },
-            { name: 'WinGo', model: WinGoUser } 
+            { name: 'WinGo', model: WinGoUser }
         ];
 
         let totalUsers = 0;
         let totalVipUsers = 0;
         let vipList = [];
 
+        // Time ranges
+        const now = new Date();
+        const startOfToday = new Date(now.setHours(0, 0, 0, 0));
+        const startOfYesterday = new Date(new Date(startOfToday).setDate(startOfToday.getDate() - 1));
+        const startOfWeek = new Date(new Date(startOfToday).setDate(startOfToday.getDate() - 7));
+
+        let analytics = {
+            today: { users: 0, vips: 0, earnings: 0 },
+            yesterday: { users: 0, vips: 0, earnings: 0 },
+            week: { users: 0, vips: 0, earnings: 0 }
+        };
+
         for (const col of collections) {
             const users = await col.model.find({});
             totalUsers += users.length;
 
-            const vips = users.filter(u => u.isVip);
-            totalVipUsers += vips.length;
+            users.forEach(u => {
+                const createDate = new Date(u.createdAt);
+                const pDate = u.purchaseDate ? new Date(u.purchaseDate) : null;
 
-            vips.forEach(u => {
-                // Handle dynamic pricing for WinGo based on planType
-                let actualPrice = col.price;
-                if (col.name === 'WinGo') {
-                    actualPrice = u.planType === 'SUPER_PRO' ? 999 : 599;
+                // --- User Growth Analytics ---
+                if (createDate >= startOfToday) analytics.today.users++;
+                else if (createDate >= startOfYesterday) analytics.yesterday.users++;
+                if (createDate >= startOfWeek) analytics.week.users++;
+
+                if (u.isVip) {
+                    totalVipUsers++;
+                    let price = col.name === 'WinGo' ? (u.planType === 'SUPER_PRO' ? 999 : 599) : col.price;
+
+                    // --- VIP & Earnings Analytics ---
+                    if (pDate >= startOfToday) {
+                        analytics.today.vips++;
+                        analytics.today.earnings += price;
+                    } else if (pDate >= startOfYesterday) {
+                        analytics.yesterday.vips++;
+                        analytics.yesterday.earnings += price;
+                    }
+                    if (pDate >= startOfWeek) {
+                        analytics.week.vips++;
+                        analytics.week.earnings += price;
+                    }
+
+                    vipList.push({
+                        id: u._id,
+                        identifier: u.phone || u.email,
+                        mod: col.name,
+                        price: price,
+                        expiry: u.vipExpiresAt || u.vipExpiry,
+                        purchasedAt: pDate || u.createdAt
+                    });
                 }
-
-                vipList.push({
-                    id: u._id,
-                    identifier: u.phone || u.email,
-                    mod: col.name,
-                    price: actualPrice,
-                    expiry: u.vipExpiresAt || u.vipExpiry,
-                    purchasedAt: u.purchaseDate || u.createdAt
-                });
             });
         }
 
-        // 🟢 Sort by latest purchase date first
         vipList.sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt));
-
-        res.json({ totalUsers, totalVipUsers, vipList });
+        res.json({ totalUsers, totalVipUsers, vipList, analytics });
     } catch (err) {
         res.status(500).json({ message: "Admin data fetch failed" });
     }
@@ -834,6 +861,48 @@ app.post('/api/wingo/payment/status', async (req, res) => {
         res.json({ status: "Pending" });
     } catch (err) {
         res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// 🟢 Manual VIP Activation for WinGo (Admin Use)
+app.post('/api/wingo/admin/activate-vip', async (req, res) => {
+    const { email, planType } = req.body; // planType should be "PRO" or "SUPER_PRO"
+
+    if (!email || !planType) {
+        return res.status(400).json({ message: "Email and planType are required" });
+    }
+
+    try {
+        const now = new Date();
+        const expiryDate = new Date();
+
+        // 🟢 Logic: Set validity based on the plan passed
+        const validityDays = planType === "SUPER_PRO" ? 28 : 21;
+        expiryDate.setDate(now.getDate() + validityDays);
+
+        const updatedUser = await WinGoUser.findOneAndUpdate(
+            { email: email.toLowerCase() },
+            {
+                isVip: true,
+                planType: planType, // "PRO" or "SUPER_PRO"
+                purchaseDate: now,
+                vipExpiry: expiryDate
+            },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found in WinGo database" });
+        }
+
+        res.json({
+            status: "Success",
+            message: `WinGo ${planType} manually activated for ${email}`,
+            expiry: updatedUser.vipExpiry
+        });
+    } catch (err) {
+        console.error("Manual Activation Error:", err);
+        res.status(500).json({ message: "Internal server error" });
     }
 });
 
