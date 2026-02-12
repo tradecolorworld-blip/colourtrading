@@ -40,10 +40,9 @@ app.get('/api/admin/stats', async (req, res) => {
         let totalUsers = 0;
         let totalVipUsers = 0;
         let vipList = [];
-
-        // Time ranges
+        
         const now = new Date();
-        const startOfToday = new Date(now.setHours(0, 0, 0, 0));
+        const startOfToday = new Date(now.setHours(0,0,0,0));
         const startOfYesterday = new Date(new Date(startOfToday).setDate(startOfToday.getDate() - 1));
         const startOfWeek = new Date(new Date(startOfToday).setDate(startOfToday.getDate() - 7));
 
@@ -61,7 +60,6 @@ app.get('/api/admin/stats', async (req, res) => {
                 const createDate = new Date(u.createdAt);
                 const pDate = u.purchaseDate ? new Date(u.purchaseDate) : null;
 
-                // --- User Growth Analytics ---
                 if (createDate >= startOfToday) analytics.today.users++;
                 else if (createDate >= startOfYesterday) analytics.yesterday.users++;
                 if (createDate >= startOfWeek) analytics.week.users++;
@@ -70,7 +68,6 @@ app.get('/api/admin/stats', async (req, res) => {
                     totalVipUsers++;
                     let price = col.name === 'WinGo' ? (u.planType === 'SUPER_PRO' ? 999 : 599) : col.price;
 
-                    // --- VIP & Earnings Analytics ---
                     if (pDate >= startOfToday) {
                         analytics.today.vips++;
                         analytics.today.earnings += price;
