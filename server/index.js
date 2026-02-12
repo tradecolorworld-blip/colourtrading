@@ -37,15 +37,24 @@ app.get('/api/admin/stats', async (req, res) => {
             { name: 'WinGo', model: WinGoUser }
         ];
 
+        // 🟢 IST Time Logic
+        const IST_OFFSET = 5.5 * 60 * 60 * 1000; // 5 hours 30 mins
+        const nowUTC = new Date();
+        const nowIST = new Date(nowUTC.getTime() + IST_OFFSET);
+        
+        // Calculate Midnights in IST
+        const startOfTodayIST = new Date(nowIST);
+        startOfTodayIST.setUTCHours(0, 0, 0, 0); // India Midnight
+        
+        const startOfYesterdayIST = new Date(startOfTodayIST);
+        startOfYesterdayIST.setUTCDate(startOfYesterdayIST.getUTCDate() - 1);
+        
+        const startOfWeekIST = new Date(startOfTodayIST);
+        startOfWeekIST.setUTCDate(startOfWeekIST.getUTCDate() - 7);
+
         let totalUsers = 0;
         let totalVipUsers = 0;
         let vipList = [];
-        
-        const now = new Date();
-        const startOfToday = new Date(now.setHours(0,0,0,0));
-        const startOfYesterday = new Date(new Date(startOfToday).setDate(startOfToday.getDate() - 1));
-        const startOfWeek = new Date(new Date(startOfToday).setDate(startOfToday.getDate() - 7));
-
         let analytics = {
             today: { users: 0, vips: 0, earnings: 0 },
             yesterday: { users: 0, vips: 0, earnings: 0 },
@@ -57,27 +66,32 @@ app.get('/api/admin/stats', async (req, res) => {
             totalUsers += users.length;
 
             users.forEach(u => {
-                const createDate = new Date(u.createdAt);
-                const pDate = u.purchaseDate ? new Date(u.purchaseDate) : null;
+                // Convert DB Dates to IST for comparison
+                const createDateIST = new Date(new Date(u.createdAt).getTime() + IST_OFFSET);
+                const pDateIST = u.purchaseDate ? new Date(new Date(u.purchaseDate).getTime() + IST_OFFSET) : null;
 
-                if (createDate >= startOfToday) analytics.today.users++;
-                else if (createDate >= startOfYesterday) analytics.yesterday.users++;
-                if (createDate >= startOfWeek) analytics.week.users++;
+                // --- User Growth (Using IST) ---
+                if (createDateIST >= startOfTodayIST) analytics.today.users++;
+                else if (createDateIST >= startOfYesterdayIST) analytics.yesterday.users++;
+                if (createDateIST >= startOfWeekIST) analytics.week.users++;
 
                 if (u.isVip) {
                     totalVipUsers++;
                     let price = col.name === 'WinGo' ? (u.planType === 'SUPER_PRO' ? 999 : 599) : col.price;
 
-                    if (pDate >= startOfToday) {
-                        analytics.today.vips++;
-                        analytics.today.earnings += price;
-                    } else if (pDate >= startOfYesterday) {
-                        analytics.yesterday.vips++;
-                        analytics.yesterday.earnings += price;
-                    }
-                    if (pDate >= startOfWeek) {
-                        analytics.week.vips++;
-                        analytics.week.earnings += price;
+                    // --- VIP & Earnings (Using IST) ---
+                    if (pDateIST) {
+                        if (pDateIST >= startOfTodayIST) {
+                            analytics.today.vips++;
+                            analytics.today.earnings += price;
+                        } else if (pDateIST >= startOfYesterdayIST) {
+                            analytics.yesterday.vips++;
+                            analytics.yesterday.earnings += price;
+                        }
+                        if (pDateIST >= startOfWeekIST) {
+                            analytics.week.vips++;
+                            analytics.week.earnings += price;
+                        }
                     }
 
                     vipList.push({
@@ -86,7 +100,7 @@ app.get('/api/admin/stats', async (req, res) => {
                         mod: col.name,
                         price: price,
                         expiry: u.vipExpiresAt || u.vipExpiry,
-                        purchasedAt: pDate || u.createdAt
+                        purchasedAt: u.purchaseDate || u.createdAt // Keep original UTC for frontend formatting
                     });
                 }
             });
@@ -98,7 +112,6 @@ app.get('/api/admin/stats', async (req, res) => {
         res.status(500).json({ message: "Admin data fetch failed" });
     }
 });
-
 // 1. Create User (Signup)
 app.post('/api/auth/register', async (req, res) => {
     const { phone, password } = req.body;
