@@ -37,14 +37,13 @@ app.get('/api/admin/stats', async (req, res) => {
             { name: 'WinGo', model: WinGoUser }
         ];
 
-        // 🟢 IST Time Logic
-        const IST_OFFSET = 5.5 * 60 * 60 * 1000; // 5 hours 30 mins
+        const IST_OFFSET = 5.5 * 60 * 60 * 1000;
         const nowUTC = new Date();
         const nowIST = new Date(nowUTC.getTime() + IST_OFFSET);
         
-        // Calculate Midnights in IST
+        // Use UTC Methods to ensure consistency across server locations
         const startOfTodayIST = new Date(nowIST);
-        startOfTodayIST.setUTCHours(0, 0, 0, 0); // India Midnight
+        startOfTodayIST.setUTCHours(0, 0, 0, 0); 
         
         const startOfYesterdayIST = new Date(startOfTodayIST);
         startOfYesterdayIST.setUTCDate(startOfYesterdayIST.getUTCDate() - 1);
@@ -66,25 +65,29 @@ app.get('/api/admin/stats', async (req, res) => {
             totalUsers += users.length;
 
             users.forEach(u => {
-                // Convert DB Dates to IST for comparison
-                const createDateIST = new Date(new Date(u.createdAt).getTime() + IST_OFFSET);
+                const createDateIST = new Date(new Date(u.createdAt || u._id.getTimestamp()).getTime() + IST_OFFSET);
                 const pDateIST = u.purchaseDate ? new Date(new Date(u.purchaseDate).getTime() + IST_OFFSET) : null;
 
-                // --- User Growth (Using IST) ---
-                if (createDateIST >= startOfTodayIST) analytics.today.users++;
-                else if (createDateIST >= startOfYesterdayIST) analytics.yesterday.users++;
-                if (createDateIST >= startOfWeekIST) analytics.week.users++;
+                // FIX: Use >= and < to create strict boundaries for Today/Yesterday
+                if (createDateIST >= startOfTodayIST) {
+                    analytics.today.users++;
+                } else if (createDateIST >= startOfYesterdayIST && createDateIST < startOfTodayIST) {
+                    analytics.yesterday.users++;
+                }
+                
+                if (createDateIST >= startOfWeekIST) {
+                    analytics.week.users++;
+                }
 
                 if (u.isVip) {
                     totalVipUsers++;
                     let price = col.name === 'WinGo' ? (u.planType === 'SUPER_PRO' ? 999 : 599) : col.price;
 
-                    // --- VIP & Earnings (Using IST) ---
                     if (pDateIST) {
                         if (pDateIST >= startOfTodayIST) {
                             analytics.today.vips++;
                             analytics.today.earnings += price;
-                        } else if (pDateIST >= startOfYesterdayIST) {
+                        } else if (pDateIST >= startOfYesterdayIST && pDateIST < startOfTodayIST) {
                             analytics.yesterday.vips++;
                             analytics.yesterday.earnings += price;
                         }
@@ -100,7 +103,7 @@ app.get('/api/admin/stats', async (req, res) => {
                         mod: col.name,
                         price: price,
                         expiry: u.vipExpiresAt || u.vipExpiry,
-                        purchasedAt: u.purchaseDate || u.createdAt // Keep original UTC for frontend formatting
+                        purchasedAt: u.purchaseDate || u.createdAt
                     });
                 }
             });
@@ -110,6 +113,75 @@ app.get('/api/admin/stats', async (req, res) => {
         res.json({ totalUsers, totalVipUsers, vipList, analytics });
     } catch (err) {
         res.status(500).json({ message: "Admin data fetch failed" });
+    }
+});
+
+// 🟢 Universal Manual VIP Activation
+// POST: /api/admin/universal-activate-vip
+// Body: { "identifier": "user@mail.com/9199...", "mod": "WinGo", "planType": "SUPER_PRO" }
+app.post('/api/admin/universal-activate-vip', async (req, res) => {
+    const { identifier, mod, planType } = req.body; // planType: "PRO" or "SUPER_PRO" (SUPER_PRO used for 28 days)
+
+    if (!identifier || !mod) {
+        return res.status(400).json({ message: "Identifier and Mod Name are required" });
+    }
+
+    const collections = {
+        'Original': User,
+        'Neon': NeonUser,
+        'Jalwa': JalwaUser,
+        'SureShot': SureShotUser,
+        'NumberHack': NumberHackUser,
+        'WinGo': WinGoUser
+    };
+
+    const TargetModel = collections[mod];
+    if (!TargetModel) return res.status(400).json({ message: "Invalid Mod Name" });
+
+    try {
+        const now = new Date();
+        const expiryDate = new Date();
+
+        // Check if user chose SUPER_PRO or if it's a standard mod (standard mods usually get 28 days)
+        const validityDays = (planType === "SUPER_PRO" || mod !== "Original") ? 28 : 14;
+        expiryDate.setDate(now.getDate() + validityDays);
+
+        // Build update object
+        const updateData = {
+            isVip: true,
+            purchaseDate: now
+        };
+
+        // Handle different field names for Expiry across your models
+        if (mod === "Original") {
+            updateData.vipExpiresAt = expiryDate;
+        } else {
+            updateData.vipExpiry = expiryDate;
+        }
+
+        // Handle planType specifically for WinGo
+        if (mod === "WinGo") {
+            updateData.planType = planType || "PRO";
+        }
+
+        // Search by phone OR email
+        const user = await TargetModel.findOneAndUpdate(
+            { $or: [{ phone: identifier }, { email: identifier.toLowerCase() }] },
+            updateData,
+            { new: true }
+        );
+
+        if (!user) return res.status(404).json({ message: "User not found in " + mod });
+
+        res.json({
+            status: "Success",
+            message: `${mod} VIP activated for ${identifier}`,
+            plan: updateData.planType || "Standard",
+            expiry: expiryDate
+        });
+
+    } catch (err) {
+        res.status(500).json({ message: "Internal Server Error", error: err.message });
     }
 });
 // 1. Create User (Signup)
