@@ -41,8 +41,10 @@ const GameScreen = () => {
     const [isChecking, setIsChecking] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
 
+    // 🟢 1. Load user and check VIP status on mount
     useEffect(() => {
-        if (!gameData) { navigate('/mas/auth'); }
+        if (!gameData) { navigate('/mas/auth'); return; }
+
         const checkVip = async () => {
             if (user?.email) {
                 try {
@@ -54,18 +56,47 @@ const GameScreen = () => {
         checkVip();
     }, [gameData, user, navigate]);
 
-    const handleLogout = () => {
-        localStorage.removeItem('MAS_user');
-        navigate('/mas/auth');
-    };
+    // 🟢 2. NEW: Verify Payment if returning from Gateway (Auto-check)
+    useEffect(() => {
+        const verifyPayment = async () => {
+            const pendingOrder = JSON.parse(localStorage.getItem('mas_current_order'));
+            if (pendingOrder && user) {
+                try {
+                    const res = await axios.post('/api/mas/payment/status', {
+                        order_id: pendingOrder.order_id,
+                        email: user.email
+                    });
 
+                    if (res.data.status === "Success") {
+                        alert(`Success! VIP Activated.`);
+                        setIsVip(true);
+                        localStorage.removeItem('mas_current_order');
+                    }
+                } catch (err) {
+                    console.error("Verification failed");
+                }
+            }
+        };
+        if (user) verifyPayment();
+    }, [user]);
+
+    // 🟢 3. Payment Flow: Create Order
     const handlePayment = async () => {
         try {
             const res = await axios.post('/api/mas/payment/create', { email: user.email });
             if (res.data.status && res.data.results.payment_url) {
+                // Store order ID to check status after redirect back
+                localStorage.setItem('mas_current_order', JSON.stringify({
+                    order_id: res.data.results.order_id
+                }));
                 window.location.href = res.data.results.payment_url;
             }
         } catch (err) { alert("Payment failed to initialize."); }
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('MAS_user');
+        navigate('/mas/auth');
     };
 
     // Real prediction states
@@ -132,12 +163,12 @@ const GameScreen = () => {
                     <button onClick={() => navigate(-1)} className="bg-white border border-[#E2E8F0] p-2.5 rounded-xl shadow-sm hover:border-indigo-500 transition-all"><ArrowLeft size={16} /></button>
                     <button onClick={handleLogout} className="bg-white border border-red-100 text-red-500 px-3 py-2 rounded-xl shadow-sm font-bold text-[11px] flex items-center gap-2 hover:bg-red-50 transition-all"><LogOut size={14} /> LOGOUT</button>
                 </div>
- <button
-                        onClick={() => setShowHelp(true)} // Yeh zaroori hai
-                        className="flex items-center gap-2 bg-white border border-[#E2E8F0] px-4 py-2.5 rounded-xl shadow-sm font-semibold text-sm hover:translate-y-[-2px] transition-all hover:border-[#6366F1]"
-                    >
-                        <HelpCircle size={16} /> Help
-                    </button>            </div>
+                <button
+                    onClick={() => setShowHelp(true)} // Yeh zaroori hai
+                    className="flex items-center gap-2 bg-white border border-[#E2E8F0] px-4 py-2.5 rounded-xl shadow-sm font-semibold text-sm hover:translate-y-[-2px] transition-all hover:border-[#6366F1]"
+                >
+                    <HelpCircle size={16} /> Help
+                </button>            </div>
             <div className="relative z-10 max-w-[420px] mx-auto">
                 {/* <div className="flex justify-between items-center mb-4">
                     <button onClick={() => navigate(-1)} className="flex items-center gap-2 bg-white border border-[#E2E8F0] px-4 py-2.5 rounded-xl shadow-sm font-semibold text-sm hover:translate-y-[-2px] transition-all hover:border-[#6366F1]">

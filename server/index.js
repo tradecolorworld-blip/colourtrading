@@ -1035,7 +1035,7 @@ app.post('/api/mas/payment/create', async (req, res) => {
         customer_name: "MASUser_" + email.split('@')[0],
         customer_mobile: "9999999999",
         customer_email: email.toLowerCase(),
-        redirect_url: "https://colourtradingworld.sbs/mas/portal"
+        redirect_url: "https://colourtradingworld.sbs/mas/game"
     };
 
     try {
