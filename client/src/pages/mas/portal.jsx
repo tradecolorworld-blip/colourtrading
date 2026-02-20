@@ -1,0 +1,202 @@
+import React, { useState, useEffect } from 'react';
+import { Star, Flame, Send, CheckCircle, Download, Headset, Gift, Rocket, LogOut } from 'lucide-react';
+import { motion } from 'framer-motion';
+import logo1 from '../../assets/logo1.png';
+import logo2 from '../../assets/logo2.png';
+import logo3 from '../../assets/logo3.png';
+import logo4 from '../../assets/logo4.png';
+import logo5 from '../../assets/logo5.png';
+import logo6 from '../../assets/logo6.png';
+import logo7 from '../../assets/logo7.png';
+import logo8 from '../../assets/logo8.png';
+import logo9 from '../../assets/logo9.png';
+import { useNavigate } from 'react-router-dom';
+
+const GamePortal = () => {
+    const [onlineUsers, setOnlineUsers] = useState(8245);
+    const navigate = useNavigate();
+
+    // --- LOGIC: RANDOM USER COUNTER ---
+    useEffect(() => {
+        const updateUsers = () => {
+            // Logic: Math.floor(Math.random() * 2501) + 7500 (Matches your HTML)
+            const randomUsers = Math.floor(Math.random() * 2501) + 7500;
+            setOnlineUsers(randomUsers);
+        };
+
+        const interval = setInterval(updateUsers, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
+    // --- LOGIC: REDIRECT ---
+    const redirectToGame = (gameName, gameLogo, gameLink) => {
+        navigate('/mas/game', {
+            state: { name: gameName, logo: gameLogo, link: gameLink }
+        });
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('MAS_user');
+        navigate('/mas/auth');
+    };
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // --- DATA: GAME LIST ---
+    const games = [
+        { name: "91Club", logo: logo1, link: "https://alllinks.pages.dev/links?tag=91club", hot: true },
+        { name: "55Club", logo: logo2, link: "https://alllinks.pages.dev/links?tag=55club", hot: true },
+        { name: "In999", logo: logo3, link: "https://alllinks.pages.dev/links?tag=In999", hot: true },
+        { name: "DamanGames", logo: logo4, link: "https://alllinks.pages.dev/links?tag=Daman", hot: true },
+        { name: "BDG Game", logo: logo5, link: "https://alllinks.pages.dev/links?tag=BigDaddy", hot: true },
+        { name: "RajaLottery", logo: logo8, link: "https://alllinks.pages.dev/links?tag=RajaLottery", hot: false },
+        { name: "Tiranga", logo: logo6, link: "https://alllinks.pages.dev/links?tag=Tiranga", hot: false },
+        { name: "BDG Win", logo: logo7, link: "https://alllinks.pages.dev/links?tag=Bdgwin", hot: false },
+        { name: "OK Win", logo: logo9, link: "https://alllinks.pages.dev/links?tag=Okwin", hot: false },
+    ];
+
+    return (
+        <div className="min-h-screen bg-[#F8FAFC] text-[#1E293B] font-['Poppins'] p-[15px] relative overflow-x-hidden selection:bg-indigo-100">
+
+            {/* 1. SAFE TAG (Floating Motion) */}
+            <div className="fixed top-[15px] left-0 right-0 px-[15px] flex justify-between items-center z-[1000]">
+                <motion.div
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white font-bold text-[11px] px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg border border-white/20"
+                >
+                    100% Safe
+                </motion.div>
+
+                <button
+                    onClick={handleLogout}
+                    className="bg-white border border-red-100 text-red-500 px-3 py-1.5 rounded-xl shadow-sm font-bold text-[11px] flex items-center gap-2 hover:bg-red-50 transition-all uppercase tracking-wider"
+                >
+                    <LogOut size={14} /> Logout
+                </button>
+            </div>
+
+            {/* Background Decor */}
+            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                <div className="absolute top-[10%] left-[-5%] w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
+                <div className="absolute bottom-[10%] right-[-5%] w-64 h-64 bg-pink-500/5 rounded-full blur-3xl" />
+            </div>
+
+            <div className="relative z-10 max-w-[500px] mx-auto pt-10">
+
+                {/* 2. TOP BAR */}
+                <div className="flex justify-between items-center gap-3 mb-6">
+                    {/* Online Users Box */}
+                    <div className=" bg-white border border-[#E2E8F0] px-4 py-2.5 rounded-[15px] text-[13px] font-semibold text-[#475569] flex items-center gap-2 shadow-sm transition-all duration-300 hover:border-[#6366F1] hover:shadow-[0_0_15px_rgba(99,102,241,0.2)] cursor-default">
+                        <span className="w-2 h-2 rounded-full bg-[#6366F1] animate-pulse"></span>
+                        Online Users: <span className="text-black font-bold">{onlineUsers.toLocaleString()}</span>
+                    </div>
+
+                    {/* Server Status Box */}
+                    <div className=" bg-white border border-[#E2E8F0] px-4 py-2.5 rounded-[15px] text-[13px] font-semibold text-[#475569] flex items-center gap-2 shadow-sm transition-all duration-300 hover:border-[#6366F1] hover:shadow-[0_0_15px_rgba(99,102,241,0.2)] cursor-default">
+                        <CheckCircle size={14} className="text-[#6366F1]" />
+                        Server: <span className="text-black font-bold">Active</span>
+                    </div>
+                </div>
+
+                {/* 3. JOIN TELEGRAM BUTTON */}
+                <button
+                    onClick={() => window.open('https://t.me/modapksh', '_blank')}
+                    className="w-[90%] max-w-[300px] mx-auto flex items-center justify-center gap-2 bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold shadow-md hover:-translate-y-1 active:scale-95 transition-all mb-6"
+                >
+                    <i className="fab fa-telegram text-xl"></i>
+                    Join Telegram
+                </button>
+
+                {/* 4. NOTIFICATION BANNER (Marquee Motion) */}
+                <div className="w-full bg-white border border-[#E2E8F0] h-[45px] rounded-xl overflow-hidden mb-6 flex items-center relative shadow-sm">
+                    <motion.div
+                        animate={{ x: ["60%", "-100%"] }}
+                        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                        className="absolute whitespace-nowrap text-[13px] font-medium flex items-center gap-3"
+                    >
+                        <Star size={16} className="text-[#6366F1] fill-[#6366F1]" />
+                        <span className="text-black font-bold">BEST GAMES: 91CLUB • 55CLUB • IN999 • DAMAN GAMES • BDG Game</span>
+                        <Star size={16} className="text-[#6366F1] fill-[#6366F1]" />
+                        <span className="text-black font-bold">✅ Join Telegram Channel For Latest Updates!</span>
+                    </motion.div>
+                </div>
+
+                {/* 5. GAME CARDS CONTAINER */}
+                <div className="flex flex-col gap-4 px-2">
+                    {games.map((game, index) => (
+                        <motion.div
+                            key={index}
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => redirectToGame(game.name, game.logo, game.link)}
+                            className="group relative bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-sm flex flex-col items-center gap-3 cursor-pointer transition-all hover:border-[#6366F1] hover:shadow-lg w-[95%] mx-auto"
+                        >
+                            {game.hot && (
+                                <div className="absolute top-[-2px] right-[-2px] bg-[#818CF8] text-white text-[10px] font-bold pl-3 pr-4 py-1.5 rounded-bl-[15px] rounded-tr-[15px] flex items-center gap-1.5 shadow-sm">
+                                    <i className="fas fa-fire-alt"></i>
+                                    <span>HOT</span>
+                                </div>
+                            )}
+                            <img src={game.logo} alt={game.name} className="w-[90px] h-[90px] rounded-2xl object-cover border-2 border-[#F1F5F9] group-hover:scale-110 group-hover:border-[#6366F1] transition-all duration-300 shadow-sm" />
+                            <p className="font-bold text-[16px] text-[#1E293B]">{game.name} (Hack)</p>
+                        </motion.div>
+                    ))}
+
+                    {/* RajaLuck Internal */}
+                    <motion.div
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => window.location.href = 'raja.html'}
+                        className="group bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-sm flex flex-col items-center gap-3 cursor-pointer w-[95%] mx-auto transition-all hover:border-[#6366F1]"
+                    >
+                        <img src={logo8} alt="Raja" className="w-[90px] h-[90px] rounded-2xl group-hover:scale-110 transition-all duration-300" />
+                        <p className="font-bold text-[#1E293B]">RajaLuck (Hack)</p>
+                    </motion.div>
+                </div>
+
+                {/* 6. BOTTOM SECTION */}
+                <div className="mt-10 mb-8 flex flex-col items-center gap-4">
+                    <p className="w-[95%] bg-white p-5 rounded-2xl border border-[#E2E8F0] text-[13px] text-[#475569] text-center font-medium shadow-sm leading-relaxed italic">
+                        "If your favourite game is not added, then don't worry soon it will be available, for now, you can play other games."
+                    </p>
+
+                    <div className="w-full flex flex-col items-center gap-3">
+                        <ActionButton
+                            onClick={() => window.open('https://t.me/modapksh', '_blank')}
+                            icon="fas fa-download"
+                            label="Download Old (Mod)"
+                            color="bg-gradient-to-r from-[#3B82F6] to-[#1D4ED8]"
+                        />
+                        <ActionButton
+                            onClick={() => window.open('https://t.me/@modapksh', '_blank')}
+                            icon="fab fa-telegram"
+                            label="Join Telegram"
+                            color="bg-gradient-to-r from-[#6366F1] to-[#818CF8]"
+                        />
+                        <ActionButton
+                            onClick={() => window.open('https://wa.me/919116046055', '_blank')}
+                            icon="fas fa-headset"
+                            label="Customer Care"
+                            color="bg-gradient-to-r from-[#6366F1] to-[#818CF8]"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// --- REUSABLE BUTTON COMPONENT ---
+const ActionButton = ({ icon, label, color, onClick }) => (
+    <motion.button
+        whileTap={{ scale: 0.95 }}
+        onClick={onClick}
+        className={`w-[90%] max-w-[320px] ${color} text-white py-4 rounded-xl font-bold shadow-lg flex items-center justify-center gap-3 transition-transform hover:-translate-y-1`}
+    >
+        <i className={icon + " text-lg"}></i>
+        {label}
+    </motion.button>
+);
+
+export default GamePortal;

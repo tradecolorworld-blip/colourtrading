@@ -21,6 +21,10 @@ import AdminDashboard from './pages/AdminDashboard';
 import WinGoAuth from './pages/WinGoAuth';
 import WinGoHackDashboard from './pages/WinGoHackDashboard';
 
+import MASAuth from './pages/mas/auth';         // Aapki Login/Signup Screen
+import MASPortal from './pages/mas/portal';       // Aapki Game Selection Screen
+import MASGame from './pages/mas/game';
+
 // 🔒 Protection Component (For Logged-in Users Only)
 const ProtectedRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -75,6 +79,15 @@ const WinGoProtectedRoute = ({ children }) => {
   return children;
 };
 
+const MASProtectedRoute = ({ children }) => {
+  // Internal key name is 'MAS_user'
+  const user = JSON.parse(localStorage.getItem('MAS_user'));
+  if (!user || !user.email) {
+    return <Navigate to="/mas/auth" replace />;
+  }
+  return children;
+};
+
 // 🔓 Public Component (Redirects to Dashboard if already logged in)
 const PublicRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -122,6 +135,14 @@ const WinGoPublicRoute = ({ children }) => {
   const winUser = JSON.parse(localStorage.getItem('WinGo_user'));
   if (winUser && winUser.email) {
     return <Navigate to="/wingo/dashboard" replace />;
+  }
+  return children;
+};
+
+const MASPublicRoute = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem('MAS_user'));
+  if (user && user.email) {
+    return <Navigate to="/mas/portal" replace />;
   }
   return children;
 };
@@ -234,6 +255,25 @@ function App() {
               <WinGoProtectedRoute>
                 <WinGoHackDashboard />
               </WinGoProtectedRoute>
+            } />
+          </Route>
+
+          <Route path="/mas">
+            <Route index element={<Navigate to="auth" replace />} />
+            <Route path="auth" element={
+              <MASPublicRoute>
+                <MASAuth />
+              </MASPublicRoute>
+            } />
+            <Route path="portal" element={
+              <MASProtectedRoute>
+                <MASPortal />
+              </MASProtectedRoute>
+            } />
+            <Route path="game" element={
+              <MASProtectedRoute>
+                <MASGame />
+              </MASProtectedRoute>
             } />
           </Route>
 

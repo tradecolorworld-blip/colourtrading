@@ -9,6 +9,7 @@ import JalwaUser from './models/JalwaUser.js';
 import SureShotUser from './models/SureShotUser.js';
 import NumberHackUser from './models/NumberHackUser.js';
 import WinGoUser from './models/WingoUser.js';
+import MASUser from './models/MASUser.js';
 
 dotenv.config();
 const app = express();
@@ -34,20 +35,21 @@ app.get('/api/admin/stats', async (req, res) => {
             { name: 'Jalwa', model: JalwaUser, price: 499 },
             { name: 'SureShot', model: SureShotUser, price: 450 },
             { name: 'NumberHack', model: NumberHackUser, price: 700 },
-            { name: 'WinGo', model: WinGoUser }
+            { name: 'WinGo', model: WinGoUser },
+            // { name: 'MAS', model: MASUser, price: 699 }
         ];
 
         const IST_OFFSET = 5.5 * 60 * 60 * 1000;
         const nowUTC = new Date();
         const nowIST = new Date(nowUTC.getTime() + IST_OFFSET);
-        
+
         // Use UTC Methods to ensure consistency across server locations
         const startOfTodayIST = new Date(nowIST);
-        startOfTodayIST.setUTCHours(0, 0, 0, 0); 
-        
+        startOfTodayIST.setUTCHours(0, 0, 0, 0);
+
         const startOfYesterdayIST = new Date(startOfTodayIST);
         startOfYesterdayIST.setUTCDate(startOfYesterdayIST.getUTCDate() - 1);
-        
+
         const startOfWeekIST = new Date(startOfTodayIST);
         startOfWeekIST.setUTCDate(startOfWeekIST.getUTCDate() - 7);
 
@@ -74,7 +76,7 @@ app.get('/api/admin/stats', async (req, res) => {
                 } else if (createDateIST >= startOfYesterdayIST && createDateIST < startOfTodayIST) {
                     analytics.yesterday.users++;
                 }
-                
+
                 if (createDateIST >= startOfWeekIST) {
                     analytics.week.users++;
                 }
@@ -938,6 +940,140 @@ app.post('/api/wingo/payment/status', async (req, res) => {
                 status: "Success",
                 user: updatedUser,
                 message: `WinGo ${planType} activated!`
+            });
+        }
+        res.json({ status: "Pending" });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// --- MAS (NUMBER HACK) BACKEND APIs ---
+
+// 🟢 1. MAS Signup API with Auto-Login
+app.post('/api/mas/signup', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        // Search in MASUser collection
+        const existingUser = await MASUser.findOne({ email: email.toLowerCase() });
+        if (existingUser) return res.status(400).json({ message: "User already exists" });
+
+        const newUser = new MASUser({
+            email: email.toLowerCase(),
+            password, // Storing plain text as per your existing logic
+            isVip: false
+        });
+        await newUser.save();
+
+        res.status(201).json({
+            message: "MAS account created successfully",
+            user: newUser
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during MAS signup" });
+    }
+});
+
+// 🟢 2. MAS Login API
+app.post('/api/mas/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await MASUser.findOne({ email: email.toLowerCase(), password });
+
+        if (!user) return res.status(401).json({ message: "Invalid login details" });
+
+        // Logic: Check if VIP has expired (28 days)
+        if (user.isVip && user.vipExpiry && new Date() > user.vipExpiry) {
+            user.isVip = false;
+            await user.save();
+        }
+
+        res.json({ message: "Login successful", user });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during MAS login" });
+    }
+});
+
+// 🟢 3. Check MAS VIP Status
+app.post('/api/mas/check-vip', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await MASUser.findOne({ email: email.toLowerCase() });
+
+        if (!user || !user.isVip) {
+            return res.json({ isVip: false });
+        }
+
+        // Auto-check for expiration
+        if (new Date() > user.vipExpiry) {
+            user.isVip = false;
+            await user.save();
+            return res.json({ isVip: false, message: "VIP Expired" });
+        }
+
+        res.json({ isVip: true, expiry: user.vipExpiry });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// 🟢 4. Create MAS Payment Order (₹699)
+app.post('/api/mas/payment/create', async (req, res) => {
+    const { email } = req.body;
+    const order_id = "MAS" + Date.now();
+
+    const basePrice = 699;
+    const randomPaisa = Math.random() * 0.9;
+    const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
+
+    const paymentData = {
+        token: "a86f69-675d92-da4e54-2886a7-0ce845", // Tera API Token
+        order_id: order_id,
+        txn_amount:1, //finalAmount, // 🟢 Discounted Price
+        txn_note: "MAS VIP Subscription",
+        product_name: "MAS Premium",
+        customer_name: "MASUser_" + email.split('@')[0],
+        customer_mobile: "9999999999",
+        customer_email: email.toLowerCase(),
+        redirect_url: "https://colourtradingworld.sbs/mas/portal"
+    };
+
+    try {
+        const response = await axios.post('https://allapi.in/order/create', paymentData);
+        res.json({
+            ...response.data,
+            results: { ...response.data.results, order_id }
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Payment initialization failed" });
+    }
+});
+
+// 🟢 5. Verify MAS Status & Activate VIP
+app.post('/api/mas/payment/status', async (req, res) => {
+    const { order_id, email } = req.body;
+
+    try {
+        const response = await axios.post('https://allapi.in/order/status', {
+            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            order_id: order_id
+        });
+
+        if (response.data.status === true && response.data.results.status === "Success") {
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 28); // 🟢 28 days validity
+            const now = new Date();
+
+            const updatedUser = await MASUser.findOneAndUpdate(
+                { email: email.toLowerCase() },
+                { isVip: true, vipExpiry: expiryDate, purchaseDate: now },
+                { new: true }
+            );
+
+            return res.json({
+                status: "Success",
+                user: updatedUser,
+                message: "Payment verified and MAS VIP activated!"
             });
         }
         res.json({ status: "Pending" });
