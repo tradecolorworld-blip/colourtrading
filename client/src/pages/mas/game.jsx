@@ -103,9 +103,9 @@ const GameScreen = () => {
     const [predictedResult, setPredictedResult] = useState(ballData[7]);
     const [predictedNums, setPredictedNums] = useState([1, 3, 7, 9]);
 
-    useEffect(() => {
-        if (!gameData) { navigate('/'); } else { setShowPopup(true); }
-    }, [gameData, navigate]);
+    // useEffect(() => {
+    //     if (!gameData) { navigate('/'); } else { setShowPopup(true); }
+    // }, [gameData, navigate]);
 
     useEffect(() => {
         const interval = setInterval(() => {
