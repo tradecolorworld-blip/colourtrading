@@ -10,6 +10,7 @@ import SureShotUser from './models/SureShotUser.js';
 import NumberHackUser from './models/NumberHackUser.js';
 import WinGoUser from './models/WingoUser.js';
 import MASUser from './models/MASUser.js';
+import MSA1User from './models/MSA1User.js';
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,16 @@ app.use(cors());
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("✅ MongoDB Connected Successfully"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+
+const getMSAModule = (variant) => {
+    const configs = {
+        'msa1': { model: MSA1User, token: "a86f69-675d92-da4e54-2886a7-0ce845" }, // Tera Personal
+        'msa2': { model: MSA2User, token: "b93b87-7195bc-2f74f2-29903f-930a8c" }, // ashu
+        'msa3': { model: MSA3User, token: "c80d10-9b542d-12fc57-48baaf-9c2afc" }  // golu
+    };
+    return configs[variant] || null;
+};
 
 // --- AUTH ROUTES ---
 
@@ -36,7 +47,7 @@ app.get('/api/admin/stats', async (req, res) => {
             { name: 'SureShot', model: SureShotUser, price: 450 },
             { name: 'NumberHack', model: NumberHackUser, price: 700 },
             { name: 'WinGo', model: WinGoUser },
-            // { name: 'MAS', model: MASUser, price: 699 }
+            { name: 'MSA1', model: MSA1User, price: 721 }
         ];
 
         const IST_OFFSET = 5.5 * 60 * 60 * 1000;
@@ -953,12 +964,17 @@ app.post('/api/wingo/payment/status', async (req, res) => {
 // 🟢 1. MAS Signup API with Auto-Login
 app.post('/api/mas/signup', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, variant } = req.body;
+
+        const config = getMSAModule(variant);
+
+        if (!config) return res.status(400).json({ message: "Invalid Variant" });
+
         // Search in MASUser collection
-        const existingUser = await MASUser.findOne({ email: email.toLowerCase() });
+        const existingUser = await config.model.findOne({ email: email.toLowerCase() });
         if (existingUser) return res.status(400).json({ message: "User already exists" });
 
-        const newUser = new MASUser({
+        const newUser = new config.model({
             email: email.toLowerCase(),
             password, // Storing plain text as per your existing logic
             isVip: false
@@ -966,7 +982,7 @@ app.post('/api/mas/signup', async (req, res) => {
         await newUser.save();
 
         res.status(201).json({
-            message: "MAS account created successfully",
+            message: `${variant.toUpperCase()} account created successfully`,
             user: newUser
         });
     } catch (err) {
@@ -977,8 +993,12 @@ app.post('/api/mas/signup', async (req, res) => {
 // 🟢 2. MAS Login API
 app.post('/api/mas/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await MASUser.findOne({ email: email.toLowerCase(), password });
+        const { email, password, variant } = req.body;
+        const config = getMSAModule(variant);
+
+        if (!config) return res.status(400).json({ message: "Invalid Variant" });
+
+        const user = await config.model.findOne({ email: email.toLowerCase(), password });
 
         if (!user) return res.status(401).json({ message: "Invalid login details" });
 
@@ -997,8 +1017,12 @@ app.post('/api/mas/login', async (req, res) => {
 // 🟢 3. Check MAS VIP Status
 app.post('/api/mas/check-vip', async (req, res) => {
     try {
-        const { email } = req.body;
-        const user = await MASUser.findOne({ email: email.toLowerCase() });
+        const { email, variant } = req.body;
+        const config = getMSAModule(variant);
+
+        if (!config) return res.status(400).json({ message: "Invalid Variant" });
+
+        const user = await config.model.findOne({ email: email.toLowerCase() });
 
         if (!user || !user.isVip) {
             return res.json({ isVip: false });
@@ -1019,23 +1043,29 @@ app.post('/api/mas/check-vip', async (req, res) => {
 
 // 🟢 4. Create MAS Payment Order (₹699)
 app.post('/api/mas/payment/create', async (req, res) => {
-    const { email } = req.body;
-    const order_id = "MAS" + Date.now();
+    const { email, variant } = req.body;
+    const config = getMSAModule(variant);
+
+    if (!config) return res.status(400).json({ message: "Invalid Variant" });
+
+    const order_id = `MAS_${variant.toUpperCase()}_` + Date.now();
+
+    const domain = req.headers.host;
 
     const basePrice = 699;
     const randomPaisa = Math.random() * 0.9;
     const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
 
     const paymentData = {
-        token: "a86f69-675d92-da4e54-2886a7-0ce845", // Tera API Token
+        token: config.token, 
         order_id: order_id,
-        txn_amount:1, //finalAmount, // 🟢 Discounted Price
-        txn_note: "MAS VIP Subscription",
-        product_name: "MAS Premium",
-        customer_name: "MASUser_" + email.split('@')[0],
+        txn_amount: 1,
+        txn_note: `${variant.toUpperCase()} VIP Subscription`,
+        product_name: `${variant.toUpperCase()} Premium`,
+        customer_name: "User_" + email.split('@')[0],
         customer_mobile: "9999999999",
         customer_email: email.toLowerCase(),
-        redirect_url: "https://colourtradingworld.sbs/mas/game"
+        redirect_url: `https://${domain}/portal`
     };
 
     try {
@@ -1051,11 +1081,14 @@ app.post('/api/mas/payment/create', async (req, res) => {
 
 // 🟢 5. Verify MAS Status & Activate VIP
 app.post('/api/mas/payment/status', async (req, res) => {
-    const { order_id, email } = req.body;
+    const { order_id, email, variant } = req.body;
+    const config = getMSAModule(variant);
+
+    if (!config) return res.status(400).json({ message: "Invalid Variant" });
 
     try {
         const response = await axios.post('https://allapi.in/order/status', {
-            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            token: config.token,
             order_id: order_id
         });
 
@@ -1064,7 +1097,7 @@ app.post('/api/mas/payment/status', async (req, res) => {
             expiryDate.setDate(expiryDate.getDate() + 28); // 🟢 28 days validity
             const now = new Date();
 
-            const updatedUser = await MASUser.findOneAndUpdate(
+            const updatedUser = await config.model.findOneAndUpdate(
                 { email: email.toLowerCase() },
                 { isVip: true, vipExpiry: expiryDate, purchaseDate: now },
                 { new: true }
