@@ -11,6 +11,8 @@ import NumberHackUser from './models/NumberHackUser.js';
 import WinGoUser from './models/WingoUser.js';
 import MASUser from './models/MASUser.js';
 import MSA1User from './models/MSA1User.js';
+import MSA2User from './models/MSA2User.js';
+import MSA3User from './models/MSA3User.js';
 
 dotenv.config();
 const app = express();
@@ -968,8 +970,9 @@ app.post('/api/mas/signup', async (req, res) => {
 
         const config = getMSAModule(variant);
 
-        if (!config) return res.status(400).json({ message: "Invalid Variant" });
-
+        if (!config || !config.model) {
+            return res.status(400).json({ message: "Invalid Variant or Model not found" });
+        }
         // Search in MASUser collection
         const existingUser = await config.model.findOne({ email: email.toLowerCase() });
         if (existingUser) return res.status(400).json({ message: "User already exists" });
@@ -1057,7 +1060,7 @@ app.post('/api/mas/payment/create', async (req, res) => {
     const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
 
     const paymentData = {
-        token: config.token, 
+        token: config.token,
         order_id: order_id,
         txn_amount: 1,
         txn_note: `${variant.toUpperCase()} VIP Subscription`,
