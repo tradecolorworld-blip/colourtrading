@@ -138,7 +138,7 @@ const GamePortal = () => {
 
                 {/* 3. JOIN TELEGRAM BUTTON */}
                 <button
-                    onClick={() => window.open('https://t.me/modapksh', '_blank')}
+                    onClick={() => window.open(`https://t.me/${telegram}`, '_blank')}
                     className="w-[90%] max-w-[300px] mx-auto flex items-center justify-center gap-2 bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold shadow-md hover:-translate-y-1 active:scale-95 transition-all mb-6"
                 >
                     <i className="fab fa-telegram text-xl"></i>
