@@ -90,6 +90,7 @@ const GamePortal = () => {
         { name: "Tiranga", logo: logo6, link: "https://tgdream.pro/#/register?invitationCode=8752724598773", hot: false },
         { name: "BDG Win", logo: logo7, link: " https://bdgwina.top//#/register?invitationCode=4138512408865", hot: false },
         { name: "OK Win", logo: logo9, link: "https://okwinslots4.com/#/register?invitationCode=755836029251", hot: false },
+        { name: "RajaLuck", logo: logo8, link: "https://rajaluckvip.com/register?invitationCode=3060605020010", hot: false },
     ];
 
     return (
@@ -180,14 +181,14 @@ const GamePortal = () => {
                     ))}
 
                     {/* RajaLuck Internal */}
-                    <motion.div
+                    {/* <motion.div
                         whileTap={{ scale: 0.97 }}
                         onClick={() => window.location.href = 'raja.html'}
                         className="group bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-sm flex flex-col items-center gap-3 cursor-pointer w-[95%] mx-auto transition-all hover:border-[#6366F1]"
                     >
                         <img src={logo8} alt="Raja" className="w-[90px] h-[90px] rounded-2xl group-hover:scale-110 transition-all duration-300" />
                         <p className="font-bold text-[#1E293B]">RajaLuck (Hack)</p>
-                    </motion.div>
+                    </motion.div> */}
                 </div>
 
                 {/* 6. BOTTOM SECTION */}
