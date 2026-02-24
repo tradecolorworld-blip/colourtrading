@@ -40,7 +40,7 @@ const AuthScreen = () => {
                 localStorage.setItem(storageKey, JSON.stringify(res.data.user));
 
                 // Redirect to the MAS Portal
-                navigate('/mas/portal');
+                navigate('/portal');
             }
         } catch (err) {
             alert(err.response?.data?.message || "Authentication failed. Please check details.");
