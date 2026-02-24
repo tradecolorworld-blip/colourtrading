@@ -10,20 +10,45 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 
-// 🟢 Helper to detect domain (Must match App.jsx)
+// 🟢 NEW: Domain Configuration Helper (Matches App, Auth, and Portal)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('bigsmalltrading.sbs')) return { variant: 'msa1', storageKey: 'MSA1_user' };
-    if (host.includes('bigsmallhack.sbs')) return { variant: 'msa2', storageKey: 'MSA2_user' };
-    if (host.includes('patternhack.sbs')) return { variant: 'msa3', storageKey: 'MSA3_user' };
-    return { variant: 'test', storageKey: 'MSA_test_user' };
+    if (host.includes('bigsmalltrading.sbs')) {
+        return {
+            variant: 'msa1',
+            storageKey: 'MSA1_user',
+            whatsapp: '919116046055',
+            telegram: 'modapksh',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+        };
+    }
+    if (host.includes('bigsmallhack.sbs')) {
+        return {
+            variant: 'msa2',
+            storageKey: 'MSA2_user',
+            whatsapp: '919057617196',
+            telegram: 'modapksales',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+        };
+    }
+    if (host.includes('patternhack.sbs')) {
+        return {
+            variant: 'msa3',
+            storageKey: 'MSA3_user',
+            whatsapp: '917357984291',
+            telegram: 'hackerbabaji1',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+        };
+    }
+    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };
 };
-
 const GameScreen = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const gameData = location.state;
-    const { variant, storageKey } = getDomainConfig();
+
+    // Get current domain details
+    const { variant, storageKey, whatsapp, telegram } = getDomainConfig();
 
     const [showHelp, setShowHelp] = useState(false);
     const [isVip, setIsVip] = useState(false);
@@ -94,7 +119,7 @@ const GameScreen = () => {
             }
         };
         if (user) verifyPayment();
-    }, [user,variant]);
+    }, [user, variant]);
 
     // 🟢 3. Payment Flow: Create Order
     const handlePayment = async () => {
@@ -320,8 +345,8 @@ const GameScreen = () => {
 
                     <button onClick={() => window.open(gameData.link, '_blank')} className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-3.5 rounded-xl font-bold shadow-md hover:translate-y-[-2px] transition-all flex items-center justify-center gap-2 uppercase tracking-wide"><UserPlus size={18} /> Register Now</button>
                     <div className="grid grid-cols-2 gap-3">
-                        <button onClick={() => window.open('https://t.me/modapksh', '_blank')} className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold text-xs shadow-md flex items-center justify-center gap-2"><Send size={16} /> Join Telegram</button>
-                        <button onClick={() => window.open('https://wa.me/919116046055', '_blank')} className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold text-xs shadow-md flex items-center justify-center gap-2"><Headset size={16} /> Customer Care</button>
+                        <button onClick={() => window.open(`https://t.me/${telegram}`, '_blank')} className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold text-xs shadow-md flex items-center justify-center gap-2"><Send size={16} /> Join Telegram</button>
+                        <button onClick={() => window.open(`https://wa.me/${whatsapp}`, '_blank')} className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold text-xs shadow-md flex items-center justify-center gap-2"><Headset size={16} /> Customer Care</button>
                     </div>
                 </div>
 
@@ -348,7 +373,7 @@ const GameScreen = () => {
                             <h2 className="text-2xl font-black mb-2 text-slate-800 tracking-tight">PURCHASE PREMIUM</h2>
                             <div className="flex items-center justify-center gap-3 mb-6">
                                 <span className="text-slate-400 line-through text-lg font-bold">₹999</span>
-                                <span className="text-emerald-500 text-3xl font-black">₹699</span>
+                                <span className="text-emerald-500 text-3xl font-black">₹721</span>
                             </div>
                             <p className="text-xs text-slate-500 mb-8 font-medium px-4 leading-relaxed italic">Get 99% accuracy predictions, ad-free experience, and 24/7 priority support.</p>
                             <div className="flex flex-col gap-3">

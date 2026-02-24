@@ -1055,14 +1055,14 @@ app.post('/api/mas/payment/create', async (req, res) => {
 
     const domain = req.headers.host;
 
-    const basePrice = 699;
+    const basePrice = 721;
     const randomPaisa = Math.random() * 0.9;
     const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
 
     const paymentData = {
         token: config.token,
         order_id: order_id,
-        txn_amount: 1,
+        txn_amount: finalAmount,
         txn_note: `${variant.toUpperCase()} VIP Subscription`,
         product_name: `${variant.toUpperCase()} Premium`,
         customer_name: "User_" + email.split('@')[0],

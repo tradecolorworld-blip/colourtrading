@@ -15,10 +15,34 @@ import { useNavigate } from 'react-router-dom';
 // 🟢 NEW: Domain Configuration Helper (Must match App.jsx and Auth.jsx)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('bigsmalltrading.sbs')) return { variant: 'msa1', storageKey: 'MSA1_user' };
-    if (host.includes('bigsmallhack.sbs')) return { variant: 'msa2', storageKey: 'MSA2_user' };
-    if (host.includes('patternhack.sbs')) return { variant: 'msa3', storageKey: 'MSA3_user' };
-    return { variant: 'test', storageKey: 'MSA_test_user' };
+    if (host.includes('bigsmalltrading.sbs')) {
+        return {
+            variant: 'msa1',
+            storageKey: 'MSA1_user',
+            whatsapp: '919116046055',
+            telegram: 'modapksh',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+        };
+    }
+    if (host.includes('bigsmallhack.sbs')) {
+        return {
+            variant: 'msa2',
+            storageKey: 'MSA2_user',
+            whatsapp: '919057617196',
+            telegram: 'modapksales',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+        };
+    }
+    if (host.includes('patternhack.sbs')) {
+        return {
+            variant: 'msa3',
+            storageKey: 'MSA3_user',
+            whatsapp: '917357984291',
+            telegram: 'hackerbabaji1',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+        };
+    }
+    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };
 };
 
 const GamePortal = () => {
@@ -26,7 +50,7 @@ const GamePortal = () => {
     const navigate = useNavigate();
 
     // Get current domain details
-    const { variant, storageKey } = getDomainConfig();
+    const { variant, storageKey, whatsapp, telegram } = getDomainConfig();
 
     // --- LOGIC: RANDOM USER COUNTER ---
     useEffect(() => {
@@ -57,15 +81,15 @@ const GamePortal = () => {
 
     // --- DATA: GAME LIST ---
     const games = [
-        { name: "91Club", logo: logo1, link: "https://alllinks.pages.dev/links?tag=91club", hot: true },
-        { name: "55Club", logo: logo2, link: "https://alllinks.pages.dev/links?tag=55club", hot: true },
-        { name: "In999", logo: logo3, link: "https://alllinks.pages.dev/links?tag=In999", hot: true },
-        { name: "DamanGames", logo: logo4, link: "https://alllinks.pages.dev/links?tag=Daman", hot: true },
-        { name: "BDG Game", logo: logo5, link: "https://alllinks.pages.dev/links?tag=BigDaddy", hot: true },
-        { name: "RajaLottery", logo: logo8, link: "https://alllinks.pages.dev/links?tag=RajaLottery", hot: false },
-        { name: "Tiranga", logo: logo6, link: "https://alllinks.pages.dev/links?tag=Tiranga", hot: false },
-        { name: "BDG Win", logo: logo7, link: "https://alllinks.pages.dev/links?tag=Bdgwin", hot: false },
-        { name: "OK Win", logo: logo9, link: "https://alllinks.pages.dev/links?tag=Okwin", hot: false },
+        { name: "91Club", logo: logo1, link: "https://www.ehIndia.com/#/register?invitationCode=87134963862", hot: true },
+        { name: "55Club", logo: logo2, link: "https://www.frzpui55.com/#/register?invitationCode=152182688038", hot: true },
+        { name: "In999", logo: logo3, link: "https://www.ilxd28.com/#/register?invitationCode=167266601273", hot: true },
+        { name: "DamanGames", logo: logo4, link: "https://damanvipgame.com/register?invitationCode=4879717468242", hot: true },
+        { name: "BDG Game", logo: logo5, link: "https://bdg-ipl.vip//#/register?invitationCode=7868719070147", hot: true },
+        { name: "RajaLottery", logo: logo8, link: "https://www.rajastake9.com/#/register?invitationCode=777125432189", hot: false },
+        { name: "Tiranga", logo: logo6, link: "https://tgdream.pro/#/register?invitationCode=8752724598773", hot: false },
+        { name: "BDG Win", logo: logo7, link: " https://bdgwina.top//#/register?invitationCode=4138512408865", hot: false },
+        { name: "OK Win", logo: logo9, link: "https://okwinslots4.com/#/register?invitationCode=755836029251", hot: false },
     ];
 
     return (
@@ -174,19 +198,19 @@ const GamePortal = () => {
 
                     <div className="w-full flex flex-col items-center gap-3">
                         <ActionButton
-                            onClick={() => window.open('https://t.me/modapksh', '_blank')}
+                            onClick={() => window.open(`https://t.me/${telegram}`, '_blank')}
                             icon="fas fa-download"
                             label="Download Old (Mod)"
                             color="bg-gradient-to-r from-[#3B82F6] to-[#1D4ED8]"
                         />
                         <ActionButton
-                            onClick={() => window.open('https://t.me/@modapksh', '_blank')}
+                            onClick={() => window.open(`https://t.me/${telegram}`, '_blank')}
                             icon="fab fa-telegram"
                             label="Join Telegram"
                             color="bg-gradient-to-r from-[#6366F1] to-[#818CF8]"
                         />
                         <ActionButton
-                            onClick={() => window.open('https://wa.me/919116046055', '_blank')}
+                            onClick={() => window.open(`https://wa.me/${whatsapp}`, '_blank')}
                             icon="fas fa-headset"
                             label="Customer Care"
                             color="bg-gradient-to-r from-[#6366F1] to-[#818CF8]"

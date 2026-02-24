@@ -7,10 +7,34 @@ import axios from 'axios';
 // 🟢 NEW: Domain Configuration Helper (Matches App.jsx)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('bigsmalltrading.sbs')) return { variant: 'msa1', storageKey: 'MSA1_user' };
-    if (host.includes('bigsmallhack.sbs')) return { variant: 'msa2', storageKey: 'MSA2_user' };
-    if (host.includes('patternhack.sbs')) return { variant: 'msa3', storageKey: 'MSA3_user' };
-    return { variant: 'test', storageKey: 'MSA_test_user' };
+    if (host.includes('bigsmalltrading.sbs')) {
+        return {
+            variant: 'msa1',
+            storageKey: 'MSA1_user',
+            whatsapp: '919116046055',
+            telegram: 'modapksh',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+        };
+    }
+    if (host.includes('bigsmallhack.sbs')) {
+        return {
+            variant: 'msa2',
+            storageKey: 'MSA2_user',
+            whatsapp: '919057617196',
+            telegram: 'modapksales',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4' // Default if not provided
+        };
+    }
+    if (host.includes('patternhack.sbs')) {
+        return {
+            variant: 'msa3',
+            storageKey: 'MSA3_user',
+            whatsapp: '917357984291',
+            telegram: 'hackerbabaji1',
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4' // Default if not provided
+        };
+    }
+    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };
 };
 
 const AuthScreen = () => {
@@ -21,6 +45,7 @@ const AuthScreen = () => {
 
     // Get current domain details
     const { variant, storageKey } = getDomainConfig();
+    const { whatsapp, telegram, youtube } = getDomainConfig();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -141,19 +166,19 @@ const AuthScreen = () => {
                 {/* Bottom Contact Dock */}
                 <div className="mt-8 grid grid-cols-3 gap-3">
                     <button
-                        onClick={() => window.open('https://wa.me/919116046055', '_blank')}
+                        onClick={() => window.open(`https://wa.me/${whatsapp}`, '_blank')}
                         className="bg-emerald-500 text-white py-3 rounded-xl font-black text-[10px] shadow-lg flex flex-col items-center gap-1 active:scale-95 transition-all"
                     >
                         <Headset size={16} /> WHATSAPP
                     </button>
                     <button
-                        onClick={() => window.open('https://t.me/modapksh', '_blank')}
+                        onClick={() => window.open(`https://t.me/${telegram}`, '_blank')}
                         className="bg-indigo-500 text-white py-3 rounded-xl font-black text-[10px] shadow-lg flex flex-col items-center gap-1 active:scale-95 transition-all"
                     >
                         <Send size={16} /> TELEGRAM
                     </button>
                     <button
-                        onClick={() => window.open('https://www.youtube.com/watch?v=-HdcugtTRN4', '_blank')}
+                        onClick={() => window.open(youtube, '_blank')}
                         className="bg-red-500 text-white py-3 rounded-xl font-black text-[10px] shadow-lg flex flex-col items-center gap-1 active:scale-95 transition-all"
                     >
                         <Youtube size={16} /> YOUTUBE
