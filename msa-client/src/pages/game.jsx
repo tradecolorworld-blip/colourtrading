@@ -249,11 +249,12 @@ const GameScreen = () => {
                 setIsChecking(false);
             }, 2000);
         }
+        
     };
     
     const t = setInterval(updateTimer, 1000);
     return () => clearInterval(t);
-}, [currentWingo, gameData?.name]);
+}, [currentWingo, gameData?.name, ballData]);
 
     if (!gameData) return null;
 
