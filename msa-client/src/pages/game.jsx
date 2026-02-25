@@ -240,14 +240,26 @@ const GameScreen = () => {
             period: periodID
         });
 
-        // 🚀 Prediction Trigger (Strictly on 00:00)
+        // 🚀 UPDATED TRIGGER: EXACTLY AT 00:00
         if (displayRemaining === 0 && utcSec % cycle === 0) {
             setIsChecking(true);
+            
+            // 🟢 Clear old data to force UI update awareness
             setTimeout(() => {
-                setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
-                setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
+                // New Random Index for result
+                const randomIndex = Math.floor(Math.random() * 10);
+                const newBall = ballData[randomIndex];
+                
+                // State update
+                setPredictedResult(newBall);
+                
+                // Change sub-numbers as well
+                const newNumbers = [...Array(4)].map(() => Math.floor(Math.random() * 10));
+                setPredictedNums(newNumbers);
+                
                 setIsChecking(false);
-            }, 2000);
+                console.log("Prediction Changed:", newBall.n); // Browser console mein check karein
+            }, 2500); 
         }
         
     };
