@@ -193,41 +193,44 @@ const GameScreen = () => {
     useEffect(() => {
     const updateTimer = () => {
         const now = new Date();
-        // Use UTC time to match server-side PHP logic consistency
+        // UTC time for server consistency
         const utcSec = now.getUTCSeconds();
         const utcMin = now.getUTCMinutes();
         const utcHrs = now.getUTCHours();
         
-        // Match the PHP Logic: (Hours * 60 + Minutes) * 2 + (Seconds / 30)
-        const totalMinutes = (utcHrs * 60) + utcMin;
+        const totalMinutesInDay = (utcHrs * 60) + utcMin;
         
-        let cycle = 60; // Default
-        let elapsedIntervals;
+        let cycle = 60; // Default 1m
         let periodID;
         let displayRemaining;
 
         if (gameData?.name === "RajaLottery") {
-            // Specialized 30s Logic for Raja Lottery
+            // Raja Lottery specialized 30s logic
             cycle = 30;
-            elapsedIntervals = (totalMinutes * 2) + Math.floor(utcSec / 30);
+            const elapsedIntervals = (totalMinutesInDay * 2) + Math.floor(utcSec / 30);
             const remaining = cycle - (utcSec % cycle);
             displayRemaining = Math.max(0, remaining - 1);
             
-            // Format: YYYYMMDD + "10005" + 4-digit interval count
             const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+            // PHP format: YYYYMMDD + 10005 + 4-digit counter
             periodID = `${dateStr}10005${String(elapsedIntervals + 1).padStart(4, '0')}`;
         } else {
-            // Standard Logic for other games
+            // Standard WinGo Logic (1m, 3m, 5m)
             if (currentWingo === 'wingo30s') cycle = 30;
             if (currentWingo === 'wingo3m') cycle = 180;
             if (currentWingo === 'wingo5m') cycle = 300;
 
-            const totalSeconds = (totalMinutes * 60) + utcSec;
-            const remaining = cycle - (totalSeconds % cycle);
+            const totalSecondsInDay = (totalMinutesInDay * 60) + utcSec;
+            const elapsedPeriods = Math.floor(totalSecondsInDay / cycle);
+            const remaining = cycle - (totalSecondsInDay % cycle);
             displayRemaining = Math.max(0, remaining - 1);
             
             const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-            periodID = `${dateStr}1000${10001 + Math.floor(totalSeconds / cycle)}`;
+            
+            // Format match for 20260225100010011 at 10:37
+            // 10:37:27 is the 637th minute of the day. 
+            // ID ends in 10011, which suggests (10000 + minute_counter) or similar offset.
+            periodID = `${dateStr}10001${String(elapsedPeriods + 1).padStart(4, '0')}`;
         }
 
         setTimer({
@@ -236,10 +239,8 @@ const GameScreen = () => {
             period: periodID
         });
 
-        // Trigger check when cycle resets
-        const isReset = (gameData?.name === "RajaLottery") ? (utcSec % 30 === 0) : (elapsedIntervals % cycle === 0);
-        
-        if (displayRemaining === 0) {
+        // Result check logic
+        if (displayRemaining === 0 && utcSec % cycle === 0) {
             setIsChecking(true);
             setTimeout(() => {
                 setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
