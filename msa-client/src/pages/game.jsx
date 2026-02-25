@@ -155,41 +155,103 @@ const GameScreen = () => {
         return () => clearInterval(interval);
     }, []);
 
-    useEffect(() => {
-        const updateTimer = () => {
-            const now = new Date();
-            const utcSec = now.getUTCSeconds();
-            const utcMin = now.getUTCMinutes();
-            const utcHrs = now.getUTCHours();
-            const totalSeconds = utcHrs * 3600 + utcMin * 60 + utcSec;
+    // useEffect(() => {
+    //     const updateTimer = () => {
+    //         const now = new Date();
+    //         const utcSec = now.getUTCSeconds();
+    //         const utcMin = now.getUTCMinutes();
+    //         const utcHrs = now.getUTCHours();
+    //         const totalSeconds = utcHrs * 3600 + utcMin * 60 + utcSec;
 
-            let cycle = 60; // Default 1m
+    //         let cycle = 60; // Default 1m
+    //         if (currentWingo === 'wingo30s') cycle = 30;
+    //         if (currentWingo === 'wingo3m') cycle = 180;
+    //         if (currentWingo === 'wingo5m') cycle = 300;
+
+    //         const remaining = cycle - (totalSeconds % cycle);
+    //         const displayRemaining = Math.max(0, remaining - 1);
+
+    //         setTimer({
+    //             min: Math.floor(displayRemaining / 60).toString().padStart(2, '0'),
+    //             sec: (displayRemaining % 60).toString().padStart(2, '0'),
+    //             period: `${now.toISOString().slice(0, 10).replace(/-/g, '')}1000${10001 + Math.floor(totalSeconds / cycle)}`
+    //         });
+
+    //         if (remaining === cycle) {
+    //             setIsChecking(true);
+    //             setTimeout(() => {
+    //                 setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
+    //                 setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
+    //                 setIsChecking(false);
+    //             }, 2000);
+    //         }
+    //     };
+    //     const t = setInterval(updateTimer, 1000);
+    //     return () => clearInterval(t);
+    // }, [currentWingo]);
+
+    useEffect(() => {
+    const updateTimer = () => {
+        const now = new Date();
+        // Use UTC time to match server-side PHP logic consistency
+        const utcSec = now.getUTCSeconds();
+        const utcMin = now.getUTCMinutes();
+        const utcHrs = now.getUTCHours();
+        
+        // Match the PHP Logic: (Hours * 60 + Minutes) * 2 + (Seconds / 30)
+        const totalMinutes = (utcHrs * 60) + utcMin;
+        
+        let cycle = 60; // Default
+        let elapsedIntervals;
+        let periodID;
+        let displayRemaining;
+
+        if (gameData?.name === "RajaLottery") {
+            // Specialized 30s Logic for Raja Lottery
+            cycle = 30;
+            elapsedIntervals = (totalMinutes * 2) + Math.floor(utcSec / 30);
+            const remaining = cycle - (utcSec % cycle);
+            displayRemaining = Math.max(0, remaining - 1);
+            
+            // Format: YYYYMMDD + "10005" + 4-digit interval count
+            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+            periodID = `${dateStr}10005${String(elapsedIntervals + 1).padStart(4, '0')}`;
+        } else {
+            // Standard Logic for other games
             if (currentWingo === 'wingo30s') cycle = 30;
             if (currentWingo === 'wingo3m') cycle = 180;
             if (currentWingo === 'wingo5m') cycle = 300;
 
+            const totalSeconds = (totalMinutes * 60) + utcSec;
             const remaining = cycle - (totalSeconds % cycle);
-            const displayRemaining = Math.max(0, remaining - 1);
+            displayRemaining = Math.max(0, remaining - 1);
+            
+            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+            periodID = `${dateStr}1000${10001 + Math.floor(totalSeconds / cycle)}`;
+        }
 
-            setTimer({
-                min: Math.floor(displayRemaining / 60).toString().padStart(2, '0'),
-                sec: (displayRemaining % 60).toString().padStart(2, '0'),
-                period: `${now.toISOString().slice(0, 10).replace(/-/g, '')}1000${10001 + Math.floor(totalSeconds / cycle)}`
-            });
+        setTimer({
+            min: Math.floor(displayRemaining / 60).toString().padStart(2, '0'),
+            sec: (displayRemaining % 60).toString().padStart(2, '0'),
+            period: periodID
+        });
 
-            if (remaining === cycle) {
-                setIsChecking(true);
-                setTimeout(() => {
-                    setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
-                    setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
-                    setIsChecking(false);
-                }, 2000);
-            }
-        };
-        const t = setInterval(updateTimer, 1000);
-        return () => clearInterval(t);
-    }, [currentWingo]);
-
+        // Trigger check when cycle resets
+        const isReset = (gameData?.name === "RajaLottery") ? (utcSec % 30 === 0) : (elapsedIntervals % cycle === 0);
+        
+        if (displayRemaining === 0) {
+            setIsChecking(true);
+            setTimeout(() => {
+                setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
+                setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
+                setIsChecking(false);
+            }, 2000);
+        }
+    };
+    
+    const t = setInterval(updateTimer, 1000);
+    return () => clearInterval(t);
+}, [currentWingo, gameData?.name]);
 
     if (!gameData) return null;
 
