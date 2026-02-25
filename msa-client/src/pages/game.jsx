@@ -156,114 +156,114 @@ const GameScreen = () => {
         return () => clearInterval(interval);
     }, []);
 
-    // useEffect(() => {
-    //     const updateTimer = () => {
-    //         const now = new Date();
-    //         const utcSec = now.getUTCSeconds();
-    //         const utcMin = now.getUTCMinutes();
-    //         const utcHrs = now.getUTCHours();
-    //         const totalSeconds = utcHrs * 3600 + utcMin * 60 + utcSec;
-
-    //         let cycle = 60; // Default 1m
-    //         if (currentWingo === 'wingo30s') cycle = 30;
-    //         if (currentWingo === 'wingo3m') cycle = 180;
-    //         if (currentWingo === 'wingo5m') cycle = 300;
-
-    //         const remaining = cycle - (totalSeconds % cycle);
-    //         const displayRemaining = Math.max(0, remaining - 1);
-
-    //         setTimer({
-    //             min: Math.floor(displayRemaining / 60).toString().padStart(2, '0'),
-    //             sec: (displayRemaining % 60).toString().padStart(2, '0'),
-    //             period: `${now.toISOString().slice(0, 10).replace(/-/g, '')}1000${10001 + Math.floor(totalSeconds / cycle)}`
-    //         });
-
-    //         if (remaining === cycle) {
-    //             setIsChecking(true);
-    //             setTimeout(() => {
-    //                 setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
-    //                 setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
-    //                 setIsChecking(false);
-    //             }, 2000);
-    //         }
-    //     };
-    //     const t = setInterval(updateTimer, 1000);
-    //     return () => clearInterval(t);
-    // }, [currentWingo]);
-
     useEffect(() => {
         const updateTimer = () => {
-            // 🟢 ALWAYS USE NEW DATE() INSIDE TIMER
             const now = new Date();
-
-            // VPS Fix: Ensure we strictly use UTC methods to match Online Compiler
             const utcSec = now.getUTCSeconds();
             const utcMin = now.getUTCMinutes();
             const utcHrs = now.getUTCHours();
-
-            // Standard UTC calculations
-            const totalMinutesToday = (utcHrs * 60) + utcMin;
-            const totalSecondsToday = (totalMinutesToday * 60) + utcSec;
-            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+            const totalSeconds = utcHrs * 3600 + utcMin * 60 + utcSec;
 
             let cycle = 60; // Default 1m
-            let periodID;
-            let displayRemaining;
+            if (currentWingo === 'wingo30s') cycle = 30;
+            if (currentWingo === 'wingo3m') cycle = 180;
+            if (currentWingo === 'wingo5m') cycle = 300;
 
-            if (gameData?.name === "RajaLottery") {
-                // 🟢 RAJA LOTTERY: Strictly 1M Cycle with Calibrated Offset
-                // Ye wahi logic hai jo aapne compiler mein 'Greate' bola tha
-                cycle = 60;
-                const remaining = cycle - (utcSec % cycle);
-                displayRemaining = Math.max(0, remaining - 1);
-
-                // Formula: Minutes today - 626 (Matches 20260225100010017)
-                const periodCounter = totalMinutesToday - 626;
-                periodID = `${dateStr}10005${String(periodCounter).padStart(5, '0')}`;
-            } else {
-                // 🔵 ALL OTHER GAMES: Using your ORIGINAL logic
-                if (currentWingo === 'wingo30s') cycle = 30;
-                else if (currentWingo === 'wingo3m') cycle = 180;
-                else if (currentWingo === 'wingo5m') cycle = 300;
-                else cycle = 60; // 1m default
-
-                const remaining = cycle - (totalSecondsToday % cycle);
-                displayRemaining = Math.max(0, remaining - 1);
-
-                // Original formula sync
-                const elapsedCycles = Math.floor(totalSecondsToday / cycle);
-                periodID = `${dateStr}1000${10001 + elapsedCycles}`;
-            }
+            const remaining = cycle - (totalSeconds % cycle);
+            const displayRemaining = Math.max(0, remaining - 1);
 
             setTimer({
                 min: Math.floor(displayRemaining / 60).toString().padStart(2, '0'),
                 sec: (displayRemaining % 60).toString().padStart(2, '0'),
-                period: periodID
+                period: `${now.toISOString().slice(0, 10).replace(/-/g, '')}1000${10001 + Math.floor(totalSeconds / cycle)}`
             });
 
-            // 🚀 UPDATED TRIGGER: EXACTLY AT 00:00
-            if (lastPeriodRef.current !== periodID) {
-                lastPeriodRef.current = periodID;
-
+            if (remaining === cycle) {
                 setIsChecking(true);
-
                 setTimeout(() => {
-                    const randomIndex = Math.floor(Math.random() * 10);
-                    const newBall = ballData[randomIndex];
-
-                    setPredictedResult(newBall);
+                    setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
                     setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
-
                     setIsChecking(false);
-                    console.log("Prediction Changed:", newBall.n);
                 }, 2000);
             }
-
         };
-
         const t = setInterval(updateTimer, 1000);
         return () => clearInterval(t);
-    }, [currentWingo, gameData?.name]);
+    }, [currentWingo]);
+
+    // useEffect(() => {
+    //     const updateTimer = () => {
+    //         // 🟢 ALWAYS USE NEW DATE() INSIDE TIMER
+    //         const now = new Date();
+
+    //         // VPS Fix: Ensure we strictly use UTC methods to match Online Compiler
+    //         const utcSec = now.getUTCSeconds();
+    //         const utcMin = now.getUTCMinutes();
+    //         const utcHrs = now.getUTCHours();
+
+    //         // Standard UTC calculations
+    //         const totalMinutesToday = (utcHrs * 60) + utcMin;
+    //         const totalSecondsToday = (totalMinutesToday * 60) + utcSec;
+    //         const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+
+    //         let cycle = 60; // Default 1m
+    //         let periodID;
+    //         let displayRemaining;
+
+    //         if (gameData?.name === "RajaLottery") {
+    //             // 🟢 RAJA LOTTERY: Strictly 1M Cycle with Calibrated Offset
+    //             // Ye wahi logic hai jo aapne compiler mein 'Greate' bola tha
+    //             cycle = 60;
+    //             const remaining = cycle - (utcSec % cycle);
+    //             displayRemaining = Math.max(0, remaining - 1);
+
+    //             // Formula: Minutes today - 626 (Matches 20260225100010017)
+    //             const periodCounter = totalMinutesToday - 626;
+    //             periodID = `${dateStr}10005${String(periodCounter).padStart(5, '0')}`;
+    //         } else {
+    //             // 🔵 ALL OTHER GAMES: Using your ORIGINAL logic
+    //             if (currentWingo === 'wingo30s') cycle = 30;
+    //             else if (currentWingo === 'wingo3m') cycle = 180;
+    //             else if (currentWingo === 'wingo5m') cycle = 300;
+    //             else cycle = 60; // 1m default
+
+    //             const remaining = cycle - (totalSecondsToday % cycle);
+    //             displayRemaining = Math.max(0, remaining - 1);
+
+    //             // Original formula sync
+    //             const elapsedCycles = Math.floor(totalSecondsToday / cycle);
+    //             periodID = `${dateStr}1000${10001 + elapsedCycles}`;
+    //         }
+
+    //         setTimer({
+    //             min: Math.floor(displayRemaining / 60).toString().padStart(2, '0'),
+    //             sec: (displayRemaining % 60).toString().padStart(2, '0'),
+    //             period: periodID
+    //         });
+
+    //         // 🚀 UPDATED TRIGGER: EXACTLY AT 00:00
+    //         if (lastPeriodRef.current !== periodID) {
+    //             lastPeriodRef.current = periodID;
+
+    //             setIsChecking(true);
+
+    //             setTimeout(() => {
+    //                 const randomIndex = Math.floor(Math.random() * 10);
+    //                 const newBall = ballData[randomIndex];
+
+    //                 setPredictedResult(newBall);
+    //                 setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
+
+    //                 setIsChecking(false);
+    //                 console.log("Prediction Changed:", newBall.n);
+    //             }, 2000);
+    //         }
+
+    //     };
+
+    //     const t = setInterval(updateTimer, 1000);
+    //     return () => clearInterval(t);
+    // }, [currentWingo, gameData?.name]);
 
     if (!gameData) return null;
 
