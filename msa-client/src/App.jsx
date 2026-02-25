@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AuthScreen from './pages/auth';
 import GamePortal from './pages/portal';
 import GameScreen from './pages/game';
+import AdminPanel from './pages/AdminPanel';
 
 // 🟢 Domain Detect karne wala helper (Must match Auth and Portal)
 const getDomainConfig = () => {
