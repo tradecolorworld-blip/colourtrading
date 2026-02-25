@@ -1118,6 +1118,48 @@ app.post('/api/mas/payment/status', async (req, res) => {
     }
 });
 
+// 🟢 6. Manual MAS VIP Activation (For Admin)
+app.post('/api/mas/admin/activate-vip', async (req, res) => {
+    const { email, variant } = req.body;
+
+    if (!email || !variant) {
+        return res.status(400).json({ message: "Email and variant are required" });
+    }
+
+    const config = getMSAModule(variant);
+    if (!config || !config.model) {
+        return res.status(400).json({ message: "Invalid Variant" });
+    }
+
+    try {
+        const now = new Date();
+        const expiryDate = new Date();
+        expiryDate.setDate(now.getDate() + 28); // 28 days validity
+
+        const updatedUser = await config.model.findOneAndUpdate(
+            { email: email.toLowerCase() },
+            { 
+                isVip: true, 
+                vipExpiry: expiryDate, 
+                purchaseDate: now 
+            },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: `User not found in ${variant.toUpperCase()}` });
+        }
+
+        res.json({
+            status: "Success",
+            message: `VIP Activated for ${email} in ${variant.toUpperCase()}`,
+            expiry: expiryDate
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+});
+
 // 🟢 Manual VIP Activation for WinGo (Admin Use)
 app.post('/api/wingo/admin/activate-vip', async (req, res) => {
     const { email, planType } = req.body; // planType should be "PRO" or "SUPER_PRO"
