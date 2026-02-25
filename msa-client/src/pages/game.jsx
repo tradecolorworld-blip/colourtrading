@@ -190,57 +190,54 @@ const GameScreen = () => {
     //     return () => clearInterval(t);
     // }, [currentWingo]);
 
-    useEffect(() => {
+   useEffect(() => {
     const updateTimer = () => {
         const now = new Date();
-        // UTC time for server consistency
         const utcSec = now.getUTCSeconds();
         const utcMin = now.getUTCMinutes();
         const utcHrs = now.getUTCHours();
         
-        const totalMinutesInDay = (utcHrs * 60) + utcMin;
+        // Total elapsed minutes in the day
+        const totalMinutesToday = (utcHrs * 60) + utcMin;
+        const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
         
         let cycle = 60; // Default 1m
-        let periodID;
-        let displayRemaining;
+        let prefix = "10001";
+        let periodCounter;
 
-        if (gameData?.name === "RajaLottery") {
-            // Raja Lottery specialized 30s logic
+        // 🟢 Logic for different Wingo modes
+        if (currentWingo === 'wingo30s' || gameData?.name === "RajaLottery") {
             cycle = 30;
-            const elapsedIntervals = (totalMinutesInDay * 2) + Math.floor(utcSec / 30);
-            const remaining = cycle - (utcSec % cycle);
-            displayRemaining = Math.max(0, remaining - 1);
-            
-            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-            // PHP format: YYYYMMDD + 10005 + 4-digit counter
-            periodID = `${dateStr}10005${String(elapsedIntervals + 1).padStart(4, '0')}`;
+            prefix = "10005";
+            // 30s logic: 2 intervals per minute with -1252 offset
+            const elapsed30s = (totalMinutesToday * 2) + Math.floor(utcSec / 30);
+            periodCounter = elapsed30s - 1252;
         } else {
-            // Standard WinGo Logic (1m, 3m, 5m)
-            if (currentWingo === 'wingo30s') cycle = 30;
-            if (currentWingo === 'wingo3m') cycle = 180;
-            if (currentWingo === 'wingo5m') cycle = 300;
+            // Shared Minute Counter Logic (-626 offset)
+            periodCounter = totalMinutesToday - 626;
 
-            const totalSecondsInDay = (totalMinutesInDay * 60) + utcSec;
-            const elapsedPeriods = Math.floor(totalSecondsInDay / cycle);
-            const remaining = cycle - (totalSecondsInDay % cycle);
-            displayRemaining = Math.max(0, remaining - 1);
-            
-            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-            
-            // Format match for 20260225100010011 at 10:37
-            // 10:37:27 is the 637th minute of the day. 
-            // ID ends in 10011, which suggests (10000 + minute_counter) or similar offset.
-            periodID = `${dateStr}10001${String(elapsedPeriods + 1).padStart(4, '0')}`;
+            if (currentWingo === 'wingo3m') {
+                cycle = 180;
+                prefix = "10002";
+            } else if (currentWingo === 'wingo5m') {
+                cycle = 300;
+                prefix = "10003";
+            }
         }
+
+        // Timer Calculation
+        const remaining = cycle - ( (cycle === 30 ? utcSec : (totalMinutesToday * 60 + utcSec)) % cycle);
+        const displayRemaining = Math.max(0, remaining - 1);
 
         setTimer({
             min: Math.floor(displayRemaining / 60).toString().padStart(2, '0'),
             sec: (displayRemaining % 60).toString().padStart(2, '0'),
-            period: periodID
+            // Exact 5-digit padding as per your 20260225100010017 example
+            period: `${dateStr}${prefix}${String(periodCounter).padStart(5, '0')}`
         });
 
-        // Result check logic
-        if (displayRemaining === 0 && utcSec % cycle === 0) {
+        // 🟢 Result checking logic when timer hits zero
+        if (displayRemaining === 0) {
             setIsChecking(true);
             setTimeout(() => {
                 setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
