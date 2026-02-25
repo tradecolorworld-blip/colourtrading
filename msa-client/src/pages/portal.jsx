@@ -86,7 +86,7 @@ const GamePortal = () => {
         { name: "In999", logo: logo3, link: "https://www.ilxd28.com/#/register?invitationCode=167266601273", hot: true },
         { name: "DamanGames", logo: logo4, link: "https://damanvipgame.com/register?invitationCode=4879717468242", hot: true },
         { name: "BDG Game", logo: logo5, link: "https://bdg-ipl.vip//#/register?invitationCode=7868719070147", hot: true },
-        { name: "RajaLottery", logo: logo8, link: "https://www.rajastake9.com/#/register?invitationCode=777125432189", hot: false },
+        { name: "RajaLottery", logo: logo8, link: "https://rajagames111.com/#/register?invitationCode=643349101079", hot: false },
         { name: "Tiranga", logo: logo6, link: "https://tgdream.pro/#/register?invitationCode=8752724598773", hot: false },
         { name: "BDG Win", logo: logo7, link: " https://bdgwina.top//#/register?invitationCode=4138512408865", hot: false },
         { name: "OK Win", logo: logo9, link: "https://okwinslots4.com/#/register?invitationCode=755836029251", hot: false },
