@@ -309,7 +309,7 @@ const WinGoHackDashboard = () => {
 
             {/* Footer Buttons */}
             <div className="my-6 flex gap-5 z-50">
-                <a href="https://wa.me/919116046055" target="_blank" rel="noreferrer" >
+                <a href="https://wa.me/919875736055" target="_blank" rel="noreferrer" >
                     <img src="https://i.ibb.co/W4T5WthP/whatsapp.png" className="w-10 h-10" alt="whatsapp" />
                 </a>
                 <a href="https://t.me/modapksh" target="_blank" rel="noreferrer" >
