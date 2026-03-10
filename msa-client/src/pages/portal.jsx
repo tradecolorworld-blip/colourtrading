@@ -19,7 +19,7 @@ const getDomainConfig = () => {
         return {
             variant: 'msa1',
             storageKey: 'MSA1_user',
-            whatsapp: '919116046055',
+            whatsapp: '919875736055',
             telegram: 'modapksh',
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
         };
@@ -42,7 +42,7 @@ const getDomainConfig = () => {
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
         };
     }
-    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };
+    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919875736055', telegram: 'modapksh', youtube: '' };
 };
 
 const GamePortal = () => {
