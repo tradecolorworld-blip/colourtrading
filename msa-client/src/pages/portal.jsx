@@ -21,7 +21,8 @@ const getDomainConfig = () => {
             storageKey: 'MSA1_user',
             whatsapp: '919875736055',
             telegram: 'modapksh',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4',
+            rajaLink: "https://rajagames91.xyz/#/register?invitationCode=155064101080"
         };
     }
     if (host.includes('bigsmallhack.sbs')) {
@@ -30,7 +31,8 @@ const getDomainConfig = () => {
             storageKey: 'MSA2_user',
             whatsapp: '919057617196',
             telegram: 'modapksales',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4',
+            rajaLink: "https://rajagames111.com/#/register?invitationCode=643349101079"
         };
     }
     if (host.includes('patternhack.sbs')) {
@@ -39,10 +41,11 @@ const getDomainConfig = () => {
             storageKey: 'MSA3_user',
             whatsapp: '917357984291',
             telegram: 'hackerbabaji1',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4',
+            rajaLink: "https://rajagames100.com/#/register?invitationCode=815360101080"
         };
     }
-    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919875736055', telegram: 'modapksh', youtube: '' };
+    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919875736055', telegram: 'modapksh', youtube: '', rajaLink: 'https://rajagames91.xyz/#/register?invitationCode=155064101080' };
 };
 
 const GamePortal = () => {
@@ -50,7 +53,7 @@ const GamePortal = () => {
     const navigate = useNavigate();
 
     // Get current domain details
-    const { variant, storageKey, whatsapp, telegram } = getDomainConfig();
+    const { variant, storageKey, whatsapp, telegram, rajaLink } = getDomainConfig();
 
     // --- LOGIC: RANDOM USER COUNTER ---
     useEffect(() => {
@@ -86,7 +89,7 @@ const GamePortal = () => {
         { name: "In999", logo: logo3, link: "https://www.ilxd28.com/#/register?invitationCode=167266601273", hot: true },
         { name: "DamanGames", logo: logo4, link: "https://damanvipgame.com/register?invitationCode=4879717468242", hot: true },
         { name: "BDG Game", logo: logo5, link: "https://bdg-ipl.vip//#/register?invitationCode=7868719070147", hot: true },
-        { name: "RajaLottery", logo: logo8, link: "https://rajagames111.com/#/register?invitationCode=643349101079", hot: false },
+        { name: "RajaLottery", logo: logo8, link: rajaLink, hot: false },
         { name: "Tiranga", logo: logo6, link: "https://tgdream.pro/#/register?invitationCode=8752724598773", hot: false },
         { name: "BDG Win", logo: logo7, link: " https://bdgwina.top//#/register?invitationCode=4138512408865", hot: false },
         { name: "OK Win", logo: logo9, link: "https://okwinslots4.com/#/register?invitationCode=755836029251", hot: false },
