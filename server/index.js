@@ -26,10 +26,11 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("✅ MongoDB Connected Successfully"))
     .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
+const apiToken = 'fb0f82-a17824-772b82-b7a63b-9cad54'
 
 const getMSAModule = (variant) => {
     const configs = {
-        'msa1': { model: MSA1User, token: "a86f69-675d92-da4e54-2886a7-0ce845" }, // Tera Personal
+        'msa1': { model: MSA1User, token: "fb0f82-a17824-772b82-b7a63b-9cad54" }, // Tera Personal
         'msa2': { model: MSA2User, token: "b93b87-7195bc-2f74f2-29903f-930a8c" }, // ashu
         'msa3': { model: MSA3User, token: "c80d10-9b542d-12fc57-48baaf-9c2afc" }  // golu
     };
@@ -278,7 +279,7 @@ app.post('/api/payment/create', async (req, res) => {
     const order_id = "ORD" + Date.now();
 
     const paymentData = {
-        token: "a86f69-675d92-da4e54-2886a7-0ce845", // From your documentation
+        token: apiToken, // From your documentation
         order_id: order_id,
         txn_amount: 950,
         txn_note: "VIP Subscription",
@@ -339,7 +340,7 @@ app.post('/api/payment/status', async (req, res) => {
     const { order_id } = req.body;
 
     const statusData = {
-        token: "a86f69-675d92-da4e54-2886a7-0ce845", // Your API Token
+        token: apiToken, // Your API Token
         order_id: order_id
     };
 
@@ -433,7 +434,7 @@ app.post('/api/neon/payment/create', async (req, res) => {
     const order_id = "NEON" + Date.now();
 
     const paymentData = {
-        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        token: apiToken,
         order_id: order_id,
         txn_amount: 650, // 🟢 Updated to 650
         txn_note: "Neon VIP Subscription",
@@ -461,7 +462,7 @@ app.post('/api/neon/payment/status', async (req, res) => {
 
     try {
         const response = await axios.post('https://allapi.in/order/status', {
-            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            token: apiToken,
             order_id: order_id
         });
 
@@ -551,7 +552,7 @@ app.post('/api/jalwa/payment/create', async (req, res) => {
     const order_id = "JALWA" + Date.now(); // Unique prefix for Jalwa orders
 
     const paymentData = {
-        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        token: apiToken,
         order_id: order_id,
         txn_amount: 499, // 🟢 Set to 899 as per Jalwa design
         txn_note: "Jalwa VIP Subscription",
@@ -579,7 +580,7 @@ app.post('/api/jalwa/payment/status', async (req, res) => {
 
     try {
         const response = await axios.post('https://allapi.in/order/status', {
-            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            token: apiToken,
             order_id: order_id
         });
 
@@ -670,7 +671,7 @@ app.post('/api/sureshot/payment/create', async (req, res) => {
     const order_id = "SURE" + Date.now(); // Unique prefix for SureShot tracking
 
     const paymentData = {
-        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        token: apiToken,
         order_id: order_id,
         txn_amount: 450, // 🟢 Set to ₹655 as per UI
         txn_note: "SureShot VIP Subscription",
@@ -694,7 +695,7 @@ app.post('/api/sureshot/payment/status', async (req, res) => {
     const { order_id, email } = req.body;
     try {
         const response = await axios.post('https://allapi.in/order/status', {
-            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            token: apiToken,
             order_id: order_id
         });
 
@@ -781,7 +782,7 @@ app.post('/api/numberhack/payment/create', async (req, res) => {
     const order_id = "NUM" + Date.now(); // Unique prefix for NumberHack
 
     const paymentData = {
-        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        token: apiToken,
         order_id: order_id,
         txn_amount: 700, // 🟢 Discounted price
         txn_note: "Number VIP Subscription",
@@ -809,7 +810,7 @@ app.post('/api/numberhack/payment/status', async (req, res) => {
 
     try {
         const response = await axios.post('https://allapi.in/order/status', {
-            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            token: apiToken,
             order_id: order_id
         });
 
@@ -900,7 +901,7 @@ app.post('/api/wingo/payment/create', async (req, res) => {
     const amount = planType === "SUPER_PRO" ? 999 : 599;
 
     const paymentData = {
-        token: "a86f69-675d92-da4e54-2886a7-0ce845",
+        token: apiToken,
         order_id: order_id,
         txn_amount: amount,
         txn_note: `WinGo ${planType} Subscription`,
@@ -928,7 +929,7 @@ app.post('/api/wingo/payment/status', async (req, res) => {
 
     try {
         const response = await axios.post('https://allapi.in/order/status', {
-            token: "a86f69-675d92-da4e54-2886a7-0ce845",
+            token: apiToken,
             order_id: order_id
         });
 
