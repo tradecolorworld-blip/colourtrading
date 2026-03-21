@@ -81,7 +81,7 @@ const GameScreen = () => {
 
     // 🟢 1. Load user and check VIP status on mount
     useEffect(() => {
-        // if (!gameData) { navigate('/auth'); return; }
+        if (!gameData) { navigate('/auth'); return; }
 
         const checkVip = async () => {
             if (user?.phone) {
@@ -95,10 +95,11 @@ const GameScreen = () => {
             }
         };
         checkVip();
-    }, [gameData, user, navigate, variant]);
+    }, [user?.phone, variant]);
 
     // 🟢 2. NEW: Verify Payment if returning from Gateway (Auto-check)
     useEffect(() => {
+        if(isVip) return
         const verifyPayment = async () => {
             const pendingOrder = JSON.parse(localStorage.getItem('mas_current_order'));
             if (pendingOrder && user) {
@@ -386,7 +387,7 @@ const GameScreen = () => {
                             <h2 className="text-2xl font-black mb-2 text-slate-800 tracking-tight">PURCHASE PREMIUM</h2>
                             <div className="flex items-center justify-center gap-3 mb-6">
                                 <span className="text-slate-400 line-through text-lg font-bold">₹999</span>
-                                <span className="text-emerald-500 text-3xl font-black">₹721</span>
+                                <span className="text-emerald-500 text-3xl font-black">₹850</span>
                             </div>
                             <p className="text-xs text-slate-500 mb-8 font-medium px-4 leading-relaxed italic">Get 99% accuracy predictions, ad-free experience, and 24/7 priority support.</p>
                             <div className="flex flex-col gap-3">
