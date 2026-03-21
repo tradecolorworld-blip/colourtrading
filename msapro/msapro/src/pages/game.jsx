@@ -16,7 +16,7 @@ const getDomainConfig = () => {
     if (host.includes('sureshotpro.sbs')) {
         return {
             variant: 'msa1',
-            storageKey: 'MSA1_user',
+            storageKey: 'MSA1PRO_user',
             whatsapp: '919875736055',
             telegram: 'modapksh',
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
@@ -25,7 +25,7 @@ const getDomainConfig = () => {
     if (host.includes('sureshothack.pro')) {
         return {
             variant: 'msa2',
-            storageKey: 'MSA2_user',
+            storageKey: 'MSA2PRO_user',
             whatsapp: '919057617196',
             telegram: 'modapksales',
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
@@ -34,7 +34,7 @@ const getDomainConfig = () => {
     if (host.includes('sureshotypro.xyz')) {
         return {
             variant: 'msa3',
-            storageKey: 'MSA3_user',
+            storageKey: 'MSA3PRO_user',
             whatsapp: '917891202468',
             telegram: 'hackerbabaji1',
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'

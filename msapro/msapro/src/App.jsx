@@ -8,9 +8,9 @@ import AdminPanel from './pages/AdminPanel';
 // 🟢 Domain Detect karne wala helper (Must match Auth and Portal)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('sureshotpro.xyz')) return { variant: 'msa1', storageKey: 'MSA1_user' };
-    if (host.includes('sureshotxpro.xyz')) return { variant: 'msa2', storageKey: 'MSA2_user' };
-    if (host.includes('sureshotypro.xyz')) return { variant: 'msa3', storageKey: 'MSA3_user' };
+    if (host.includes('sureshotpro.xyz')) return { variant: 'msa1', storageKey: 'MSA1PRO_user' };
+    if (host.includes('sureshotxpro.xyz')) return { variant: 'msa2', storageKey: 'MSA2PRO_user' };
+    if (host.includes('sureshotypro.xyz')) return { variant: 'msa3', storageKey: 'MSA3PRO_user' };
     return { variant: 'test', storageKey: 'MSA_test_user' };
 };
 
@@ -19,7 +19,7 @@ const ProtectedRoute = ({ children }) => {
     const { storageKey } = getDomainConfig();
     const user = JSON.parse(localStorage.getItem(storageKey));
 
-    if (!user || !user.email) {
+    if (!user || !user.phone) {
         return <Navigate to="/auth" replace />;
     }
     return children;
