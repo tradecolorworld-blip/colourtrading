@@ -139,25 +139,9 @@ app.get('/api/admin/stats', async (req, res) => {
             });
         }
 
-        // vipList.sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt));
-        // const limitedVipList = vipList.slice(0, 20);
-        // res.json({ totalUsers, totalVipUsers, limitedVipList, analytics });
-        // 1. Sort by _id descending (Hexadecimal chronological order)
-        // This ensures the literal last 20 records added to the array are picked.
-        vipList.sort((a, b) => {
-            // Convert IDs to strings and compare to get the absolute latest entries
-            return b.id.toString().localeCompare(a.id.toString());
-        });
-
-        // 2. Take the top 20
+        vipList.sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt));
         const limitedVipList = vipList.slice(0, 20);
-
-        res.json({
-            totalUsers,
-            totalVipUsers,
-            vipList: limitedVipList,
-            analytics
-        });
+        res.json({ totalUsers, totalVipUsers, limitedVipList, analytics });
     } catch (err) {
         res.status(500).json({ message: "Admin data fetch failed" });
     }
@@ -1172,10 +1156,10 @@ app.post('/api/mas/admin/activate-vip', async (req, res) => {
 
         const updatedUser = await config.model.findOneAndUpdate(
             { email: email.toLowerCase() },
-            {
-                isVip: true,
-                vipExpiry: expiryDate,
-                purchaseDate: now
+            { 
+                isVip: true, 
+                vipExpiry: expiryDate, 
+                purchaseDate: now 
             },
             { new: true }
         );
@@ -1301,7 +1285,7 @@ app.post('/api/maspro/check-vip', async (req, res) => {
 
         if (!config) return res.status(400).json({ message: "Invalid Variant" });
 
-        const user = await config.model.findOne({ phone: phone.toLowerCase() });
+        const user = await config.model.findOne({phone : phone.toLowerCase() });
 
         if (!user || !user.isVip) {
             return res.json({ isVip: false });
@@ -1414,10 +1398,10 @@ app.post('/api/maspro/admin/activate-vip', async (req, res) => {
 
         const updatedUser = await config.model.findOneAndUpdate(
             { phone: phone.toLowerCase() },
-            {
-                isVip: true,
-                vipExpiry: expiryDate,
-                purchaseDate: now
+            { 
+                isVip: true, 
+                vipExpiry: expiryDate, 
+                purchaseDate: now 
             },
             { new: true }
         );
