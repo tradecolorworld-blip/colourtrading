@@ -153,7 +153,7 @@ const AdminDashboard = () => {
                                     value={vipForm.mod}
                                     onChange={(e) => setVipForm({...vipForm, mod: e.target.value})}
                                 >
-                                    {['Original', 'Neon', 'Jalwa', 'SureShot', 'NumberHack', 'WinGo'].map(mod => (
+                                    {['Original', 'Neon', 'Jalwa', 'SureShot', 'NumberHack', 'WinGo', 'MSA1', 'MASPro1'].map(mod => (
                                         <option key={mod} value={mod} className="bg-[#151921]">{mod}</option>
                                     ))}
                                 </select>

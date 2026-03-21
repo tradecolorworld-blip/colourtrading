@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 // 🟢 NEW: Domain Configuration Helper (Must match App.jsx and Auth.jsx)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('sureshotpro.xyz')) {
+    if (host.includes('sureshotpro.sbs')) {
         return {
             variant: 'msa1',
             storageKey: 'MSA1_user',
@@ -25,7 +25,7 @@ const getDomainConfig = () => {
             rajaLink: "https://rajagames91.xyz/#/register?invitationCode=155064101080"
         };
     }
-    if (host.includes('sureshotxpro.xyz')) {
+    if (host.includes('sureshothack.pro')) {
         return {
             variant: 'msa2',
             storageKey: 'MSA2_user',

@@ -63,7 +63,8 @@ app.get('/api/admin/stats', async (req, res) => {
             { name: 'SureShot', model: SureShotUser, price: 450 },
             { name: 'NumberHack', model: NumberHackUser, price: 700 },
             { name: 'WinGo', model: WinGoUser },
-            { name: 'MSA1', model: MSA1User, price: 721 }
+            { name: 'MSA1', model: MSA1User, price: 721 },
+            { name: 'MASPro1', model: MASProUser1, price: 850 },
         ];
 
         const IST_OFFSET = 5.5 * 60 * 60 * 1000;
@@ -139,7 +140,8 @@ app.get('/api/admin/stats', async (req, res) => {
         }
 
         vipList.sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt));
-        res.json({ totalUsers, totalVipUsers, vipList, analytics });
+        const limitedVipList = vipList.slice(0, 20);
+        res.json({ totalUsers, totalVipUsers, limitedVipList, analytics });
     } catch (err) {
         res.status(500).json({ message: "Admin data fetch failed" });
     }
@@ -161,7 +163,9 @@ app.post('/api/admin/universal-activate-vip', async (req, res) => {
         'Jalwa': JalwaUser,
         'SureShot': SureShotUser,
         'NumberHack': NumberHackUser,
-        'WinGo': WinGoUser
+        'WinGo': WinGoUser,
+        'MSA1': MSA1User,      // 🟢 Added MSA1
+        'MASPro1': MASProUser1
     };
 
     const TargetModel = collections[mod];
@@ -1152,10 +1156,10 @@ app.post('/api/mas/admin/activate-vip', async (req, res) => {
 
         const updatedUser = await config.model.findOneAndUpdate(
             { email: email.toLowerCase() },
-            { 
-                isVip: true, 
-                vipExpiry: expiryDate, 
-                purchaseDate: now 
+            {
+                isVip: true,
+                vipExpiry: expiryDate,
+                purchaseDate: now
             },
             { new: true }
         );
@@ -1281,7 +1285,7 @@ app.post('/api/maspro/check-vip', async (req, res) => {
 
         if (!config) return res.status(400).json({ message: "Invalid Variant" });
 
-        const user = await config.model.findOne({phone : phone.toLowerCase() });
+        const user = await config.model.findOne({ phone: phone.toLowerCase() });
 
         if (!user || !user.isVip) {
             return res.json({ isVip: false });
@@ -1394,10 +1398,10 @@ app.post('/api/maspro/admin/activate-vip', async (req, res) => {
 
         const updatedUser = await config.model.findOneAndUpdate(
             { phone: phone.toLowerCase() },
-            { 
-                isVip: true, 
-                vipExpiry: expiryDate, 
-                purchaseDate: now 
+            {
+                isVip: true,
+                vipExpiry: expiryDate,
+                purchaseDate: now
             },
             { new: true }
         );

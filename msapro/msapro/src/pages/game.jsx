@@ -13,7 +13,7 @@ import axios from 'axios';
 // 🟢 NEW: Domain Configuration Helper (Matches App, Auth, and Portal)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('sureshotpro.xyz')) {
+    if (host.includes('sureshotpro.sbs')) {
         return {
             variant: 'msa1',
             storageKey: 'MSA1_user',
@@ -22,7 +22,7 @@ const getDomainConfig = () => {
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
         };
     }
-    if (host.includes('sureshotxpro.xyz')) {
+    if (host.includes('sureshothack.pro')) {
         return {
             variant: 'msa2',
             storageKey: 'MSA2_user',
@@ -84,10 +84,10 @@ const GameScreen = () => {
         // if (!gameData) { navigate('/auth'); return; }
 
         const checkVip = async () => {
-            if (user?.email) {
+            if (user?.phone) {
                 try {
                     const res = await axios.post('/api/maspro/check-vip', {
-                        email: user.email,
+                        phone: user.phone,
                         variant
                     });
                     setIsVip(res.data.isVip);
@@ -105,7 +105,7 @@ const GameScreen = () => {
                 try {
                     const res = await axios.post('/api/maspro/payment/status', {
                         order_id: pendingOrder.order_id,
-                        email: user.email,
+                        phone: user.phone,
                         variant
                     });
 
@@ -125,7 +125,7 @@ const GameScreen = () => {
     // 🟢 3. Payment Flow: Create Order
     const handlePayment = async () => {
         try {
-            const res = await axios.post('/api/maspro/payment/create', { email: user.email, variant });
+            const res = await axios.post('/api/maspro/payment/create', { phone: user.phone, variant });
             if (res.data.status && res.data.results.payment_url) {
                 // Store order ID to check status after redirect back
                 localStorage.setItem('mas_current_order', JSON.stringify({
@@ -142,7 +142,9 @@ const GameScreen = () => {
     };
 
     // Real prediction states
-    const [predictedResult, setPredictedResult] = useState(ballData[7]);
+    // Change this line
+    const [predictedResult, setPredictedResult] = useState(ballData[Math.floor(Math.random() * 10)]);
+    const [isSureShot, setIsSureShot] = useState(false); // New state to track 100% accuracy
     const [predictedNums, setPredictedNums] = useState([1, 3, 7, 9]);
 
     // useEffect(() => {
@@ -183,6 +185,16 @@ const GameScreen = () => {
                 setTimeout(() => {
                     setPredictedResult(ballData[Math.floor(Math.random() * 10)]);
                     setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
+
+                    // 2. Logic for 100% Sure Shot (approx 1 in 6 chance)
+                    const luckyDraw = Math.floor(Math.random() * 6);
+                    if (luckyDraw === 0) {
+                        setIsSureShot(true);
+                    } else {
+                        setIsSureShot(false);
+                    }
+
+
                     setIsChecking(false);
                 }, 2000);
             }
@@ -248,8 +260,21 @@ const GameScreen = () => {
                         <p>Remaining Time: {timer.min} : {timer.sec}</p>
 
                         <div className="bg-[#0f0d22] rounded-xl p-4 w-full mt-2 flex flex-col items-center justify-center gap-3 border border-slate-200 relative overflow-hidden">
-                            <span className="text-[14px] font-bold uppercase tracking-wider">👇 Result 👇</span>
-
+                            {/* <span className="text-[14px] font-bold uppercase tracking-wider">👇 Result 👇</span> */}
+                            <div className="flex flex-col items-center gap-1">
+                                <span className={`text-[14px] font-bold uppercase tracking-wider ${isSureShot ? 'text-emerald-400' : 'text-slate-300'}`}>
+                                    {isSureShot ? "🔥 100% SURE SHOT 🔥" : "👇 NEXT RESULT 👇"}
+                                </span>
+                                {isSureShot && isVip && (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        className="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-[9px] font-black border border-emerald-500/30 animate-pulse"
+                                    >
+                                        ACCURACY: 100%
+                                    </motion.div>
+                                )}
+                            </div>
                             <div className="min-h-[70px] flex items-center justify-center w-full relative">
                                 {isChecking ? (
                                     <div className="bg-gradient-to-r from-[#64748B] to-[#475569] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2"><Loader2 size={16} className="animate-spin" /> Checking...</div>

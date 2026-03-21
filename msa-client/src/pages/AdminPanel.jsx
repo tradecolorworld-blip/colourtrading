@@ -6,9 +6,7 @@ import axios from 'axios';
 // 🟢 Domain Detect karne wala helper (Matches Auth, Portal, and Game)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('bigsmalltrading.sbs')) {
-        return { variant: 'msa1', label: 'MSA1 (Personal)' };
-    }
+    
     if (host.includes('bigsmallhack.sbs')) {
         return { variant: 'msa2', label: 'MSA2 (Ashu)' };
     }

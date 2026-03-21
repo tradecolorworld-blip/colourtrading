@@ -7,7 +7,7 @@ import axios from 'axios';
 // 🟢 NEW: Domain Configuration Helper (Matches App.jsx)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('sureshotpro.xyz')) {
+    if (host.includes('sureshotpro.sbs')) {
         return {
             variant: 'msa1',
             storageKey: 'MSA1_user',
@@ -16,7 +16,7 @@ const getDomainConfig = () => {
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
         };
     }
-    if (host.includes('sureshotxpro.xyz')) {
+    if (host.includes('sureshothack.pro')) {
         return {
             variant: 'msa2',
             storageKey: 'MSA2_user',
