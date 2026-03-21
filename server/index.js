@@ -139,9 +139,25 @@ app.get('/api/admin/stats', async (req, res) => {
             });
         }
 
-        vipList.sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt));
+        // vipList.sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt));
+        // const limitedVipList = vipList.slice(0, 20);
+        // res.json({ totalUsers, totalVipUsers, limitedVipList, analytics });
+        // 1. Sort by _id descending (Hexadecimal chronological order)
+        // This ensures the literal last 20 records added to the array are picked.
+        vipList.sort((a, b) => {
+            // Convert IDs to strings and compare to get the absolute latest entries
+            return b.id.toString().localeCompare(a.id.toString());
+        });
+
+        // 2. Take the top 20
         const limitedVipList = vipList.slice(0, 20);
-        res.json({ totalUsers, totalVipUsers, limitedVipList, analytics });
+
+        res.json({
+            totalUsers,
+            totalVipUsers,
+            vipList: limitedVipList,
+            analytics
+        });
     } catch (err) {
         res.status(500).json({ message: "Admin data fetch failed" });
     }
