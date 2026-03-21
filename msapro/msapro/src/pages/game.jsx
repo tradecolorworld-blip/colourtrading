@@ -47,6 +47,7 @@ const GameScreen = () => {
     const navigate = useNavigate();
     const gameData = location.state;
     const lastPeriodRef = useRef(null);
+    const [paymentLoading, setPaymentLoading] = useState(false);
 
     // Get current domain details
     const { variant, storageKey, whatsapp, telegram } = getDomainConfig();
@@ -99,7 +100,7 @@ const GameScreen = () => {
 
     // 🟢 2. NEW: Verify Payment if returning from Gateway (Auto-check)
     useEffect(() => {
-        if(isVip) return
+        if (isVip) return
         const verifyPayment = async () => {
             const pendingOrder = JSON.parse(localStorage.getItem('mas_current_order'));
             if (pendingOrder && user) {
@@ -125,6 +126,7 @@ const GameScreen = () => {
 
     // 🟢 3. Payment Flow: Create Order
     const handlePayment = async () => {
+        setPaymentLoading(true);
         try {
             const res = await axios.post('/api/maspro/payment/create', { phone: user.phone, variant });
             if (res.data.status && res.data.results.payment_url) {
@@ -135,6 +137,9 @@ const GameScreen = () => {
                 window.location.href = res.data.results.payment_url;
             }
         } catch (err) { alert("Payment failed to initialize."); }
+        finally {
+            setPaymentLoading(false); // Stop loading if error occurs
+        }
     };
 
     const handleLogout = () => {
@@ -391,7 +396,16 @@ const GameScreen = () => {
                             </div>
                             <p className="text-xs text-slate-500 mb-8 font-medium px-4 leading-relaxed italic">Get 99% accuracy predictions, ad-free experience, and 24/7 priority support.</p>
                             <div className="flex flex-col gap-3">
-                                <button onClick={handlePayment} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-indigo-200 active:scale-95 transition-all">PAY WITH UPI</button>
+                                <button onClick={handlePayment} className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-indigo-200 active:scale-95 transition-all">
+                                    {paymentLoading ? (
+                                        <>
+                                            <Loader2 className="animate-spin" size={20} />
+                                            {/* PROCESSING... */}
+                                        </>
+                                    ) : (
+                                        "PAY WITH UPI"
+                                    )}
+                                </button>
                                 <button onClick={() => setShowVipPopup(false)} className="w-full py-2 text-[13px] font-bold text-slate-400">CANCEL</button>
                             </div>
                         </motion.div>
