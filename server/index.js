@@ -141,7 +141,7 @@ app.get('/api/admin/stats', async (req, res) => {
 
         vipList.sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt));
         const limitedVipList = vipList.slice(0, 20);
-        res.json({ totalUsers, totalVipUsers, limitedVipList, analytics });
+        res.json({ totalUsers, totalVipUsers, vipList:limitedVipList, analytics });
     } catch (err) {
         res.status(500).json({ message: "Admin data fetch failed" });
     }
