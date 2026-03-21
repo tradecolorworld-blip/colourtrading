@@ -1311,7 +1311,7 @@ app.post('/api/maspro/payment/create', async (req, res) => {
 
     const domain = req.headers.host;
 
-    const basePrice = 850;
+    const basePrice = 1;
     const randomPaisa = Math.random() * 0.9;
     const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
 
