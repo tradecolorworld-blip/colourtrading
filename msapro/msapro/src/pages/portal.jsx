@@ -102,8 +102,8 @@ const GamePortal = () => {
         { name: "Bharat Club", logo: logo15, link: "https://bhtclub3.com/#/register?invitationCode=562615493882", hot: true },
         { name: "51Game", logo: logo12, link: "https://www.51gameo.com/#/register?invitationCode=325163568721", hot: true },
         { name: "82Lottery", logo: logo16, link: "https://www.82winoo.com/#/register?invitationCode=666533745649", hot: true },
-        { name: "66Lottery", logo: logo14, link: "https://www.66lottery.vip/#/pages/login/register?invitationCode=5218250409", hot: true },
-        { name: "DiuWin", logo: logo17, link: " https://www.5diuwin.com/#/register?invitationCode=7626511684473", hot: true },
+        { name: "66Lottery", logo: logo17, link: "https://www.66lottery.vip/#/pages/login/register?invitationCode=5218250409", hot: true },
+        { name: "DiuWin", logo: logo14, link: " https://www.5diuwin.com/#/register?invitationCode=7626511684473", hot: true },
         
         { name: "Tiranga", logo: logo6, link: "https://tgdream.pro/#/register?invitationCode=8752724598773", hot: false },
         { name: "BDG Win", logo: logo7, link: " https://bdgwina.top//#/register?invitationCode=4138512408865", hot: false },
