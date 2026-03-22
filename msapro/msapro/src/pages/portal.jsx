@@ -10,6 +10,13 @@ import logo6 from '../assets/logo6.png';
 import logo7 from '../assets/logo7.png';
 import logo8 from '../assets/logo8.png';
 import logo9 from '../assets/logo9.png';
+import logo12 from '../assets/logo12.webp';
+import logo13 from '../assets/logo13.webp';
+import logo14 from '../assets/logo14.png';
+import logo15 from '../assets/logo15.png';
+import logo16 from '../assets/logo16.png';
+import logo17 from '../assets/logo17.png';
+
 import { useNavigate } from 'react-router-dom';
 
 // 🟢 NEW: Domain Configuration Helper (Must match App.jsx and Auth.jsx)
@@ -90,6 +97,14 @@ const GamePortal = () => {
         { name: "In999", logo: logo3, link: "https://www.ilxd28.com/#/register?invitationCode=167266601273", hot: true },
         { name: "DamanGames", logo: logo4, link: "https://damanvipgame.com/register?invitationCode=4879717468242", hot: true },
         { name: "BDG Game", logo: logo5, link: "https://bdg-ipl.vip//#/register?invitationCode=7868719070147", hot: true },
+
+        { name: "Jalwa Game", logo: logo13, link: "https://jalwaclub3.com/#/register?invitationCode=84518166493", hot: true },
+        { name: "Bharat Club", logo: logo15, link: "https://bhtclub3.com/#/register?invitationCode=562615493882", hot: true },
+        { name: "51Game", logo: logo12, link: "https://www.51gameo.com/#/register?invitationCode=325163568721", hot: true },
+        { name: "82Lottery", logo: logo16, link: "https://www.82winoo.com/#/register?invitationCode=666533745649", hot: true },
+        { name: "66Lottery", logo: logo14, link: "https://www.66lottery.vip/#/pages/login/register?invitationCode=5218250409", hot: true },
+        { name: "DiuWin", logo: logo17, link: " https://www.5diuwin.com/#/register?invitationCode=7626511684473", hot: true },
+        
         { name: "Tiranga", logo: logo6, link: "https://tgdream.pro/#/register?invitationCode=8752724598773", hot: false },
         { name: "BDG Win", logo: logo7, link: " https://bdgwina.top//#/register?invitationCode=4138512408865", hot: false },
         { name: "OK Win", logo: logo9, link: "https://okwinslots4.com/#/register?invitationCode=755836029251", hot: false },

@@ -122,7 +122,7 @@ const GameScreen = () => {
             }
         };
         if (user) verifyPayment();
-    }, [user, variant]);
+    }, [user?.phone, variant]);
 
     // 🟢 3. Payment Flow: Create Order
     const handlePayment = async () => {
@@ -193,7 +193,7 @@ const GameScreen = () => {
                     setPredictedNums([...Array(4)].map(() => Math.floor(Math.random() * 10)));
 
                     // 2. Logic for 100% Sure Shot (approx 1 in 6 chance)
-                    const luckyDraw = Math.floor(Math.random() * 6);
+                    const luckyDraw = Math.floor(Math.random() * 4);
                     if (luckyDraw === 0) {
                         setIsSureShot(true);
                     } else {
