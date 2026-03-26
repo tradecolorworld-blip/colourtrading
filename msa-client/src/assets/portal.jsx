@@ -175,7 +175,7 @@ const GamePortal = () => {
                             color="bg-gradient-to-r from-[#6366F1] to-[#818CF8]"
                         />
                         <ActionButton
-                            onClick={() => window.open('https://wa.me/919875736055', '_blank')}
+                            onClick={() => window.open('https://wa.me/919116046055', '_blank')}
                             icon="fas fa-headset"
                             label="Customer Care"
                             color="bg-gradient-to-r from-[#6366F1] to-[#818CF8]"

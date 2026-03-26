@@ -125,7 +125,7 @@ const AuthScreen = () => {
                 {/* Bottom Contact Dock */}
                 <div className="mt-8 grid grid-cols-3 gap-3">
                     <button
-                        onClick={() => window.open('https://wa.me/919875736055', '_blank')}
+                        onClick={() => window.open('https://wa.me/919116046055', '_blank')}
                         className="bg-emerald-500 text-white py-3 rounded-xl font-black text-[10px] shadow-lg flex flex-col items-center gap-1 active:scale-95 transition-all"
                     >
                         <Headset size={16} /> WHATSAPP
