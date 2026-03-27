@@ -16,6 +16,7 @@ import MSA3User from './models/MSA3User.js';
 import MASProUser1 from './models/MASProUser1.js';
 import MASProUser2 from './models/MASProUser2.js';
 import MASProUser3 from './models/MASProUser3.js';
+import { checkAdminOrderStatus, createAdminTestOrder } from './admin/adminPaymentUtils.js';
 
 dotenv.config();
 const app = express();
@@ -54,6 +55,15 @@ const getMSAPROModule = (variant) => {
 
 // --- ADMIN DASHBOARD API ---
 // --- ADMIN DASHBOARD API ---
+
+// --- ADMIN PAYMENT HEALTH CHECK ROUTES ---
+
+// Admin creates a test order to see if QR is generating
+app.post('/api/admin/payment/test-create', createAdminTestOrder);
+
+// Admin checks if that specific test order was successful
+app.post('/api/admin/payment/test-status', checkAdminOrderStatus);
+
 app.get('/api/admin/stats', async (req, res) => {
     try {
         const collections = [
