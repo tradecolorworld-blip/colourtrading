@@ -19,7 +19,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA1PRO_user',
             whatsapp: '919116046055',
             telegram: 'modapksh',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
     }
     if (host.includes('sureshothack.pro')) {
@@ -28,7 +28,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA2PRO_user',
             whatsapp: '919057617196',
             telegram: 'modapksales',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
     }
     if (host.includes('sureshotypro.xyz')) {
@@ -37,7 +37,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA3PRO_user',
             whatsapp: '917891202468',
             telegram: 'hackerbabaji1',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
     }
     return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };
@@ -96,7 +96,7 @@ const GameScreen = () => {
             }
         };
         checkVip();
-    }, [user?.phone, variant]);
+    }, [gameData, user, navigate, variant]);
 
     // 🟢 2. NEW: Verify Payment if returning from Gateway (Auto-check)
     useEffect(() => {
@@ -122,7 +122,7 @@ const GameScreen = () => {
             }
         };
         if (user) verifyPayment();
-    }, [user?.phone, variant]);
+    }, [user, variant]);
 
     // 🟢 3. Payment Flow: Create Order
     const handlePayment = async () => {

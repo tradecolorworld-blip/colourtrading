@@ -19,7 +19,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA1_user',
             whatsapp: '919116046055',
             telegram: 'modapksh',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://vimeo.com/1171257304'
         };
     }
     if (host.includes('bigsmallhack.sbs')) {
@@ -28,7 +28,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA2_user',
             whatsapp: '919057617196',
             telegram: 'modapksales',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://vimeo.com/1171257304'
         };
     }
     if (host.includes('patternhack.sbs')) {
@@ -37,7 +37,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA3_user',
             whatsapp: '917891202468',
             telegram: 'hackerbabaji1',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
+            youtube: 'https://vimeo.com/1171257304'
         };
     }
     return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };

@@ -28,7 +28,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA1PRO_user',
             whatsapp: '919116046055',
             telegram: 'modapksh',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4',
+            youtube: 'https://youtu.be/qQAtpOn-tFw',
             rajaLink: "https://rajagames91.xyz/#/register?invitationCode=155064101080"
         };
     }
@@ -38,7 +38,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA2PRO_user',
             whatsapp: '919057617196',
             telegram: 'modapksales',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4',
+            youtube: 'https://youtu.be/qQAtpOn-tFw',
             rajaLink: "https://rajagames111.com/#/register?invitationCode=643349101079"
         };
     }
@@ -48,7 +48,7 @@ const getDomainConfig = () => {
             storageKey: 'MSA3PRO_user',
             whatsapp: '917891202468',
             telegram: 'hackerbabaji1',
-            youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4',
+            youtube: 'https://youtu.be/qQAtpOn-tFw',
             rajaLink: "https://rajagames100.com/#/register?invitationCode=815360101080"
         };
     }
@@ -93,7 +93,7 @@ const GamePortal = () => {
     const games = [
         { name: "RajaLottery", logo: logo8, link: rajaLink, hot: true },
         { name: "91Club", logo: logo1, link: "https://www.ehIndia.com/#/register?invitationCode=87134963862", hot: true },
-        { name: "55Club", logo: logo2, link: "https://www.frzpui55.com/#/register?invitationCode=152182688038", hot: true },
+        { name: "55Club", logo: logo2, link: "https://55clubofficial.xyz/#/register?invitationCode=434633101080", hot: true },
         { name: "In999", logo: logo3, link: "https://www.ilxd28.com/#/register?invitationCode=167266601273", hot: true },
         { name: "DamanGames", logo: logo4, link: "https://damanvipgame.com/register?invitationCode=4879717468242", hot: true },
         { name: "BDG Game", logo: logo5, link: "https://bdg-ipl.vip//#/register?invitationCode=7868719070147", hot: true },
