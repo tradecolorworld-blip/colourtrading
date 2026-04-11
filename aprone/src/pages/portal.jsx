@@ -22,6 +22,7 @@ import logo20 from '../assets/logo20.png';
 import logo21 from '../assets/logo21.png';
 import logo22 from '../assets/logo22.png';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // 🟢 NEW: Domain Configuration Helper (Must match App.jsx and Auth.jsx)
 const getDomainConfig = () => {
