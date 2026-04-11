@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Flame, Send, CheckCircle, Download, Headset, Gift, Rocket, LogOut, X, QrCode } from 'lucide-react';
+import { Star, Flame, Send, CheckCircle, Download, Headset, Gift, Rocket, LogOut, X, QrCode, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo1 from '../assets/logo1.png';
 import logo2 from '../assets/logo2.png';
@@ -67,6 +67,16 @@ const getDomainConfig = () => {
     };
 };
 
+const formattedDate = (isoString) => {
+    if (!isoString) return "---";
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+    const year = date.getFullYear();
+
+    return `${day}-${month}-${year}`;
+};
+
 
 
 const GamePortal = () => {
@@ -76,7 +86,7 @@ const GamePortal = () => {
 
     // --- STATE ---
     const [isVip, setIsVip] = useState(false);
-    const [vipExpiry, setVipExpiry] = useState("22-04-2026");
+    const [vipExpiry, setVipExpiry] = useState("");
     const [showPayModal, setShowPayModal] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState(8245);
     const [paymentLoading, setPaymentLoading] = useState(false);
@@ -95,6 +105,7 @@ const GamePortal = () => {
                         variant
                     });
                     setIsVip(res.data.isVip);
+                    setVipExpiry(formattedDate(res?.data?.expiry));
                 } catch (err) { console.error("VIP Check Error"); }
             }
         };
@@ -192,6 +203,11 @@ const GamePortal = () => {
 
     ];
 
+    const handleLogout = () => {
+        localStorage.removeItem(storageKey);
+        navigate('/auth');
+    };
+
     return (
         <div className="min-h-screen bg-white font-['Poppins'] pb-20 pt-5">
             {/* Header with Back & Logout */}
@@ -200,7 +216,7 @@ const GamePortal = () => {
                 <h1 className="text-[#1a47cc] font-black text-2xl text-center leading-tight">
                     COLOUR TRADING<br />MOD MENU
                 </h1>
-                <button onClick={() => navigate('/auth')} className="p-2 bg-red-900/10 rounded-full text-red-800"><LogOut size={20} /></button>
+                <button onClick={handleLogout} className="p-2 bg-red-900/10 rounded-full text-red-800"><LogOut size={20} /></button>
             </div>
 
             {/* VIP STATUS CARD */}
@@ -288,13 +304,29 @@ const GamePortal = () => {
                             initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
                             className="bg-[#d7e9ff] w-full max-w-sm rounded-[30px] overflow-hidden relative border-2 border-red-500 shadow-2xl"
                         >
-                            <button onClick={() => setShowPayModal(false)} className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-1 z-10"><X size={20} /></button>
+                            <button onClick={() => setShowPayModal(false)} className="absolute top-4 right-4 bg-red-500 text-white rounded-full p-1 z-10">
+                                <X size={20} />
+                            </button>
 
                             <div className="p-6 pt-10 text-center">
-                                <h2 className="text-[#1a47cc] font-black text-xl mb-4">ACCESS VIP HACK IN <span className="text-green-600">₹710</span></h2>
+                                <h2 className="text-[#1a47cc] font-black text-xl mb-4">
+                                    ACCESS VIP HACK IN <span className="text-green-600">₹710</span></h2>
 
-                                <button className="w-full bg-[#a81c07] text-white py-4 rounded-full font-black text-xl flex items-center justify-center gap-3 shadow-lg mb-2" onClick={handlePayment}>
-                                    PAY ON QR <div className="bg-white text-blue-800 rounded-full p-1"><ArrowRight size={16} /></div>
+                                <button
+                                    className="w-full bg-[#a81c07] text-white py-4 rounded-full font-black text-xl flex items-center justify-center gap-3 shadow-lg mb-2 disabled:opacity-70"
+                                    onClick={handlePayment}
+                                    disabled={paymentLoading}
+                                >
+                                    {paymentLoading ? (
+                                        <Loader2 className="animate-spin" size={24} />
+                                    ) : (
+                                        <>
+                                            PAY ON QR
+                                            <div className="bg-white text-blue-800 rounded-full p-1 shadow-sm">
+                                                <ArrowRight size={16} strokeWidth={4} />
+                                            </div>
+                                        </>
+                                    )}
                                 </button>
                                 <p className="text-red-500 font-bold text-xs mb-4 italic">INSTANT ACTIVATION</p>
 
@@ -321,7 +353,7 @@ const GamePortal = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 };
 
