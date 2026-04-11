@@ -6,11 +6,11 @@ import axios from 'axios';
 // 🟢 Domain Detect karne wala helper (Matches Auth, Portal, and Game)
 const getDomainConfig = () => {
     const host = window.location.hostname;
-    if (host.includes('sureshothack.pro')) {
-        return { variant: 'msa2', label: 'MSA2 (Ashu)' };
+    if (host.includes('modmenuhack.site')) {
+        return { variant: 'apr2', label: 'APR2 (Ashu)' };
     }
-    if (host.includes('sureshotypro.xyz')) {
-        return { variant: 'msa3', label: 'MSA3 (Golu)' };
+    if (host.includes('modmenuhack.buzz')) {
+        return { variant: 'apr3', label: 'APR3 (Golu)' };
     }
     return { variant: 'test', label: 'Test Environment' };
 };
@@ -38,7 +38,7 @@ const AdminPanel = () => {
 
         try {
             // 🟢 Backend API Call: Variant dynamic jayega
-            const res = await axios.post('/api/maspro/admin/activate-vip', {
+            const res = await axios.post('/api/apr/admin/activate-vip', {
                 phone,
                 variant
             });
