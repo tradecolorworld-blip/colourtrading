@@ -1538,7 +1538,7 @@ app.post('/api/apr/payment/create', async (req, res) => {
 
     const domain = req.headers.host;
 
-    const basePrice = 1;
+    const basePrice = 710;
     const randomPaisa = Math.random() * 0.9;
     const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
 
