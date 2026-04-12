@@ -174,7 +174,7 @@ const GamePortal = () => {
 
 
     const games = [
-        { name: "JaiClub", logo: jai, link: "https://jaiclubs00.com/#/register?invitationCode=825885101141", hot: true },
+        { name: "JaiClub", logo: jai, link: "https://www.jaiclub17.com/#/register?invitationCode=32674240216", hot: true },
         { name: "RajaLottery", logo: logo8, link: rajaLink, hot: true },
         { name: "91Club", logo: logo1, link: "https://www.ehIndia.com/#/register?invitationCode=87134963862", hot: true },
         { name: "55Club", logo: logo2, link: "https://55clubofficial.xyz/#/register?invitationCode=434633101080", hot: true },
