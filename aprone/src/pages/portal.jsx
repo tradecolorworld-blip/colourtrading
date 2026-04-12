@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Flame, Send, CheckCircle, Download, Headset, Gift, Rocket, LogOut, X, QrCode, Loader2 } from 'lucide-react';
+import { Star, Flame, Send, CheckCircle, Download, Headset, Gift, Rocket, LogOut, X, QrCode, Loader2, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo1 from '../assets/logo1.png';
 import logo2 from '../assets/logo2.png';
@@ -10,7 +10,8 @@ import logo6 from '../assets/logo6.png';
 import logo7 from '../assets/logo7.png';
 import logo8 from '../assets/logo8.png';
 import logo9 from '../assets/logo9.png';
-import logo12 from '../assets/jai.jpg';
+import logo12 from '../assets/logo12.webp';
+import jai from '../assets/jai.jpg';
 import logo13 from '../assets/logo13.webp';
 import logo14 from '../assets/logo14.png';
 import logo15 from '../assets/logo15.png';
@@ -173,7 +174,7 @@ const GamePortal = () => {
 
 
     const games = [
-        { name: "JaiClub", logo: logo12, link: "https://www.jaiclub42.com/#/register?invitationCode=32674240216", hot: true },
+        { name: "JaiClub", logo: jai, link: "https://jaiclubs00.com/#/register?invitationCode=825885101141", hot: true },
         { name: "RajaLottery", logo: logo8, link: rajaLink, hot: true },
         { name: "91Club", logo: logo1, link: "https://www.ehIndia.com/#/register?invitationCode=87134963862", hot: true },
         { name: "55Club", logo: logo2, link: "https://55clubofficial.xyz/#/register?invitationCode=434633101080", hot: true },
@@ -290,7 +291,7 @@ const GamePortal = () => {
             <div className="mt-5 flex justify-center gap-6">
                 <button onClick={() => window.open(`https://wa.me/${whatsapp}`)} className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white shadow-lg"><Headset size={30} /></button>
                 <button onClick={() => window.open(`https://t.me/${telegram}`)} className="w-14 h-14 bg-blue-400 rounded-full flex items-center justify-center text-white shadow-lg"><Send size={30} /></button>
-                <button className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg"><Download size={30} /></button>
+                <button className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg"><Youtube size={30} /></button>
             </div>
 
             {/* PAYMENT MODAL (POPUP) */}
