@@ -21,7 +21,7 @@ const getDomainConfig = () => {
         'modmenuhack.site': {
             variant: 'apr2',
             storageKey: 'APR2_user',
-            whatsapp: '919057617196',
+            whatsapp: '918239817438',
             telegram: 'modapksales',
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
         },

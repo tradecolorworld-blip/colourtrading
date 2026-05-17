@@ -20,7 +20,7 @@ const getDomainConfig = () => {
         return {
             variant: 'msa2',
             storageKey: 'MSA2_user',
-            whatsapp: '919057617196',
+            whatsapp: '918239817438',
             telegram: 'modapksales',
             youtube: 'https://vimeo.com/1171257304' // Default if not provided
         };
