@@ -23,7 +23,7 @@ const getDomainConfig = () => {
         'modmenuhack.buzz': {
             variant: 'apr3',
             storageKey: 'APR3_user',
-            whatsapp: '917891202468',
+            whatsapp: '917357984291',
             telegram: 'hackerbabaji1',
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4'
         }

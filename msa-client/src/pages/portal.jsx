@@ -39,7 +39,7 @@ const getDomainConfig = () => {
         return {
             variant: 'msa3',
             storageKey: 'MSA3_user',
-            whatsapp: '917891202468',
+            whatsapp: '917357984291',
             telegram: 'hackerbabaji1',
             youtube: 'https://vimeo.com/1171257304',
             rajaLink: "https://rajagames100.com/#/register?invitationCode=815360101080"
