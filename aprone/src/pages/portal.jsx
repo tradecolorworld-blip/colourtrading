@@ -42,7 +42,7 @@ const getDomainConfig = () => {
         return {
             variant: 'apr2',
             storageKey: 'APR2_user',
-            whatsapp: '918239817438',
+            whatsapp: '919001410711',
             telegram: 'modapksales',
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4',
             rajaLink: "https://rajagames111.com/#/register?invitationCode=643349101079"
@@ -52,7 +52,7 @@ const getDomainConfig = () => {
         return {
             variant: 'apr3',
             storageKey: 'APR3_user',
-            whatsapp: '917357984291',
+            whatsapp: '917891202468',
             telegram: 'hackerbabaji1',
             youtube: 'https://www.youtube.com/watch?v=-HdcugtTRN4',
             rajaLink: "https://rajagames100.com/#/register?invitationCode=815360101080"

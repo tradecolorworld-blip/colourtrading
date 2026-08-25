@@ -20,7 +20,7 @@ const getDomainConfig = () => {
         return {
             variant: 'msa2',
             storageKey: 'MSA2PRO_user',
-            whatsapp: '918239817438',
+            whatsapp: '919001410711',
             telegram: 'modapksales',
             youtube: 'https://youtu.be/qQAtpOn-tFw' // Default if not provided
         };
@@ -29,7 +29,7 @@ const getDomainConfig = () => {
         return {
             variant: 'msa3',
             storageKey: 'MSA3PRO_user',
-            whatsapp: '917357984291',
+            whatsapp: '917891202468',
             telegram: 'hackerbabaji1',
             youtube: 'https://youtu.be/qQAtpOn-tFw' // Default if not provided
         };
