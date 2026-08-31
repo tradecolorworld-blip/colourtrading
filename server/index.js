@@ -20,6 +20,9 @@ import { checkAdminOrderStatus, createAdminTestOrder } from './admin/adminPaymen
 import APRUser1 from './models/APRUser1.js';
 import APRUser2 from './models/APRUser2.js';
 import APRUser3 from './models/APRUser3.js';
+import sureShotNew1 from './models/sureShotNew1.js';
+import sureShotNew2 from './models/sureShotNew2.js';
+import sureShotNew3 from './models/sureShotNew3.js';
 
 dotenv.config();
 const app = express();
@@ -52,6 +55,16 @@ const getMSAPROModule = (variant) => {
     };
     return configs[variant] || null;
 };
+
+const getSureShotNewModule = (variant) => {
+    const configs = {
+        'sure1': { model: sureShotNew1, token: "fb0f82-a17824-772b82-b7a63b-9cad54" }, // Tera Personal
+        'sure2': { model: sureShotNew2, token: "b93b87-7195bc-2f74f2-29903f-930a8c" }, // ashu
+        'sure3': { model: sureShotNew3, token: "c80d10-9b542d-12fc57-48baaf-9c2afc" }  // golu
+    };
+    return configs[variant] || { model: MASProUser1, token: "fb0f82-a17824-772b82-b7a63b-9cad54" };
+};
+
 
 const getAPRModule = (variant) => {
     const configs = {
@@ -1610,6 +1623,207 @@ app.post('/api/apr/admin/activate-vip', async (req, res) => {
     }
 
     const config = getAPRModule(variant);
+    if (!config || !config.model) {
+        return res.status(400).json({ message: "Invalid Variant" });
+    }
+
+    try {
+        const now = new Date();
+        const expiryDate = new Date();
+        expiryDate.setDate(now.getDate() + 28); // 28 days validity
+
+        const updatedUser = await config.model.findOneAndUpdate(
+            { phone: phone.toLowerCase() },
+            { 
+                isVip: true, 
+                vipExpiry: expiryDate, 
+                purchaseDate: now 
+            },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: `User not found in ${variant.toUpperCase()}` });
+        }
+
+        res.json({
+            status: "Success",
+            message: `VIP Activated for ${phone} in ${variant.toUpperCase()}`,
+            expiry: expiryDate
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+});
+
+
+// sureShotNew
+
+// 🟢 1. MAS Signup API with Auto-Login
+app.post('/api/sureshotnew/signup', async (req, res) => {
+    try {
+        const { phone, password, variant } = req.body;
+        console.log(phone,password,variant)
+
+        const config = getSureShotNewModule(variant);
+
+        if (!config || !config.model) {
+            return res.status(400).json({ message: "Invalid Variant or Model not found" });
+        }
+        // Search in MASUser collection
+        const existingUser = await config.model.findOne({ phone: phone.toLowerCase() });
+        if (existingUser) return res.status(400).json({ message: "User already exists" });
+
+        const newUser = new config.model({
+            phone: phone.toLowerCase(),
+            password, // Storing plain text as per your existing logic
+            isVip: false
+        });
+        await newUser.save();
+
+        res.status(201).json({
+            message: `${variant.toUpperCase()} account created successfully`,
+            user: newUser
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during MAS signup" });
+    }
+});
+
+// 🟢 2. MAS Login API
+app.post('/api/sureshotnew/login', async (req, res) => {
+    try {
+        const { phone, password, variant } = req.body;
+        const config = getSureShotNewModule(variant);
+
+        if (!config) return res.status(400).json({ message: "Invalid Variant" });
+
+        const user = await config.model.findOne({ phone: phone.toLowerCase(), password });
+
+        if (!user) return res.status(401).json({ message: "Invalid login details" });
+
+        // Logic: Check if VIP has expired (28 days)
+        if (user.isVip && user.vipExpiry && new Date() > user.vipExpiry) {
+            user.isVip = false;
+            await user.save();
+        }
+
+        res.json({ message: "Login successful", user });
+    } catch (err) {
+        res.status(500).json({ message: "Server error during MAS login" });
+    }
+});
+
+// 🟢 3. Check MAS VIP Status
+app.post('/api/sureshotnew/check-vip', async (req, res) => {
+    try {
+        const { phone, variant } = req.body;
+        const config = getSureShotNewModule(variant);
+
+        if (!config) return res.status(400).json({ message: "Invalid Variant" });
+
+        const user = await config.model.findOne({phone : phone.toLowerCase() });
+
+        if (!user || !user.isVip) {
+            return res.json({ isVip: false });
+        }
+
+        // Auto-check for expiration
+        if (new Date() > user.vipExpiry) {
+            user.isVip = false;
+            await user.save();
+            return res.json({ isVip: false, message: "VIP Expired" });
+        }
+
+        res.json({ isVip: true, expiry: user.vipExpiry });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// 🟢 4. Create MAS Payment Order (₹699)
+app.post('/api/sureshotnew/payment/create', async (req, res) => {
+    const { phone, variant } = req.body;
+    const config = getSureShotNewModule(variant);
+
+    if (!config) return res.status(400).json({ message: "Invalid Variant" });
+
+    const order_id = `SURE_${variant.toUpperCase()}_` + Date.now();
+
+    const domain = req.headers.host;
+
+    const basePrice = 1;
+    const randomPaisa = Math.random() * 0.9;
+    const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
+
+    const paymentData = {
+        token: config.token,
+        order_id: order_id,
+        txn_amount: finalAmount,
+        txn_note: `sure`,
+        product_name: `sure new`,
+        customer_name: "User_" + phone,
+        customer_mobile: "9999999999",
+        customer_email: 'xyz@gmail.com',
+        redirect_url: `https://${domain}/portal`
+    };
+
+    try {
+        const response = await axios.post('https://allapi.in/order/create', paymentData);
+        res.json({
+            ...response.data,
+            results: { ...response.data.results, order_id }
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Payment initialization failed" });
+    }
+});
+
+// 🟢 5. Verify MAS Status & Activate VIP
+app.post('/api/sureshotnew/payment/status', async (req, res) => {
+    const { order_id, phone, variant } = req.body;
+    const config = getSureShotNewModule(variant);
+
+    if (!config) return res.status(400).json({ message: "Invalid Variant" });
+
+    try {
+        const response = await axios.post('https://allapi.in/order/status', {
+            token: config.token,
+            order_id: order_id
+        });
+
+        if (response.data.status === true && response.data.results.status === "Success") {
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 28); // 🟢 28 days validity
+            const now = new Date();
+
+            const updatedUser = await config.model.findOneAndUpdate(
+                { phone: phone.toLowerCase() },
+                { isVip: true, vipExpiry: expiryDate, purchaseDate: now },
+                { new: true }
+            );
+
+            return res.json({
+                status: "Success",
+                user: updatedUser,
+                message: "Payment verified and MAS VIP activated!"
+            });
+        }
+        res.json({ status: "Pending" });
+    } catch (err) {
+        res.status(500).json({ message: "Error checking status" });
+    }
+});
+
+// 🟢 6. Manual MAS VIP Activation (For Admin)
+app.post('/api/sureshotnew/admin/activate-vip', async (req, res) => {
+    const { phone, variant } = req.body;
+
+    if (!phone || !variant) {
+        return res.status(400).json({ message: "Email and variant are required" });
+    }
+
+    const config = getSureShotNewModule(variant);
     if (!config || !config.model) {
         return res.status(400).json({ message: "Invalid Variant" });
     }
