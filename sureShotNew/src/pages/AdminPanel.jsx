@@ -35,7 +35,7 @@ const AdminPanel = () => {
 
         try {
             // 🟢 Backend API Call: Updated endpoint
-            const res = await axios.post('http://localhost:5000/api/sureshotnew/admin/activate-vip', {
+            const res = await axios.post('/api/sureshotnew/admin/activate-vip', {
                 phone,
                 variant
             });

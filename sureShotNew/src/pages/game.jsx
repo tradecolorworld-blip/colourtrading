@@ -85,7 +85,7 @@ const GameScreen = () => {
         const checkVip = async () => {
             if (user?.phone) {
                 try {
-                    const res = await axios.post('http://localhost:5000/api/sureshotnew/check-vip', { phone: user.phone, variant });
+                    const res = await axios.post('/api/sureshotnew/check-vip', { phone: user.phone, variant });
                     setIsVip(res.data.isVip);
                 } catch (err) { 
                     console.error("VIP Check Error:", err.response?.data || err.message); // 🟢 Added detailed error logging
@@ -105,7 +105,7 @@ const GameScreen = () => {
             const pendingOrder = JSON.parse(localStorage.getItem('sure_current_order'));
             if (pendingOrder && user) {
                 try {
-                    const res = await axios.post('http://localhost:5000/api/sureshotnew/payment/status', {
+                    const res = await axios.post('/api/sureshotnew/payment/status', {
                         order_id: pendingOrder.order_id,
                         phone: user.phone,
                         variant
@@ -126,7 +126,7 @@ const GameScreen = () => {
     const handlePayment = async () => {
         setPaymentLoading(true);
         try {
-            const res = await axios.post('http://localhost:5000/api/sureshotnew/payment/create', { phone: user.phone, variant });
+            const res = await axios.post('/api/sureshotnew/payment/create', { phone: user.phone, variant });
             if (res.data.status && res.data.results.payment_url) {
                 localStorage.setItem('sure_current_order', JSON.stringify({ order_id: res.data.results.order_id }));
                 window.location.href = res.data.results.payment_url;

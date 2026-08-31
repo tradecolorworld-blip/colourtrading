@@ -58,7 +58,7 @@ const AuthScreen = () => {
         setLoading(true);
 
         try {
-            const endpoint = isLogin ? 'http://localhost:5000/api/sureshotnew/login' : 'http://localhost:5000/api/sureshotnew/signup';
+            const endpoint = isLogin ? '/api/sureshotnew/login' : '/api/sureshotnew/signup';
             const res = await axios.post(endpoint, { ...formData, variant });
 
             if (res.data.user) {
