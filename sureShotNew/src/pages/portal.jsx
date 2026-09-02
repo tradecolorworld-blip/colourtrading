@@ -60,7 +60,7 @@ const GamePortal = () => {
     const [onlineUsers, setOnlineUsers] = useState(8245);
     const navigate = useNavigate();
 
-    const { storageKey, whatsapp, telegram, rajaLink } = getDomainConfig();
+    const { storageKey, whatsapp, telegram, rajaLink, variant } = getDomainConfig();
 
     // Random User Counter
     useEffect(() => {
