@@ -44,7 +44,7 @@ const AdminPanel = () => {
 
     const fetchGames = async () => {
         try {
-            const res = await axios.get(`http://localhost:4000/api/sureshotnew/games/${variant}`);
+            const res = await axios.get(`/api/sureshotnew/games/${variant}`);
             setGames(res.data);
         } catch (error) {
             console.error("Failed to fetch games");
@@ -56,7 +56,7 @@ const AdminPanel = () => {
         if (!phone) return alert("Please enter a phone number");
         setLoading(true); setStatus(null);
         try {
-            const res = await axios.post('http://localhost:4000/api/sureshotnew/admin/activate-vip', { phone, variant });
+            const res = await axios.post('/api/sureshotnew/admin/activate-vip', { phone, variant });
             setStatus({ type: 'success', msg: res.data.message });
             setPhone('');
         } catch (err) {
@@ -73,10 +73,10 @@ const AdminPanel = () => {
         try {
             const payload = { ...gameForm, variant };
             if (editingId) {
-                await axios.put(`http://localhost:4000/api/sureshotnew/admin/games/${editingId}`, payload);
+                await axios.put(`/api/sureshotnew/admin/games/${editingId}`, payload);
                 setStatus({ type: 'success', msg: "Game updated!" });
             } else {
-                await axios.post('http://localhost:4000/api/sureshotnew/admin/games', payload);
+                await axios.post('/api/sureshotnew/admin/games', payload);
                 setStatus({ type: 'success', msg: "Game added!" });
             }
             setGameForm({ name: '', logo: '', link: '', hot: false });
@@ -98,7 +98,7 @@ const AdminPanel = () => {
     const handleDeleteGame = async (id) => {
         if (!window.confirm("Delete this game?")) return;
         try {
-            await axios.delete(`http://localhost:4000/api/sureshotnew/admin/games/${id}`);
+            await axios.delete(`/api/sureshotnew/admin/games/${id}`);
             fetchGames();
         } catch (err) {
             alert("Failed to delete game");
