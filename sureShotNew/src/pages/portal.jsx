@@ -72,6 +72,23 @@ const GamePortal = () => {
         return () => clearInterval(interval);
     }, []);
 
+    // 🟢 FETCH GAMES FROM API
+    useEffect(() => {
+        const fetchGames = async () => {
+            try {
+                // Using relative path so Nginx/Vite proxy handles it
+                const res = await axios.get(`/api/sureshotnew/games/${variant}`);
+                setGames(res.data);
+            } catch (err) {
+                console.error("Failed to load games:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchGames();
+    }, [variant]);
+
     const redirectToGame = (gameName, gameLogo, gameLink) => {
         navigate('/game', {
             state: { name: gameName, logo: gameLogo, link: gameLink }
@@ -98,7 +115,7 @@ const GamePortal = () => {
         { name: "82Lottery", logo: logo16, link: "https://www.82winoo.com/#/register?invitationCode=666533745649", hot: true },
         { name: "66Lottery", logo: logo17, link: "https://www.66lottery.vip/#/pages/login/register?invitationCode=5218250409", hot: true },
         { name: "DiuWin", logo: logo14, link: " https://www.5diuwin.com/#/register?invitationCode=7626511684473", hot: true },
-        
+
         { name: "Tiranga", logo: logo6, link: "https://tgdream.pro/#/register?invitationCode=8752724598773", hot: false },
         { name: "BDG Win", logo: logo7, link: " https://bdgwina.top//#/register?invitationCode=4138512408865", hot: false },
         { name: "OK Win", logo: logo9, link: "https://okwinslots4.com/#/register?invitationCode=755836029251", hot: false },
@@ -109,7 +126,7 @@ const GamePortal = () => {
         <div className="min-h-screen bg-gradient-to-br from-[#0D0620] via-[#1A0535] to-[#2D0A5C] text-[#F5F0FF] font-['Poppins'] p-4 relative overflow-x-hidden pb-12">
 
             {/* Background Decor - Particles & Glows */}
-            <div 
+            <div
                 className="fixed inset-0 pointer-events-none z-0 opacity-40"
                 style={{
                     backgroundImage: 'radial-gradient(circle, rgba(245,158,11,0.08) 1px, transparent 1px), radial-gradient(circle, rgba(168,85,247,0.06) 1px, transparent 1px)',
@@ -173,7 +190,7 @@ const GamePortal = () => {
                 <div className="w-full bg-[#1E0A3C]/80 border border-[#F59E0B]/30 h-[48px] rounded-2xl overflow-hidden mb-8 flex items-center relative shadow-[0_4px_20px_rgba(245,158,11,0.15)] backdrop-blur-md">
                     {/* Left Gold Gradient Fade */}
                     <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#1E0A3C] to-transparent z-10" />
-                    
+
                     <motion.div
                         animate={{ x: ["100%", "-150%"] }}
                         transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
@@ -195,34 +212,42 @@ const GamePortal = () => {
                     <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-[#F59E0B]/50" />
                 </div>
 
-                {/* 5. GAME CARDS GRID */}
-                <div className="grid grid-cols-2 gap-4 px-1">
-                    {games.map((game, index) => (
-                        <motion.div
-                            key={index}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => redirectToGame(game.name, game.logo, game.link)}
-                            className="group relative bg-[#1E0A3C]/60 backdrop-blur-sm p-4 rounded-[20px] border border-[#7C3AED]/30 shadow-[0_8px_24px_rgba(0,0,0,0.4)] flex flex-col items-center gap-3 cursor-pointer transition-all hover:border-[#F59E0B] hover:shadow-[0_8px_30px_rgba(245,158,11,0.25)] hover:-translate-y-1 overflow-hidden"
-                        >
-                            {/* Inner Glow */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-[#F59E0B]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                {/* 5. DYNAMIC GAME CARDS GRID */}
+                {loading ? (
+                    <div className="flex justify-center items-center py-10">
+                        <Loader2 className="animate-spin text-[#F59E0B]" size={32} />
+                    </div>
+                ) : games.length === 0 ? (
+                    <div className="text-center py-10 text-[#8B7CB8] font-bold text-sm uppercase tracking-wider">
+                        No games available yet.
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 gap-4 px-1">
+                        {games.map((game) => (
+                            <motion.div
+                                key={game._id}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => redirectToGame(game.name, game.logo, game.link)}
+                                className="group relative bg-[#1E0A3C]/60 backdrop-blur-sm p-4 rounded-[20px] border border-[#7C3AED]/30 shadow-[0_8px_24px_rgba(0,0,0,0.4)] flex flex-col items-center gap-3 cursor-pointer transition-all hover:border-[#F59E0B] hover:shadow-[0_8px_30px_rgba(245,158,11,0.25)] hover:-translate-y-1 overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#F59E0B]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                            {game.hot && (
-                                <div className="absolute top-0 right-0 bg-gradient-to-bl from-[#ef4444] to-[#dc2626] text-white text-[9px] font-black pl-3 pr-2 py-1 rounded-bl-[12px] flex items-center gap-1 shadow-[0_0_10px_rgba(239,68,68,0.5)] border-l border-b border-white/20 z-10">
-                                    <i className="fas fa-fire animate-pulse"></i> HOT
+                                {game.hot && (
+                                    <div className="absolute top-0 right-0 bg-gradient-to-bl from-[#ef4444] to-[#dc2626] text-white text-[9px] font-black pl-3 pr-2 py-1 rounded-bl-[12px] flex items-center gap-1 shadow-[0_0_10px_rgba(239,68,68,0.5)] border-l border-b border-white/20 z-10">
+                                        <i className="fas fa-fire animate-pulse"></i> HOT
+                                    </div>
+                                )}
+
+                                <div className="relative">
+                                    <img src={game.logo} alt={game.name} className="w-[80px] h-[80px] rounded-xl object-cover border-2 border-[#7C3AED]/40 group-hover:border-[#F59E0B] transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.5)] z-10 relative bg-white" />
+                                    <div className="absolute inset-0 rounded-xl bg-[#F59E0B] blur-[15px] opacity-0 group-hover:opacity-30 transition-opacity" />
                                 </div>
-                            )}
-                            
-                            <div className="relative">
-                                <img src={game.logo} alt={game.name} className="w-[80px] h-[80px] rounded-xl object-cover border-2 border-[#7C3AED]/40 group-hover:border-[#F59E0B] transition-all duration-300 shadow-[0_4px_15px_rgba(0,0,0,0.5)] z-10 relative" />
-                                {/* Image Glow behind */}
-                                <div className="absolute inset-0 rounded-xl bg-[#F59E0B] blur-[15px] opacity-0 group-hover:opacity-30 transition-opacity" />
-                            </div>
-                            
-                            <p className="font-black text-[14px] text-white tracking-wide group-hover:text-[#FBBF24] transition-colors z-10">{game.name}</p>
-                        </motion.div>
-                    ))}
-                </div>
+
+                                <p className="font-black text-[14px] text-white tracking-wide group-hover:text-[#FBBF24] transition-colors z-10">{game.name}</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
 
                 {/* 6. BOTTOM SECTION */}
                 <div className="mt-10 flex flex-col items-center gap-5">

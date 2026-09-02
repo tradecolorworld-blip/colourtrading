@@ -23,13 +23,14 @@ import APRUser3 from './models/APRUser3.js';
 import sureShotNew1 from './models/sureShotNew1.js';
 import sureShotNew2 from './models/sureShotNew2.js';
 import sureShotNew3 from './models/sureShotNew3.js';
+import Game from './models/GameSchema.js';
 
 dotenv.config();
 const app = express();
 
 // Middleware
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI)
@@ -1765,7 +1766,7 @@ app.post('/api/sureshotnew/payment/create', async (req, res) => {
         customer_name: "User_" + phone,
         customer_mobile: "9999999999",
         customer_email: 'xyz@gmail.com',
-        redirect_url: `https://${domain}/portal`
+        redirect_url: `https://${domain}/sureshotnew/portal`
     };
 
     try {
@@ -1854,6 +1855,47 @@ app.post('/api/sureshotnew/admin/activate-vip', async (req, res) => {
         });
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+});
+
+// 🟢 2. GET Games (For Admin Panel and Portal)
+app.get('/api/sureshotnew/games/:variant', async (req, res) => {
+    try {
+        const games = await Game.find({ variant: req.params.variant });
+        res.json(games);
+    } catch (err) { 
+        res.status(500).json({ error: err.message }); 
+    }
+});
+
+// 🟢 3. ADD a new Game
+app.post('/api/sureshotnew/admin/games', async (req, res) => {
+    try {
+        const newGame = new Game(req.body);
+        await newGame.save();
+        res.json({ message: "Game added successfully!", game: newGame });
+    } catch (err) { 
+        res.status(500).json({ error: err.message }); 
+    }
+});
+
+// 🟢 4. EDIT a Game
+app.put('/api/sureshotnew/admin/games/:id', async (req, res) => {
+    try {
+        const updatedGame = await Game.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json({ message: "Game updated successfully!", game: updatedGame });
+    } catch (err) { 
+        res.status(500).json({ error: err.message }); 
+    }
+});
+
+// 🟢 5. DELETE a Game
+app.delete('/api/sureshotnew/admin/games/:id', async (req, res) => {
+    try {
+        await Game.findByIdAndDelete(req.params.id);
+        res.json({ message: "Game deleted successfully!" });
+    } catch (err) { 
+        res.status(500).json({ error: err.message }); 
     }
 });
 
