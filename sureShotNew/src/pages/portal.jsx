@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Star, CheckCircle, LogOut, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // Logo Imports (Keep your existing paths)
 import logo1 from '../assets/logo1.png';
