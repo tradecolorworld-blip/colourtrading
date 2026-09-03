@@ -421,7 +421,7 @@ const GameScreen = () => {
                             
                             <div className="flex items-center justify-center gap-3 mb-6 bg-[#0D0620] py-3 rounded-2xl border border-[#7C3AED]/30">
                                 <span className="text-[#8B7CB8] line-through text-lg font-bold">₹999</span>
-                                <span className="text-[#10b981] text-3xl font-black drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]">₹850</span>
+                                <span className="text-[#10b981] text-3xl font-black drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]">₹799</span>
                             </div>
                             
                             <ul className="text-left text-[#C4B5FD] text-[13px] font-medium mb-8 space-y-3 px-2">

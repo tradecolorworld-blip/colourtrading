@@ -1660,7 +1660,7 @@ app.post('/api/apr/admin/activate-vip', async (req, res) => {
 
 // sureShotNew
 
-// 🟢 1. MAS Signup API with Auto-Login
+// 🟢 1. sureShotNew Signup API with Auto-Login
 app.post('/api/sureshotnew/signup', async (req, res) => {
     try {
         const { phone, password, variant } = req.body;
@@ -1691,7 +1691,7 @@ app.post('/api/sureshotnew/signup', async (req, res) => {
     }
 });
 
-// 🟢 2. MAS Login API
+// 🟢 2. sureShotNew Login API
 app.post('/api/sureshotnew/login', async (req, res) => {
     try {
         const { phone, password, variant } = req.body;
@@ -1715,7 +1715,7 @@ app.post('/api/sureshotnew/login', async (req, res) => {
     }
 });
 
-// 🟢 3. Check MAS VIP Status
+// 🟢 3. Check sureShotNew VIP Status
 app.post('/api/sureshotnew/check-vip', async (req, res) => {
     try {
         const { phone, variant } = req.body;
@@ -1742,7 +1742,7 @@ app.post('/api/sureshotnew/check-vip', async (req, res) => {
     }
 });
 
-// 🟢 4. Create MAS Payment Order (₹699)
+// 🟢 4. Create sureShotNew Payment Order (₹799)
 app.post('/api/sureshotnew/payment/create', async (req, res) => {
     const { phone, variant } = req.body;
     const config = getSureShotNewModule(variant);
@@ -1753,7 +1753,7 @@ app.post('/api/sureshotnew/payment/create', async (req, res) => {
 
     const domain = req.headers.host;
 
-    const basePrice = 1;
+    const basePrice = 799;
     const randomPaisa = Math.random() * 0.9;
     const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
 
@@ -1780,7 +1780,7 @@ app.post('/api/sureshotnew/payment/create', async (req, res) => {
     }
 });
 
-// 🟢 5. Verify MAS Status & Activate VIP
+// 🟢 5. Verify sureShotNew Status & Activate VIP
 app.post('/api/sureshotnew/payment/status', async (req, res) => {
     const { order_id, phone, variant } = req.body;
     const config = getSureShotNewModule(variant);
@@ -1816,7 +1816,7 @@ app.post('/api/sureshotnew/payment/status', async (req, res) => {
     }
 });
 
-// 🟢 6. Manual MAS VIP Activation (For Admin)
+// 🟢 6. Manual sureShotNew VIP Activation (For Admin)
 app.post('/api/sureshotnew/admin/activate-vip', async (req, res) => {
     const { phone, variant } = req.body;
 
@@ -1858,7 +1858,7 @@ app.post('/api/sureshotnew/admin/activate-vip', async (req, res) => {
     }
 });
 
-// 🟢 2. GET Games (For Admin Panel and Portal)
+// 🟢 7.sureShotNew GET Games (For Admin Panel and Portal)
 app.get('/api/sureshotnew/games/:variant', async (req, res) => {
     try {
         const games = await Game.find({ variant: req.params.variant });
@@ -1868,7 +1868,7 @@ app.get('/api/sureshotnew/games/:variant', async (req, res) => {
     }
 });
 
-// 🟢 3. ADD a new Game
+// 🟢 8.sureShotNew ADD a new Game
 app.post('/api/sureshotnew/admin/games', async (req, res) => {
     try {
         const newGame = new Game(req.body);
@@ -1879,7 +1879,7 @@ app.post('/api/sureshotnew/admin/games', async (req, res) => {
     }
 });
 
-// 🟢 4. EDIT a Game
+// 🟢 9.sureShotNew EDIT a Game
 app.put('/api/sureshotnew/admin/games/:id', async (req, res) => {
     try {
         const updatedGame = await Game.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -1889,7 +1889,7 @@ app.put('/api/sureshotnew/admin/games/:id', async (req, res) => {
     }
 });
 
-// 🟢 5. DELETE a Game
+// 🟢 10.sureShotNew DELETE a Game
 app.delete('/api/sureshotnew/admin/games/:id', async (req, res) => {
     try {
         await Game.findByIdAndDelete(req.params.id);
