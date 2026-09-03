@@ -44,7 +44,7 @@ const getDomainConfig = () => {
             rajaLink: "https://rajagames111.com/#/register?invitationCode=643349101079"
         };
     }
-    if (host.includes('sureshotypro.xyz')) {
+    if (host.includes('sureshotxpro.sbs')) {
         return {
             variant: 'sure3',
             storageKey: 'SURE3PRO_user',

@@ -25,7 +25,7 @@ const getDomainConfig = () => {
             youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
     }
-    if (host.includes('sureshotypro.xyz')) {
+    if (host.includes('sureshotxpro.sbs')) {
         return {
             variant: 'sure3',
             storageKey: 'SURE3PRO_user',

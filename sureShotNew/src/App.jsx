@@ -10,7 +10,7 @@ const getDomainConfig = () => {
     const host = window.location.hostname;
     if (host.includes('sureshotpro.sbs')) return { variant: 'sure1', storageKey: 'SURE1PRO_user' };
     if (host.includes('sureshothack.pro')) return { variant: 'sure2', storageKey: 'SURE2PRO_user' };
-    if (host.includes('sureshotypro.xyz')) return { variant: 'sure3', storageKey: 'SURE3PRO_user' };
+    if (host.includes('sureshotxpro.sbs')) return { variant: 'sure3', storageKey: 'SURE3PRO_user' };
     return { variant: 'sure1', storageKey: 'SURE_test_user' };
 };
 
