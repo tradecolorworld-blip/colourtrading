@@ -95,8 +95,8 @@ const AuthScreen = () => {
             <div className="relative z-10 max-w-[420px] mx-auto pt-8 pb-12">
                 {/* Header Branding */}
                 <div className="text-center mb-8">
-                    <div className="w-[80px] h-[80px] mx-auto mb-4 rounded-2xl border-2 border-[#F59E0B]/40 bg-[#0D0620] flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.25)]">
-                        <span className="text-4xl drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]">🎯</span>
+                    <div className="w-[80px] h-[80px] mx-auto mb-4  flex items-center justify-center">
+                        <img src="https://i.ibb.co/bjw5cRXm/sure-Shot.png" alt="Logo" className="w-[80px] h-[80px]" />
                     </div>
                     <h1 className="text-3xl font-black italic tracking-tighter text-white drop-shadow-md">
                         Sure Shot <span className="text-[#F59E0B] drop-shadow-[0_0_12px_rgba(245,158,11,0.6)]">PRO</span>
