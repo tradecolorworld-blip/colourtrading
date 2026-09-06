@@ -17,7 +17,7 @@ const getDomainConfig = () => {
         return {
             variant: 'msa1',
             storageKey: 'MSA1PRO_user',
-            whatsapp: '919116046055',
+            whatsapp: '919875736055',
             telegram: 'modapksh',
             youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
@@ -31,7 +31,7 @@ const getDomainConfig = () => {
             youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
     }
-    if (host.includes('sureshotypro.xyz')) {
+    if (host.includes('sureshotxpro.sbs')) {
         return {
             variant: 'msa3',
             storageKey: 'MSA3PRO_user',
@@ -40,7 +40,7 @@ const getDomainConfig = () => {
             youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
     }
-    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };
+    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919875736055', telegram: 'modapksh', youtube: '' };
 };
 const GameScreen = () => {
     const location = useLocation();

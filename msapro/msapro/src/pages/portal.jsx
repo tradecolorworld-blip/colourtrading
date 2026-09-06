@@ -26,7 +26,7 @@ const getDomainConfig = () => {
         return {
             variant: 'msa1',
             storageKey: 'MSA1PRO_user',
-            whatsapp: '919116046055',
+            whatsapp: '919875736055',
             telegram: 'modapksh',
             youtube: 'https://youtu.be/qQAtpOn-tFw',
             rajaLink: "https://rajagames91.xyz/#/register?invitationCode=155064101080"
@@ -42,7 +42,7 @@ const getDomainConfig = () => {
             rajaLink: "https://rajagames111.com/#/register?invitationCode=643349101079"
         };
     }
-    if (host.includes('sureshotypro.xyz')) {
+    if (host.includes('sureshotxpro.sbs')) {
         return {
             variant: 'msa3',
             storageKey: 'MSA3PRO_user',
@@ -52,7 +52,7 @@ const getDomainConfig = () => {
             rajaLink: "https://rajagames100.com/#/register?invitationCode=815360101080"
         };
     }
-    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '', rajaLink: 'https://rajagames91.xyz/#/register?invitationCode=155064101080' };
+    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919875736055', telegram: 'modapksh', youtube: '', rajaLink: 'https://rajagames91.xyz/#/register?invitationCode=155064101080' };
 };
 
 const GamePortal = () => {

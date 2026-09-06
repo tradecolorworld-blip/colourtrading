@@ -28,7 +28,7 @@ const getDomainConfig = () => {
         return {
             variant: 'sure1',
             storageKey: 'SURE1PRO_user',
-            whatsapp: '919116046055',
+            whatsapp: '919875736055',
             telegram: 'modapksh',
             youtube: 'https://youtu.be/qQAtpOn-tFw',
             rajaLink: "https://rajagames91.xyz/#/register?invitationCode=155064101080"
@@ -54,7 +54,7 @@ const getDomainConfig = () => {
             rajaLink: "https://rajagames100.com/#/register?invitationCode=815360101080"
         };
     }
-    return { variant: 'sure1', storageKey: 'SURE_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '', rajaLink: 'https://rajagames91.xyz/#/register?invitationCode=155064101080' };
+    return { variant: 'sure1', storageKey: 'SURE_test_user', whatsapp: '919875736055', telegram: 'modapksh', youtube: '', rajaLink: 'https://rajagames91.xyz/#/register?invitationCode=155064101080' };
 };
 
 const GamePortal = () => {

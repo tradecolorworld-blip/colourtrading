@@ -17,7 +17,7 @@ const getDomainConfig = () => {
         return {
             variant: 'msa1',
             storageKey: 'MSA1_user',
-            whatsapp: '919116046055',
+            whatsapp: '919875736055',
             telegram: 'modapksh',
             youtube: 'https://vimeo.com/1171257304'
         };
@@ -40,7 +40,7 @@ const getDomainConfig = () => {
             youtube: 'https://vimeo.com/1171257304'
         };
     }
-    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };
+    return { variant: 'test', storageKey: 'MSA_test_user', whatsapp: '919875736055', telegram: 'modapksh', youtube: '' };
 };
 const GameScreen = () => {
     const location = useLocation();

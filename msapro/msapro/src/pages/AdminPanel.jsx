@@ -9,7 +9,7 @@ const getDomainConfig = () => {
     if (host.includes('sureshothack.pro')) {
         return { variant: 'msa2', label: 'MSA2 (Ashu)' };
     }
-    if (host.includes('sureshotypro.xyz')) {
+    if (host.includes('sureshotxpro.sbs')) {
         return { variant: 'msa3', label: 'MSA3 (Golu)' };
     }
     return { variant: 'test', label: 'Test Environment' };

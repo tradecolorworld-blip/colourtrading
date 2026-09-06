@@ -11,7 +11,7 @@ const getDomainConfig = () => {
         return {
             variant: 'sure1',
             storageKey: 'SURE1PRO_user',
-            whatsapp: '919116046055',
+            whatsapp: '919875736055',
             telegram: 'modapksh',
             youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
@@ -34,7 +34,7 @@ const getDomainConfig = () => {
             youtube: 'https://youtu.be/qQAtpOn-tFw'
         };
     }
-    return { variant: 'sure1', storageKey: 'SURE_test_user', whatsapp: '919116046055', telegram: 'modapksh', youtube: '' };
+    return { variant: 'sure1', storageKey: 'SURE_test_user', whatsapp: '919875736055', telegram: 'modapksh', youtube: '' };
 };
 
 const AuthScreen = () => {

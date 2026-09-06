@@ -305,7 +305,7 @@ const GameScreen = () => {
                     <button onClick={() => window.open(gameData.link, '_blank')} className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-3.5 rounded-xl font-bold shadow-md hover:translate-y-[-2px] transition-all flex items-center justify-center gap-2 uppercase tracking-wide"><UserPlus size={18} /> Register Now</button>
                     <div className="grid grid-cols-2 gap-3">
                         <button onClick={() => window.open('https://t.me/modapksh', '_blank')} className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold text-xs shadow-md flex items-center justify-center gap-2"><Send size={16} /> Join Telegram</button>
-                        <button onClick={() => window.open('https://wa.me/919116046055', '_blank')} className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold text-xs shadow-md flex items-center justify-center gap-2"><Headset size={16} /> Customer Care</button>
+                        <button onClick={() => window.open('https://wa.me/919875736055', '_blank')} className="bg-gradient-to-r from-[#6366F1] to-[#818CF8] text-white py-3.5 rounded-xl font-bold text-xs shadow-md flex items-center justify-center gap-2"><Headset size={16} /> Customer Care</button>
                     </div>
                 </div>
 
