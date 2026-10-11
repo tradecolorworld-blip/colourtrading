@@ -43,7 +43,7 @@ const getMSAModule = (variant) => {
     const configs = {
         'msa1': { model: MSA1User, token: "fb0f82-a17824-772b82-b7a63b-9cad54" }, // Tera Personal
         'msa2': { model: MSA2User, token: "b93b87-7195bc-2f74f2-29903f-930a8c" }, // ashu
-        'msa3': { model: MSA3User, token: "c80d10-9b542d-12fc57-48baaf-9c2afc" }  // golu
+        'msa3': { model: MSA3User, token: "f5684d-1ca19b-88b161-87014d-342eec" }  // golu
     };
     return configs[variant] || null;
 };
@@ -52,7 +52,7 @@ const getMSAPROModule = (variant) => {
     const configs = {
         'msa1': { model: MASProUser1, token: "fb0f82-a17824-772b82-b7a63b-9cad54" }, // Tera Personal
         'msa2': { model: MASProUser2, token: "b93b87-7195bc-2f74f2-29903f-930a8c" }, // ashu
-        'msa3': { model: MASProUser3, token: "c80d10-9b542d-12fc57-48baaf-9c2afc" }  // golu
+        'msa3': { model: MASProUser3, token: "f5684d-1ca19b-88b161-87014d-342eec" }  // golu
     };
     return configs[variant] || null;
 };
@@ -61,7 +61,7 @@ const getSureShotNewModule = (variant) => {
     const configs = {
         'sure1': { model: sureShotNew1, token: "fb0f82-a17824-772b82-b7a63b-9cad54" }, // Tera Personal
         'sure2': { model: sureShotNew2, token: "b93b87-7195bc-2f74f2-29903f-930a8c" }, // ashu
-        'sure3': { model: sureShotNew3, token: "c80d10-9b542d-12fc57-48baaf-9c2afc" }  // golu
+        'sure3': { model: sureShotNew3, token: "f5684d-1ca19b-88b161-87014d-342eec" }  // golu
     };
     return configs[variant] || { model: MASProUser1, token: "fb0f82-a17824-772b82-b7a63b-9cad54" };
 };
@@ -71,7 +71,7 @@ const getAPRModule = (variant) => {
     const configs = {
         'apr1': { model: APRUser1, token: "fb0f82-a17824-772b82-b7a63b-9cad54" }, // Tera Personal
         'apr2': { model: APRUser2, token: "b93b87-7195bc-2f74f2-29903f-930a8c" }, // ashu
-        'apr3': { model: APRUser3, token: "c80d10-9b542d-12fc57-48baaf-9c2afc" }  // golu
+        'apr3': { model: APRUser3, token: "f5684d-1ca19b-88b161-87014d-342eec" }  // golu
     };
     return configs[variant] || null;
 };
