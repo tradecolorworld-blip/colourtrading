@@ -74,7 +74,7 @@ const GamePortal = () => {
             if (!user || !user.email) return;
 
             try {
-                const res = await axios.post(`${API_BASE_URL}/api/nsspro/check-vip`, {
+                const res = await axios.post(`/api/nsspro/check-vip`, {
                     email: user.email
                 });
                 setIsVip(res.data.isVip);
@@ -110,7 +110,7 @@ const GamePortal = () => {
     const initiatePayment = async () => {
         setLoadingPayment(true);
         try {
-            const res = await axios.post(`${API_BASE_URL}/api/nsspro/payment/create`, {
+            const res = await axios.post(`/api/nsspro/payment/create`, {
                 email: user.email
             });
 
@@ -152,7 +152,7 @@ const GamePortal = () => {
         fd.append('screenshot', usdtFile); // Yahan file attach ho rahi hai
 
         try {
-            const res = await axios.post(`${API_BASE_URL}/api/nsspro/payment/usdt-submit`, fd, {
+            const res = await axios.post(`/api/nsspro/payment/usdt-submit`, fd, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 

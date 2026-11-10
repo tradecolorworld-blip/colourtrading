@@ -37,7 +37,7 @@ const AuthScreen = () => {
 
         try {
             // 2. Select Endpoint based on Tab
-            const endpoint = isLogin ? `${API_BASE_URL}/api/nsspro/login` : `${API_BASE_URL}/api/nsspro/signup`;
+            const endpoint = isLogin ? `/api/nsspro/login` : `/api/nsspro/signup`;
             
             // 3. Make API Request
             const res = await axios.post(endpoint, formData);

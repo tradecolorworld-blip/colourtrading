@@ -68,7 +68,7 @@ const GameScreen = () => {
 
         const checkVip = async () => {
             try {
-                const res = await axios.post(`${API_BASE_URL}/api/nsspro/check-vip`, {
+                const res = await axios.post(`/api/nsspro/check-vip`, {
                     email: user.email
                 });
                 setIsVip(res.data.isVip);
@@ -87,7 +87,7 @@ const GameScreen = () => {
             const pendingOrder = JSON.parse(localStorage.getItem('nsspro_current_order'));
             if (pendingOrder && user) {
                 try {
-                    const res = await axios.post(`${API_BASE_URL}/api/nsspro/payment/status`, {
+                    const res = await axios.post(`/api/nsspro/payment/status`, {
                         order_id: pendingOrder.order_id,
                         email: user.email
                     });
@@ -110,7 +110,7 @@ const GameScreen = () => {
     const handlePayment = async () => {
         setPaymentLoading(true);
         try {
-            const res = await axios.post(`${API_BASE_URL}/api/nsspro/payment/create`, { email: user.email });
+            const res = await axios.post(`/api/nsspro/payment/create`, { email: user.email });
 
             // 🟢 CORRECTED: res.data.results.payment_url
             if (res.data && res.data.results && res.data.results.payment_url) {
@@ -148,7 +148,7 @@ const GameScreen = () => {
         fd.append('screenshot', usdtFile); // Yahan file attach ho rahi hai
 
         try {
-            const res = await axios.post(`${API_BASE_URL}/api/nsspro/payment/usdt-submit`, fd, {
+            const res = await axios.post(`/api/nsspro/payment/usdt-submit`, fd, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
