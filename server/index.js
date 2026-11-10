@@ -24,6 +24,14 @@ import sureShotNew1 from './models/sureShotNew1.js';
 import sureShotNew2 from './models/sureShotNew2.js';
 import sureShotNew3 from './models/sureShotNew3.js';
 import Game from './models/GameSchema.js';
+import nssProRoutes from './routes/nssProRoutes.js';
+
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// ES Module fix for __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const app = express();
@@ -31,6 +39,9 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// 🟢 Yeh add karo taaki frontend images access kar sake
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URI)
@@ -1898,6 +1909,9 @@ app.delete('/api/sureshotnew/admin/games/:id', async (req, res) => {
         res.status(500).json({ error: err.message }); 
     }
 });
+
+// 🟢 nsspro
+app.use('/api/nsspro', nssProRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
