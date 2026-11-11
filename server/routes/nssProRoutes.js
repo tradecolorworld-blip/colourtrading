@@ -91,7 +91,7 @@ router.post('/payment/create', async (req, res) => {
     const domain = req.headers.host;
 
     // Matching the ₹899 amount from your HTML modal
-    const basePrice = 1;
+    const basePrice = 899;
     const randomPaisa = 0;
     const finalAmount = parseFloat((basePrice + randomPaisa).toFixed(2));
 
